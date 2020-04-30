@@ -1,0 +1,153 @@
+#
+# Copyright(c) 1999 FRIDU a Free Software Company
+# 
+# Projet       : jWrap
+# SubModule    : WTX VxWorks Tornado Interface
+# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# 
+# Last: 
+#  Author      : $Author: Fulup $ Date        :
+#  Date        : $Date: 1999/03/11 12:49:31 $
+#  Revision    : $Revision: 1.3.0.1 $
+#  Source      : $Source: /Master/jWrap/tornado/wrs/Tcl/shellShowCmd.jTcl,v $
+# 
+# Modification History
+# --------------------
+# 05mar99,Fulup hacked from WRS shellShowCmd.tcl
+
+
+# shellShowCmd.tcl - Tcl implementation of WindSh "show" commands
+# Copyright 1998 Wind River Systems, Inc.
+
+#
+# List of names of task options. The first entry corresponds to the
+# least-significant bit of the task options word, and subsequent entries
+# represent more significant bits.
+#
+set taskOptionNames {
+	VX_SUPERVISOR_MODE
+	VX_UNBREAKABLE
+	VX_DEALLOC_STACK
+	VX_FP_TASK
+	VX_STDIO
+	VX_ADA_DEBUG
+        VX_FORTRAN
+	VX_PRIVATE_ENV
+	VX_NO_STACK_FILL
+    }
+
+##-------------------------------------------------------------
+# activeQOrder - A sort routine which sorts activeQ records by
+# priority (used by the i command).
+## ------------------------------------------------------------
+proc Local.ActiveQOrder {t1 t2} {
+
+    set p1 [lindex $t1 1]
+    set p2 [lindex $t2 1]
+
+    return [expr $p1 > $p2 ? 1 : ($p1 < $p2 ? -1 : 0)]
+}
+
+##-------------------------------------------------------
+# taskPrintBanner - print the usual "i" command banner
+## ------------------------------------------------------
+proc Local.TaskPrintBanner {} {
+    puts stdout {  NAME        ENTRY       TID    PRI   STATUS      PC       SP     ERRNO  DELAY}
+    puts stdout {---------- ------------ -------- --- ---------- -------- -------- ------- -----}
+}
+
+##----------------------------------------------------------------------
+# taskInfoPrint - format and print information collected for one task
+# in the format used by the "i" command.
+##----------------------------------------------------------------------
+proc taskInfoPrint {vxClock taskInfo} {
+   global TORNADO
+     
+    set DEST [list taskId status priority pc sp errno timeout entry priNormal name]
+    Tornado.DirectVarsToValues $DEST  $taskInfo
+
+    # convert numeric entry to symbolic form if possible.
+    set entry [Tornado.ExecFindAddr $TORNADO(id) $entry]
+
+    set delayCount [expr {$status & 0x4 ? $timeout - $vxClock : 0}]
+    set inherited  [expr $priority > $priNormal]
+    puts stdout [format "%-11.11s%-12.12s %8x %3d %-10s %8x %8x %7x %5d"\
+        $name								\
+        $entry								\
+        $taskId								\
+        $priority							\
+        [Shell.CoreTaskStatus $status $inherited]					\
+	$pc								\
+	$sp								\
+	$errno								\
+	$delayCount]
+}
+
+##-----------------------------------------------------------------
+# i - summarize TCB information for all tasks in the active queue.
+## ----------------------------------------------------------------
+proc Show.I {args} {
+    global TORNADO
+
+    # get an empty list if i is requested for all tasks or the list
+    # of tasks for which i is requested (list size <= 10)
+    set taskList {}
+    foreach value $args {
+	if {$value != "0x0"} {lappend taskList $value}
+    }
+
+    # get a list of active task IDs, and priorities.
+    set aQ [Shell.CoreActiveQueue 1]
+
+    # Reorganize that linear list into a list of {taskId priority} couples.
+    set aList ""
+    while {[llength $aQ] >= 2} {
+	lappend aList [lrange $aQ 0 1]
+	set aQ [lrange $aQ 2 end]
+    }
+
+    set aList [lsort -command Local.ActiveQOrder $aList]
+
+    Local.TaskPrintBanner
+
+    if {[llength $taskList] > 0} {
+	foreach taskCouple $aList {
+	    set task [lindex $taskCouple 0]
+	    if {[lsearch $taskList $task] != -1} {
+		set taskInfo [Shell.CoreTaskInfoGet $task]
+		set vxClock  [lindex $taskInfo 0]
+		# XXX validate it's really a task
+		taskInfoPrint $vxClock [lrange $taskInfo 1 end]
+	    }
+	}
+    } {
+	foreach taskCouple $aList {
+	    set task [lindex $taskCouple 0]
+	    set taskInfo [Shell.CoreTaskInfoGet $task]
+	    set vxClock  [lindex $taskInfo 0]
+	    # XXX validate it's really a task
+	    taskInfoPrint $vxClock [lrange $taskInfo 1 end]
+	}
+    }
+
+    if {[Wtx.AgentModeGet $TORNADO(wtxId)] == "AGENT_MODE_EXTERN"} {
+	puts stdout "\nAgent mode     : Extern"
+	if ![catch "Wtx.ContextStatusGet $TORNADO(wtxId) CONTEXT_SYSTEM 0" result] {
+	    if {$result == "CONTEXT_SUSPENDED"} {
+		puts stdout "System context : Suspended"
+	    } else {
+		puts stdout "System context : Running"
+	    }	
+	}
+    }
+    return 0
+}
+
+
+
+
+
+
+
+
+

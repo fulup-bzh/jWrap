@@ -1,0 +1,24 @@
+This example as been written after some mail discution with Mikhail Teterin
+when he was looking for a very simple example. 
+
+Example mainlelly does do anything except printing some trace to understand
+interaction in between jTcl and C++ when using jWrap mechanism
+
+Class named "one" provides two constructors, this show how jWrap handle
+polymorhism fully automatically when methods have a different number
+of arguments.
+
+Both methods only print a trace message with input parameters values.
+
+Signal method is automatically called by jTcl under-laying layer when it
+detect an error in object usage. When this method is not overloaded we
+call internal C++ method define in class one.  Nevertheless as class "two"
+written in jTcl inherit of both "Object" and "one" classes. As class "Object"
+has a signal method when an error occurs in class "two" we use Object signal
+method and not the one defined in C++.
+
+BUG WIN32 MSVC: For some unknown reason MSVC-4.2 refuse explicit call to
+    super class constructor. I refused loosing time on a window problem
+    but if someone have a solution, I will be please to integrate it. 
+
+Fulup  

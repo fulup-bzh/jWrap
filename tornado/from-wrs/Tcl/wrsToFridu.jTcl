@@ -1,0 +1,126 @@
+#
+# Copyright(c) 1999 FRIDU a Free Software Company
+# 
+# Projet       : jWrap
+# SubModule    : WTX VxWorks Tornado Interface
+# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# 
+# Last: 
+#  Author      : $Author: Fulup $ Date        :
+#  Date        : $Date: 1999/03/19 08:09:28 $
+#  Revision    : $Revision: 1.4 $
+#  Source      : $Source: /Master/jWrap/tornado/from-wrs/Tcl/wrsToFridu.jTcl,v $
+# 
+# Modification History
+# --------------------
+# 19mar99,Fulup corrected resource file name 
+# 05mar99,Fulup written from WRS shellCore.tcl
+
+
+# Build Tornado handle and prepare a tempry long pointer
+  set TORNADO(tempry) [jWrap new JWRAP_basic ""]
+
+## -----------------------------------------------------------------------
+# Following proc emulate wtxPath WRS routine and return resource
+# directory from jTcl
+## -----------------------------------------------------------------------
+proc wtxPath {host resource tcl} {
+  global TORNADO
+
+  switch -- $resource {
+      resource  {return "$TORNADO(resourceDir)/"}
+  }
+
+  # currentelly we only emulate resource mode
+  return -code error "ERROR: wrsToFridu unsupported wtxPath mode"
+}
+
+## -----------------------------------------------------------------------
+# Emulated WRS symfind routine
+## -----------------------------------------------------------------------
+proc wtxSymFind {OPT SYMBOL} {
+  global TORNADO
+
+  set ZERO [jWrap cast UINT8 0]
+
+  switch -- $OPT {  
+
+    -exact {
+              set ADDR [Wtx.SymFind $TORNADO(wtxId) $SYMBOL 0 1 $ZERO $ZERO]
+            }
+
+    -name  {
+              set ADDR [Wtx.SymFind $TORNADO(wtxId) $SYMBOL 0 0 $ZERO $ZERO]
+            }
+    default {
+              set ADDR [Wtx.SymFind $TORNADO(wtxId) $SYMBOL 0 0 $ZERO $ZERO]
+	    }
+    } ;# end switch
+
+    # If not found generate an error code
+    if [jWrap equal $ADDR 0] {
+         return -code error SYMTBL_SYMBOL_NOT_FOUND
+    }
+
+    # Return symbol addresse
+    set NAME  [jWrap cget $ADDR name]
+    set VALUE [jWrap cget $ADDR value]
+    
+    # Dont let Tcl free ADDR pointer
+    jWrap forget $ADDR
+
+    return [list $NAME $VALUE]
+}
+
+## -----------------------------------------------------------------------
+# Emulated WRS WtxDirect undocumented routine
+## -----------------------------------------------------------------------
+proc wtxDirectCall {FUNC args} {
+ global TORNADO
+
+  set len [llength $args]
+
+  # passe all argument as parameter to function
+  for {set ind 0} {$ind < $len} {incr ind} {
+    set P${ind} [jWrap convert  TGT_ARG_T [lindex $args $ind]]
+  }
+ 
+  # completed all other to zero
+  for {} {$ind < 10} {incr ind} {
+    set P${ind} 0
+  }
+
+  set STATUS [Wtx.DirectCall $TORNADO(wtxId) $FUNC [jWrap cast void_Ptr $TORNADO(tempry)] \
+                         $P0 $P1 $P2 $P3 $P4 $P5 $P6 $P7 $P8 $P9]
+
+  # if error break TCL execution
+  if {$STATUS != 0} {return -code $STATUS}
+
+  # extract result and return it as an integer
+  set RESULT [jWrap cget $TORNADO(tempry) number]
+
+  return $RESULT
+}
+
+## -------------------------------------------------------------------------
+#  Emulate wtxErrorName. jWrap return error directelly formated in string
+## -------------------------------------------------------------------------
+proc wtxErrorName {CODE} {
+   return $CODE
+}
+
+## -------------------------------------------------------------------------
+#  Tornado.DirectVarsToValues is equivalent to WRS tBindNamesToList
+#  except that it is faster and rely on tcl8 object vars.
+## -------------------------------------------------------------------------
+proc tBindNamesToList {VARS VALUES} {
+  uplevel Tornado.DirectVarsToValues $VARS $VALUES
+}
+
+
+
+
+
+
+
+

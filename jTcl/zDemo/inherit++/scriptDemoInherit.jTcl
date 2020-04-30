@@ -1,0 +1,64 @@
+#
+# Copyright(c) 1997-98 FRIDU a Free Software Company
+# 
+# Projet       : Jos/jWrap
+# SubModule    : Test
+# Implement    : DemoSimple
+# Object       : Adaptation of Swing inheritancy to jWrap/jTcl Fridu Wrapper
+# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# 
+# Last: 
+#  Author      : $Author: Fulup $ Date        :
+#  Date        : $Date: 1999/03/11 12:49:30 $
+#  Revision    : $Revision: 1.3.0.1 $
+#  Source      : $Source: /Master/jWrap/jTcl/zDemo/inherit++/scriptDemoInherit.jTcl,v $
+# 
+# Modification History
+# -------------------
+# 01a,06may98, Fulup Written
+# 
+
+# Include jTcl wrapper file in demo mode
+# -------------------------------------
+if [catch {package require jTcl}] {
+  puts "Can't find jTcl Package check TCLLIBPATH variable environemnt"
+  return -code error 
+}
+
+# Check jWrap DemoInherit jWrap demonstration module is loaded
+if [catch {jWrap info DemoInherit} ERR] {
+  puts "ERROR: This demonstration require ModuleInherit to loaded."
+  puts "Restart stript with DemoInheritSh Executable or load libDemoInherit.so in tclsh."
+  return -code error
+}  
+
+# import basic Object package
+# ---------------------------
+  jClassImport "lang.object.*"
+
+
+puts "Wellcome to Inherit: $JWRAP(Inherit_help)"
+
+# Start est program
+# ---------------------------
+set PTS1  [new Point1]
+set ${PTS1}(x) 1.0
+puts "PTS1 magnitude = [$PTS1 mag]"
+
+set PTS2 [new Point2]
+set ${PTS2}(x) 1.0
+set ${PTS2}(y) 2.0
+puts "PTS2 magnitude = [$PTS2 mag]"
+
+set PTS3 [new Point3]
+set ${PTS3}(x) 1.0
+set ${PTS3}(y) 2.0
+set ${PTS3}(z) 3.0
+puts "PTS3 magnitude = [$PTS3 mag]"
+
+puts "result sumary"
+puts "PTS1 mag=[$PTS1 mag]"
+puts "PTS2 mag=[$PTS2 mag]"
+puts "PTS3 mag=[$PTS3 mag]"
+
+puts "*** test Inherit OK ***"

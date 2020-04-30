@@ -1,0 +1,55 @@
+Readline interface to tclsh
+----------------------------
+
+This Module interface GNU readline with tclsh, it
+is compatible with TCLSH event loop, and complete
+tcl command and/or variables, using tab/tab escape
+completion character.
+
+PS1 and PS2 are defined in a global variable and can
+be changed directelly from JWRAP static array. Default is
+PS1=%% PS2=??
+
+Readline Name is set by default to TclSh in order
+to use selective entry in ~/.inputrc startup file.
+
+Readline interface can be load dynamically or
+statically [check mainShellReadline.c example].
+Normally static is reserved to debug.
+
+When started user should uses "Readline.Start"
+command in order to efectivelly enter in readline
+mode.
+
+Automatique startup (add following lines in your .tclshrc)
+-------------------i------------------------------------
+  if {$tcl_interactive} {
+
+    # WARNING: your shell env LD_LIBRARY_PATH sould point to
+    #          libRuntime*.so directory (check with ldd) 
+
+    # Adapt this path to your configuration
+    load libRuntimeReadline.so Readline
+
+    # display readline version
+    jWrap version Readline list
+
+    # Change your path to your choice
+    set JWRAP(ReadlinePrompt1) "-->"
+
+    # enter in readline mode
+    Readline.Start
+  } 
+
+Exiting
+-------
+  First Ctrl-D will quit readline and return to normal TCL exit.
+
+BUGs
+---- 
+  uses GNU readline that is too big, too slow and not adapted to TCL.
+
+-------------------------------------------------------------------------
+Have fun
+
+Fulup.LeFoll@fridu.bzh

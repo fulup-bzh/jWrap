@@ -1,0 +1,56 @@
+#  Copyright(c) 1997-98 FRIDU a Free Software Company
+#
+# Projet    :   jWrap
+# SubModule :   readline
+# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+#
+# Last
+#      Author      : $Author. Fulup $
+#      Date        : $Date. 1997/02/01 17.29.30 $
+#      Revision    : $Revision. 1.2 $
+#      Source      : $Source. /Master/config/header/header.sh,v $
+#
+# Modification History
+# --------------------
+# 01a,05mar99,Fulup written
+#
+
+# dont include this file more than one
+# ------------------------------------
+if {![info exist JTCL_LOADED(jWrap.readline)]} \
+{
+  set JTCL_LOADED(jWrap.readline) TRUE
+
+  # Set release symbolic name
+  # -------------------------
+  set _RL_REL 001
+
+  # Set directory depending on devlopement status
+  # ---------------------------------------------
+  switch -- $PKG_STATE  {
+   dev {
+    set _RL_SHL   $PKG_DIR/Tcl
+   }
+   prod {
+    set _RL_SHL  $PKG_DIR/Tcl
+   }
+   default {
+    puts "ERROR: Unknow PKG_STATE:$PKG_STATE"
+    return ERROR
+   }
+  } ;# end switch
+  
+  # Register ic RL
+  jClassRegister jWrap.readline.state    $_RL_REL "$PKG_STATE $_RL_REL"
+  jClassRegister jWrap.readline.console  $_RL_REL $_RL_SHL/readlineConsole.jTcl
+
+  # clean up tempry varaibles
+  foreach VAR [info var _RL_*] {
+    unset $VAR
+  }
+  
+} ;# end if already loaded
+
+
+
+

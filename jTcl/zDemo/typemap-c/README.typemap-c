@@ -1,0 +1,10 @@
+Typemap demonstrate how overloading default type mapping, this
+example force mapping of typeMapAdrs* on an application custom
+external<->internal representation routines.
+
+Since jWrap handle now complex type automatically remapping
+of complex type to user specific translation routine should
+be exceptionnal and probabelly limitted to old code reuse.
+
+Fulup@fridu.bzh
+

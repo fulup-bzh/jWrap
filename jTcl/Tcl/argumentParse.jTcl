@@ -1,0 +1,133 @@
+#
+# Copyright(c) 1999 FRIDU a Free Software Company
+# 
+# Projet       : jWrap
+# SubModule    : jTcl C/Tcl componant interface
+# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# 
+# Last: 
+#  Author      : $Author: Fulup $ Date        :
+#  Date        : $Date: 1999/03/11 12:49:29 $
+#  Revision    : $Revision: 1.3.0.1 $
+#  Source      : $Source: /Master/jWrap/jTcl/Tcl/argumentParse.jTcl,v $
+# 
+# Modification History
+# --------------------
+# 05mar99,Fulup written
+
+## -------------------------------------------------------------------------------
+#   Print avaliable option + an error message
+## -------------------------------------------------------------------------------
+proc jWrapArgumentHelp {SET_OPT_NAME MSG} {
+  # pass arguement list as a reference and not a value
+  upvar $SET_OPT_NAME OPTIONS
+  set FMT {%-3s %-20s %-30s (%s)}
+
+  puts "--------------------------------------------------------------------------"
+  puts " ERROR |[lindex $MSG 0]| [lrange $MSG 1 end]"
+  puts "--------------------------------------------------------------------------"
+  puts [format $FMT "" options help default]
+  puts ""
+
+  # Loop on, each option
+  foreach {NAME VALUES} [array get OPTIONS *] {
+    set FLAG    [lindex $VALUES 0] 
+    set DEFAULT [lindex $VALUES 1] 
+    set HELP    [lindex $VALUES 2]
+
+    if {$FLAG > 1} {
+      set OPTIONAL "*"
+    } else {
+      set OPTIONAL ""
+    }  
+
+    if {[lindex $VALUES 0] == 0} {
+	puts [format $FMT $OPTIONAL $NAME $HELP $DEFAULT]
+    } else {
+	puts [format $FMT $OPTIONAL ${NAME}=xxxx $HELP $DEFAULT]
+    }
+  }  
+  puts "--------------------------------------------------------------------------"
+}
+
+## -------------------------------------------------------------------------------
+#   Parse argument list and fill up a static array ARGV
+#   ARG_PATERN should be an array name containing one slot
+#   for each argument, that contain a list of two elements
+#   first one is a flag where 0 means no arguement, 1 argument facultative
+#   2 arguement mandatory 
+#   set OPT_ARRAY(target) 1 "defaultValue" "help text"
+## -------------------------------------------------------------------------------
+proc jWrapCheckArgument {SET_OPT_NAME GET_OPT_NAME ARG_LIST_VALUES} {
+
+  # pass arguement list as a reference and not a value
+  upvar $SET_OPT_NAME   OPTIONS
+  upvar $GET_OPT_NAME   RESULT
+
+  # default no argument
+  set RESULT(argc) 0
+
+  set LEN [llength $ARG_LIST_VALUES]
+
+  # loop for each arguement in list
+  for {set IND 0} {$IND < $LEN} {incr IND} {
+     # process each slot in list
+     set SLOT [lindex $ARG_LIST_VALUES $IND]
+
+     # if arguement start by -- process it else add it to prog param
+      if {![string match "--*" $SLOT]} {
+        incr    RESULT(argc)
+        lappend RESULT(argv) $SLOT
+      } else {
+        # split character to =
+        set ARGUMENT [split $SLOT =]
+        set NAME     [string range [lindex $ARGUMENT 0] 2 end]
+        set VALUE    [lrange $ARGUMENT 1 end]
+
+        # search for option in OPTIONS array
+        if {![info exists OPTIONS($NAME)]} {
+          return -code error [jWrapArgumentHelp OPTIONS "--$NAME unknow option"]
+        }
+
+        # check if option should have a value
+        if {[lindex $OPTIONS($NAME) 0] == 0} {
+
+          set RESULT($NAME) 1
+        } else {
+
+          # check user effectivelly gave an option
+          if {[llength $VALUE] == 0} {
+             return -code error  [jWrapArgumentHelp OPTIONS "--$NAME require a value"]
+          }
+
+          # set option value in result array
+          set RESULT($NAME) $VALUE
+        }
+     } ;# end if match --* 
+  } ;# end for each argument
+  
+  # check all mandatory arguement have been set and fill up default
+  foreach {NAME VALUES} [array get OPTIONS *] {
+
+    # If slot does not exist check it now
+    if {![info exist RESULT($NAME)]} {
+      set DEFAULT  [lindex $VALUES 1]
+      set OPTIONAL [lindex $VALUES 0]
+      # if arguement is mandatory exit now
+      if {$OPTIONAL > 1} {
+         return -code error  [jWrapArgumentHelp OPTIONS "--$NAME is mandatory"] 
+      }
+      # if arguement as a default fill it now
+      if {$DEFAULT != "none"} {
+         set RESULT($NAME) $DEFAULT
+      }
+
+    }
+  }
+} ;# end jWrapCheckArgument
+
+
+
+
+
+

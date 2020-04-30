@@ -1,0 +1,247 @@
+ # --------------------------------------------------------------------------------
+ # Copyright(c) 1997-98 FRIDU a Free Software Company
+ # 
+ # Projet       : Jos/jWrap
+ # SubModule    : Test/Tornado
+ # Object       : Demo jTcl Stript for complex structure interfacing on VxWorks/Tornado
+ # Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+ # 
+ # Last: 
+ #  Author      : $Author: Fulup $ Date        :
+ #  Date        : $Date: 1999/03/22 08:58:02 $
+ #  Revision    : $Revision: 1.5 $
+ #  Source      : $Source: /Master/jWrap/tornado/zDemo/msg/scriptDemoMsg.jTcl,v $
+ # 
+ # Modification History
+ # -------------------
+ # 1.1  02jun98, Fulup Written
+ # --------------------------------------------------------------------------
+
+
+ ## --------------------------------------------------------------------------
+ #    In order running this example:
+ #      1: Startit with "DemoMsgSh scriptDemoMsg.jTcl targetName" 
+ ## --------------------------------------------------------------------------
+
+
+proc test_init {} {
+ global argv
+ global argc
+ global env
+ global TORNADO_ID
+
+ # default have to be addapted to your location
+  set DEFAULT_TARGET   Fulup-sim
+  set DEFAULT_REGISTRY gesvres
+
+ # Check jWrap DemoMsg jWrap demonstration module is loaded
+ if [catch {jWrap info DemoMsg} ERR] {
+   puts "ERROR: This demonstration require Jwrap/Tornado ModuleMsg to loaded."
+   puts "Restart stript with DemoMsgSh Executable or load libDemoMsg.so in tclsh."
+   return -code error
+ }  
+
+ if {![info exist env(WIND_REGISTRY)]} {
+   puts "WARNING: WIND_REGISTRY not set in environment using $DEFAULT_REGISTRY"
+   # WARNING: tcl env command does not change current process environment
+   jWrap.PutEnv "WIND_REGISTRY=$DEFAULT_REGISTRY"
+ }
+
+ # Check param number
+ if {$argc != 1} {
+   puts "WARNING: using  |$DEFAULT_TARGET|"
+   set TARGET $DEFAULT_TARGET
+ } else {
+   # Take target server name from command line
+   set TARGET [lindex $argv 0]
+ }
+
+ # Force module name (WARNING: must fit with jWrap info)
+ set MODULE_NAME DemoMsg 
+
+ # Connect onto target server
+ set TORNADO_ID [jWrap new TORNADO_id [list [list targetName $TARGET]]]
+ if [catch {Tornado.Connect $TORNADO_ID} REPONSE] {
+    puts "Cannot connect on target=$TARGET ERR=$REPONSE"
+    return -code error
+ } 
+
+ # Normally we should load our target applicatin object module now
+ # set JOB_ID [Tornado.load $TORNADO_ID "Noting to load on target for this example"]
+
+ # Bind our module, this function check all function on target
+ if [catch {Tornado.ModuleBind $TORNADO_ID $MODULE_NAME BIND_NOW} ERR] {
+     puts "$ERR [Tornado.ModuleUnresolved $MODULE_NAME]"
+     return -code error
+ }
+
+ # ----- Now our module is loaded and binded with target -------
+} ;# end test_init
+
+
+# ----------------- Test modules -------------------------------
+proc test_structure {} {
+   puts "\ntesting complex structure handling"
+   set A [gets stdin]
+   set LIST {{name "Demat deoc'h"} {A 1 2 3 4}}
+   set STRUCT [jWrap new MSG_lists $LIST]
+   if {"MsgLists" != "[jWrap type $STRUCT]"} {
+       # note that MSG_lists is an alias of Msglists
+       puts "ERROR: LIST cast failed MsgLists != [jWrap type $LIST]"
+     return -code error
+   }
+   puts "\$STRUCT external rep = |$STRUCT|"
+}
+
+proc test_complexStruct {} {
+ puts "\ntesting very complex structure"
+ set a [gets stdin]
+
+ # Build a new structure with an enumeration
+ set TYPE32   [jWrap new  type32 {{intValue 4}}]
+ puts "type32=$TYPE32"
+
+ # Cast type in order storing it in a generic pointer
+ set  PTR [jWrap cast void_Ptr $TYPE32]
+ puts "ptr=$PTR"
+
+ # Place or pointer in buffer slot of a union
+ set UNION [list jointure [list [list  buffer $PTR]]]
+ puts "jointure=$UNION"
+
+ # Build global structure that embeded a Union that itself home a pointer on an other struct
+ set HDR [jWrap new  MsgLists [list {A 1 2 3 4} {name toto} $UNION]]
+ puts "MsgList type=[jWrap type $HDR] value=$HDR" 
+
+ # Retreive structure from the list 
+ set JOINTURE [jWrap cget $HDR jointure]
+ puts "jointure type=[jWrap type $JOINTURE] value=$JOINTURE"
+
+ # Get buffer from union
+ set PTR [jWrap cget $JOINTURE buffer]
+ puts "buffer type=[jWrap type $PTR] value=$PTR"  
+
+ # Cast buffer in original type32 struct
+ set BUF [jWrap cast type32 $PTR]
+
+ # Get int32 value from buffer union
+ set INT [jWrap cget $BUF intValue]
+ if {$INT == 4} {
+   puts "OK: Very Complex struct int=4"
+ } else {
+   puts "FX: Very Complex struct int=$INT (should be 4)"
+ }
+}
+
+proc test_free {} {
+   puts "\ntesting manual freeing of structure"
+   set a [gets stdin]
+   set MSG_ID [jWrap new MSG_lists {{name "Demat deoc'h"} {A 1 2 3 4}}]
+   puts "MSG_ID=$MSG_ID"
+   # unset should free target attached data
+   unset $MSG_ID
+}
+
+proc test_directCall {} {
+ global TORNADO_ID
+
+ puts "\nDirect execution call"
+ set A [gets stdin]
+ set ADR   [jWrap cast TGT_ARG_T [Tornado.ExecFindSymbol $TORNADO_ID sysBootLineAdrs]
+ set ARGS  [list args $ADR 0 ...]
+ set CTX   [jWrap new WTX_CONTEXT_DESC [list {name printf} $ARGS]]
+ Tornado.ExecFuncCall $TORNADO_ID $CTX
+}
+ 
+proc test_memPartLib {} {
+
+ puts "\nMemPartLib test"
+ set A [gets stdin]
+ set SIZE  2048
+ set BLOCK [DemoMsg.malloc $SIZE]
+ set POOL  [DemoMsg.memPartCreate $BLOCK $SIZE]
+ set BUF   [DemoMsg.memPartAlloc  $POOL  512]
+ puts "POOL=$POOL BUF=$BUF"
+ DemoMsg.memPartFree $POOL $BUF
+ puts "done1"
+ DemoMsg.free $BLOCK
+ puts "done2"
+}
+
+proc test_msgQ {} {
+ puts "\nMessage Queue"
+ set A [gets stdin]
+ # create a Message queue
+ set Msg_ID [DemoMsg.msgQCreate 10 1024 MSG_Q_FIFO]
+ if [jWrap equal $Msg_ID 0] {
+   puts "ERROR: cannot create message queue on target"
+   return -code error
+ }
+ 
+ # send a message on list
+ set INBUF  "This is a jWrap-TORNADO demonstration message"
+ set LEN     [expr [string length $INBUF] + 1]
+ set TIMEOUT 60
+ # make message string to be a valid string on target
+ set STATUS  [DemoMsg.msgQSend $Msg_ID $INBUF $LEN $TIMEOUT MSG_PRI_NORMAL]
+
+ if {$STATUS == "ERROR"} {
+  puts "ERROR: cannot send message on queue (hug!!!)"
+  return -code error
+ }
+
+ # check number of message in qlist
+ set NB_MSG [DemoMsg.msgQNumMsgs $Msg_ID]
+ if {$NB_MSG != 1} {
+   puts "ERROR: we should have only one message in queue ($NB_MSG != 1)"
+   return -code error
+ } 
+ 
+ # read message from list
+ set OUTBUF  [DemoMsg.malloc 255]
+ set STATUS  [DemoMsg.msgQReceive $Msg_ID $OUTBUF 255 $TIMEOUT]
+ if {$STATUS == "ERROR"} {
+  puts "ERROR: cannot get message from queue (hug!!!)"
+  return -code error
+ }
+
+ # print message 
+ puts "got message OUTBUF=$OUTBUF"
+
+ # Delete queue works but return an invalid status
+ catch {
+   # close message queue return
+   set STATUS [DemoMsg.msgQDelete $Msg_ID]
+   if {$STATUS == "ERROR"} {
+     puts "ERROR: cannot get close queue (hug!!!)"
+    return -code error
+   }
+ }
+
+ # free target
+ DemoMsg.free $OUTBUF 
+}
+# ------------------------ Test Program start ---------------------------
+ 
+ # Set a debug level for TORNADO interface
+ test_init 
+ jWrap debug 10
+
+ if $tcl_interactive return
+
+ puts "start enter for test"
+ set A [gets stdin]
+
+ test_structure
+ test_complexStruct
+
+ test_memPartLib
+ test_free
+ test_directCall
+ test_msgQ
+
+ # Unconnect and freeing target server is done automatically
+ puts "Test ended"
+ set A [gets stdin]
+ puts "Kenavo"
+ 

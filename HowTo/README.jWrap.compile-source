@@ -1,0 +1,453 @@
+Recompiling from source code
+============================
+ 0) tell us where are locate FRIDU.tgz files
+ ...........................................
+  FRIDU_TGZ=/Where/I/Downloaded/Fridu/Tar/Gziped/Files
+
+ 1) install a binary distribution of Common
+ ...........................................
+  export   FRIDU_HOME=$HOME/pMaster/linux86
+  mkdir    -p $FRIDU_HOME
+  cd       $FRIDU_HOME
+  tar      -xzf $FRIDU_TGZ/common-linux86-3.09.tgz
+  COMMON_DIR=`ls -d $FRIDU_HOME/Common-*`
+  export   LD_LIBRARY_PATH=$COMMON_DIR/lib:$LD_LIBRARY_PATH
+  export   PATH=$COMMON_DIR/bin:$PATH
+
+  2) download tornado-header [ATTENTION: only if you need TornadoSh]
+  ...............................................................
+    tar    -xzf $FRIDU_TGZ/tornado-header-1.01.tgz
+    export WIND_BASE=$FRIDU_HOME/tornado-1.01
+    note: If you are not using fridu tornado-header look remark in (5)
+
+  3) install jTcl [mandatory for TornadoSh and all C++ example]
+  ..........................................................
+    tar    -xzf $FRIDU_TGZ/jTcl-noarch-3.06.tgz
+    JTCL_DIR=`ls -d $FRIDU_HOME/jTcl-*`
+    export TCLLIBPATH=$JTCL_DIR/bin
+
+  4) check you environement
+  .........................
+    % ls $FRIDU_HOME  ;# only Common-xxx is mandatory for compiling
+    -->Common-3.09 jTcl-3.06  tornado-1.01
+
+    which cproto      ;# should not point on gnu/gcc cproto
+    -->$FRIDU_HOME/Common-3.09/bin/cproto
+
+    cproto --help     ;# fridu cproto syntaxe is not compatible with gnu cproto
+    -->ERROR: syntaxe is cproto outFile.d inFileName.[c|cxx]
+
+    which build.tcl
+    -->$FRIDU_HOME/Common-3.09/bin/build.tcl
+
+  4) install jWrap source distribution
+  ...........................................
+    mkdir    $FRIDU_HOME/../src
+    cd       $FRIDU_HOME/../src
+    tar      -xzf $FRIDU_TGZ/jWrap-src-1.31.tgz
+
+    export   ARCH_OS=linux86
+    export   CCDEBUG=1            ;# in order compiling with -g
+
+    cd jWrap
+    build.tcl -s proto          ;# during proto generation cdepend produce many warning
+    build.tcl -s all            ;# should produce few warnings but not errors
+    build.tcl -s all            ;# should not try to recompile any thing
+    build.tcl -s install        ;# will install in $FRIDU_HOME directory
+
+  5) customization of Makefile [if you are not using a RH-5.2]
+  .........................................................................
+    Architecture dependant files are located in:
+     $FRIDU_HOME/Common-*/Config/arch   (If you are using Common-xxx binary distrib)
+     $TOP/Common/Config/arch            (If you are are using Common-src)
+
+    Ressource file are in named $ARCH_OS.mk
+
+    In order to understand what include are use operate build in verbose mode
+    nevertheless do not run verbose mode from top directory it will produce
+    too many output.
+
+    a) change to the failing directory
+    b) build.tcl
+
+    it should print something looking like
+
+      % cd jWrap/tornado/runtime
+      % build.tcl
+      gcc -fPIC -c  -g   -finline-functions -Winline -W -Wimplicit
+      -Wreturn-type -Wswitch -Wformat -Wchar-subscripts -Wparentheses
+      -Wshadow -Wpointer-arith -Wcast-align -Waggregate-return  -DFRIDU
+      -DHOST=sun4-solaris2.mk -DEASYC_PROTO_ONLY  -DNO_XUSTAT -DLINUX
+      -D_IOSTREAM_H -DLinux -DX86 -DHost
+      -I. -I/home/fridu/Fulup/Vues/Fridu/jWrap/Include
+      -I/home/fridu/Fulup/Vues/Fridu/Common/Config/Include/Unix
+      -I/home/fridu/Fulup/Vues/Fridu/Exe/linux86/include
+      -I/home/fridu/Fulup/Vues/Fridu/Exe/linux86/etc
+      -I/usr/include -I/pMaster/tornado-1.01/host/include
+      -I/usr/local/include
+      miscRuntimeTornado.c
+      -o /home/fridu/Fulup/Vues/Fridu/Exe/linux86/obj/miscRuntimeTornado.o
+
+     c) Edit $FRIDU_HOME/Common-*/Config/arch/$ARCH_OS.mk
+
+      Change the value you don't want, by example TORNADO_INCLUDE
+      TORNADO_INCL  := $(TCL_INCL) -I/usr/include -I$(TORNADO_BASE)/host/include
+
+  6) startup bash file
+  ........................
+    You will find my bashrc file $FRIDU_HOME/Common-*/Config/include
+
+
+Here after a trace of an installation on a RH-5.2
+==================================================
+
+# this example assume an empty accound
+# ....................................
+ 1016 # su - mael
+ [mael@fridu mael]$ ls
+ [mael@fridu mael]$
+
+# account is using RH-5.2 default kde user
+# .........................................
+ [mael@fridu mael]$ echo $PATH
+ /opt/kde-1.1/bin:/bin:/usr/bin:/usr/local/bin:/usr/bin/X11:/usr/X11R6/bin
+
+# Place fridu distrib where ever you want
+# ..............................................
+ [mael@fridu mael]$  export   FRIDU_HOME=~/fridu
+ [mael@fridu mael]$  mkdir    $FRIDU_HOME
+ [mael@fridu mael]$  cd       $FRIDU_HOME
+
+# download common tools [mandatory for compilation]
+# ..................................................
+ [mael@fridu fridu]$ tar -xzf ~Fulup/tmp/common-linux86-3.09.tgz
+ [mael@fridu fridu]$ export PATH=/home/fridu/mael/fridu/Common-3.09/bin:$PATH
+ [mael@fridu fridu]$ export ARCH_OS=linux86
+
+# download tornado-header [ATTENTION: only if you need TornadoSh]
+# ...............................................................
+ [mael@fridu fridu]$ tar -xzf ~Fulup/tmp/tornado-header-1.01.tgz
+ [mael@fridu jWrap]$ export WIND_BASE=$FRIDU_HOME/tornado-1.01
+
+# install jTcl [mandatory for TornadoSh and all C++ example]
+# ..........................................................
+ [mael@fridu jWrap]$ cd $FRIDU_HOME
+ [mael@fridu fridu]$ tar -xzf ~Fulup/tmp/jTcl-noarch-3.06
+ [mael@fridu fridu]$ cd src/jWrap/
+ [mael@fridu jWrap]$ export TCLLIBPATH=$FRIDU_HOME/jTcl-3.06/bin
+
+# check your environement
+# .......................
+ [mael@fridu fridu]$ ls $FRIDU_HOME
+ Common-3.09  jTcl-3.06  tornado-1.01
+
+ [mael@fridu fridu]$ which cproto
+ /home/fridu/mael/fridu/Common-3.09/bin/cproto
+
+ [mael@fridu fridu]$ which build.tcl
+ /home/fridu/mael/fridu/Common-3.09/bin/build.tcl
+
+ [mael@fridu fridu]$ ls /home/fridu/mael/fridu/Common-3.09/lib/Config/arch/$ARCH_OS.mk
+ /home/fridu/mael/fridu/Common-3.09/lib/Config/arch/linux86.mk
+
+ [mael@fridu jWrap]$ ls $WIND_BASE
+ host     include  share    target
+
+ [mael@fridu jWrap]$ ls $TCLLIBPATH
+ demoIt.tcl     pkgIndex.tcl
+
+# download jWrap sources
+ [mael@fridu fridu]$ cd $FRIDU_HOME
+ [mael@fridu fridu]$ mkdir src
+ [mael@fridu fridu]$ cd src
+ [mael@fridu src]$   tar -xzf ~Fulup/tmp/jWrap-src-1.31.tgz
+
+# move into source top directory
+ [mael@fridu src]$ cd $FRIDU_HOME/jWrap/
+ [mael@fridu jWrap]$
+
+# make proto WARNING: don't be afraid by cdepend warning
+ [mael@fridu jWrap]$ build.tcl -s proto
+  WARNING: creating target dir /home/fridu/mael/fridu/src/Exe/linux86/bin
+  WARNING: creating target dir /home/fridu/mael/fridu/src/Exe/linux86/obj
+  WARNING: creating target dir /home/fridu/mael/fridu/src/Exe/linux86/etc
+  WARNING: creating target dir /home/fridu/mael/fridu/src/Exe/linux86/include
+  WARNING: creating target dir /home/fridu/mael/fridu/src/Exe/linux86/lib
+  WARNING: creating target dir /home/fridu/mael/fridu/src/Exe/linux86/jDoc
+  ### Module=cmd OPT=proto ###
+  extracting cc proto from oalWrap.cxx
+  ### Module=frontend OPT=proto ###
+   Making proto in cc jTcl
+   extracting depend from yaccFrontendCc.cxx
+   extracting depend from lexFrontendCc.cxx
+   ...
+   proto in cc jTcl done
+ ### Module=jDoc OPT=proto ###
+ ...
+ ### Module=jProto OPT=proto ###
+ ...
+ ### Module=jTcl OPT=proto ###
+   Making proto in backend runtime zDemo
+   extracting depend from typeBackendCc2jTcl.cxx
+   ...
+   protoMaking /home/fridu/mael/fridu/src/Exe/linux86/include/libBackendCc2jTcl.i
+   extracting depend from typeRuntimeJwrap.c
+   cdepend include not found [line:290]
+     file:/home/fridu/mael/fridu/src/jWrap/Include/libRuntimeJwrap.h
+     include:libRuntimeJwrap.i
+   ...
+   proto in backend runtime zDemo done
+ ### Module=readline OPT=proto ###
+ ...
+ ### Module=tornado OPT=proto ###
+   Making proto in backend runtime shell vxWorks wrs wtx zDemo
+   Making proto in wtx
+   proto in wtx done
+   Making proto in msg
+   proto in msg done
+   proto in backend runtime shell vxWorks wrs wtx zDemo done
+[mael@fridu jWrap]$
+
+# Compile jWrap [ATTENTION CCDEBUG should set to 1 for debug]
+# ----------------------------------------------------------
+[mael@fridu jWrap]$ build.tcl -s all
+ ### Module=cmd OPT=lib ###
+ ### Module=frontend OPT=lib ###
+  Making lib in cc jTcl
+  compiling++ yaccFrontendCc.cxx [linux86, -O2]
+  compiling++ lexFrontendCc.cxx [linux86, -O2]
+  lexFrontendCc.lex: In function `int yycc_lex()':
+  lexFrontendCc.lex:499: warning: unknown escape sequence `\ '
+  libMaking /home/fridu/mael/fridu/src/Exe/linux86/lib/libFrontendCc.a
+ ### Module=jDoc OPT=lib ###
+  ..
+  stringRuntimeJwrap.c: In function `jWrapStringCc2Tcl':
+  stringRuntimeJwrap.c:195: warning: `oldSignalhandler' might be used uninitialized in this function
+  stringRuntimeJwrap.c:195: warning: variable `oldSignalhandler' might be clobbered by `longjmp' or `vfork'
+ ### Module=tornado OPT=exe ###
+  Making exe in backend runtime shell vxWorks wrs wtx zDemo
+  Making exe in wtx
+  exe in wtx done
+  Making exe in msg
+  exe in msg done
+  exe in backend runtime shell vxWorks wrs wtx zDemo done
+[mael@fridu jWrap]$
+
+
+# check compilation produced binaries
+# ------------------------------------
+  [mael@fridu jWrap]$ ls ../Exe/$ARCH_OS/bin/
+  DemoEventSh     DemoMsgSh       DemoPolySh      DemoStructSh    ReadlineSh      jWrap
+  DemoInheritSh   DemoOverloadSh  DemoSimpleSh    DemoTypemapSh   TornadoSh
+  [mael@fridu jWrap]$
+
+# check you effectivelly produced binaries
+# ----------------------------------------
+  [mael@fridu jWrap]$ ls ../Exe/linux86/bin/
+  DemoEventSh     DemoMsgSh       DemoPolySh      DemoStructSh    ReadlineSh      jWrap
+  DemoInheritSh   DemoOverloadSh  DemoSimpleSh    DemoTypemapSh   TornadoSh
+  [mael@fridu jWrap]$
+
+# check you binaries are working
+# ------------------------------
+
+  [mael@fridu jWrap]$ top.tcl TornadoSh
+  TOP_DIR=/home/fridu/mael/fridu/src PROJET=jWrap MODULE=cmd frontend jDoc jProto jTcl readline tornado
+  % jWrap info
+    ## --- Loaded jWrap Modules ---
+    # jWrap           jWrap Core module
+    # Readline        GNU Readline interface to tclsh
+    # Tornado         Tornado fast interface to WTX
+    # Wtx             Tornado VxWorks WTX interface with target server
+    # VxWorks         VxWorks Target interface thru target server
+    ## ---
+  % jWrap version
+    ## --- Version Stamp jWrap Modules ---
+    # jWrap        RuntimeJwrap.jWrap-1.31/jTcl-032.linux86.-O2.the.24-Mar-99[12h03].by.mael.on.fridu.sene.bzh
+    # Readline     RuntimeReadline.jWrap-1.31/readline-008.linux86.-O2.the.24-Mar-99[12h03].by.mael.on.fridu.sene.bzh
+    # Tornado      RuntimeTornado.jWrap-1.31/tornado-032.linux86.-O2.the.24-Mar-99[12h19].by.mael.on.fridu.sene.bzh
+    # Wtx          RuntimeWtx.jWrap-1.31/tornado-032.linux86.-O2.the.24-Mar-99[12h19].by.mael.on.fridu.sene.bzh
+    # VxWorks      RuntimeVxWorks.jWrap-1.31/tornado-032.linux86.-O2.the.24-Mar-99[12h19].by.mael.on.fridu.sene.bzh
+    ## ---
+    %
+
+# remark on binary tree
+# ----------------------
+
+ 1) LD_LIBRAY_PATH
+ .................
+
+   top.tcl is a small tcl script that find out where binaries are in a Fridu tree
+   and that set LD_LIBRARY_PATH to make exe run without setting any special variables
+   If you try to start without top.tcl script it will fail like this
+
+   [mael@fridu jWrap]$ ../Exe/linux86/bin/TornadoSh
+     ../Exe/linux86/bin/TornadoSh: error in loading shared libraries
+     libRuntimeVxWorks.so: cannot open shared object file: No such file or directory
+   [mael@fridu jWrap]$
+
+   in order to make it work set LD_LIBRARY_PATH
+   [mael@fridu jWrap]$ export LD_LIBRARY_PATH=$FRIDU_HOME/src/Exe/$ARCH_OS/lib
+   [mael@fridu jWrap]$ ../Exe/linux86/bin/TornadoSh
+      %          jWrap info
+        ## --- Loaded jWrap Modules ---
+        # jWrap           jWrap Core module
+        # Readline        GNU Readline interface to tclsh
+        # Tornado         Tornado fast interface to WTX
+        # Wtx             Tornado VxWorks WTX interface with target server
+        # VxWorks         VxWorks Target interface thru target server
+        ## ---
+      %          exit
+      .          tornadoExit Closing Tgt Connection
+      .          tornadoExit Tornado Wtx Ended
+   [mael@fridu jWrap]$
+
+ 2) JTCL is required by many examples, if not installed you will have following error
+ ....................................................................................
+
+    [mael@fridu jWrap]$ ../Exe/linux86/bin/TornadoSh tornado/shell/TornadoSh.tcl
+       ERROR: did not find jTcl package please set FRIDU_HOME
+       .          tornadoExit Closing Tgt Connection
+       .          tornadoExit Tornado Wtx Ended
+    [mael@fridu jWrap]$
+
+    In order to solv install jTcl in $FRIDU_HOME and set TCLLIBPATH
+    [mael@fridu jWrap]$ cd $FRIDU_HOME
+    [mael@fridu fridu]$ tar -xzf ~Fulup/tmp/jTcl-noarch-3.06
+    [mael@fridu fridu]$ cd src/jWrap/
+    [mael@fridu jWrap]$ export TCLLIBPATH=/home/fridu/mael/fridu/jTcl-3.06/bin
+    [mael@fridu jWrap]$ ../Exe/linux86/bin/TornadoSh tornado/shell/TornadoSh.tcl
+       --------------------------------------------------------------------------
+       ERROR |--target| is mandatory
+       --------------------------------------------------------------------------
+       options              help                           (default)
+        --noshowroutine      Dont include WRS shell proc    (0)
+        --registry=xxxx      Registry host                  (none)
+        --notargetconnect    Dont connect to target for debug purpose (0)
+        --tool=xxxx          Tool name on Target server     (TornadoSh)
+        --debug=xxxx         Debug level 0-9                (0)
+       *--target=xxxx        Target server name             (AsToBeSet)
+      --------------------------------------------------------------------------
+      .          tornadoExit Closing Tgt Connection
+      .          tornadoExit Tornado Wtx Ended
+      [mael@fridu jWrap]$
+
+Check you sharable lib dependencies
+-----------------------------------
+
+  --> ldd ~/pMaster/linux86/jWrap-1.31/bin/TornadoSh
+        libRuntimeVxWorks.so => /home/fridu/Fulup/pMaster/linux86/shadow/lib/libRuntimeVxWorks.so (0x40000000)
+        libRuntimeTornado.so => /home/fridu/Fulup/pMaster/linux86/shadow/lib/libRuntimeTornado.so (0x400b5000)
+        libRuntimeWtx.so => /home/fridu/Fulup/pMaster/linux86/shadow/lib/libRuntimeWtx.so (0x400d4000)
+        libRuntimeReadline.so => /home/fridu/Fulup/pMaster/linux86/shadow/lib/libRuntimeReadline.so (0x400fb000)
+        libRuntimeJwrap.so => /home/fridu/Fulup/pMaster/linux86/shadow/lib/libRuntimeJwrap.so (0x400fe000)
+        libLinuxWtx.so => /home/fridu/Fulup/pMaster/linux86/shadow/lib/libLinuxWtx.so (0x40108000)
+        libtcl8.6.so => /usr/lib/libtcl8.6.so (0x4011f000)
+        libdl.so.2 => /lib/libdl.so.2 (0x4017e000)
+        libm.so.6 => /lib/libm.so.6 (0x40181000)
+        libreadline.so.3 => /usr/lib/libreadline.so.3 (0x4019a000)
+        libncurses.so.4 => /usr/lib/libncurses.so.4 (0x401bd000)
+        libc.so.6 => /lib/libc.so.6 (0x401fb000)
+        /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x00000000)
+        libtermcap.so.2 => /lib/libtermcap.so.2 (0x402a1000)
+
+
+ -->ldd ~/pMaster/linux86/jWrap-1.31/lib/libRuntimeReadline.so
+        libRuntimeJwrap.so => /home/fridu/Fulup/pMaster/linux86/shadow/lib/libRuntimeJwrap.so (0x40003000)
+        libreadline.so.3 => /usr/lib/libreadline.so.3 (0x40011000)
+        libncurses.so.4 => /usr/lib/libncurses.so.4 (0x40036000)
+        libtermcap.so.2 => /lib/libtermcap.so.2 (0x40074000)
+        libc.so.6 => /lib/libc.so.6 (0x40078000)
+        /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x00000000)
+
+
+    If you don't have those dependencies, probabelly dynamic load won't work, in this
+    case try loading each jWrap module interactivelly.
+
+    tclsh
+    % load libRuntimeJwrap.so jWrap
+    % jWrap info
+      ## --- Loaded jWrap Modules ---
+      # jWrap           jWrap Core module
+      ## ---
+    % load libRuntimeReadline.so Readline
+    % Readline.Start
+    -->
+
+    --> load libRuntimeTornado.so Tornado
+    --> load libRuntimeWtx.so wtx
+    --> load libRuntimeVxWorks.so VxWorks
+
+    --> jWrap info
+      ## --- Loaded jWrap Modules ---
+      # jWrap           jWrap Core module
+      # Readline        GNU Readline interface to tclsh
+      # Tornado         Tornado fast interface to WTX
+      # Wtx             Tornado VxWorks WTX interface with target server
+      # VxWorks         VxWorks Target interface thru target server
+      ## ---
+
+   If during load time you have any error looking like
+    % load libRuntimeReadline.so Readline
+      couldn't load file "libRuntimeReadline.so":
+      /home/newdir/Exe/linux86/lib/libRuntimeReadline.so: undefined symbol:
+      rl_attempted_
+      completion_function
+    %
+  Then you are missing a dependencie, check you do not have twice the same
+  lib in search path, it is very common to have system readline.so in /usr/lib
+  and an application readline in /usr/local/lib  that hide official system readline.so
+  Note that under Linux if .so file is not find at sharable link time it
+  won't be placed in dependencies list, you have to cleanup and rebuild .so
+  libraries in order to effectivelly solve the problem. Changing LD_LIB_PATH is not
+  enought.
+
+
+Remark on readline
+-------------------
+  1) Linux RedHat readline sharable is in: readline-devel-2.2.1-1
+    $ rpm -ql readline-devel-2.2.1-1
+      /usr/include/readline
+      /usr/include/readline/chardefs.h
+      /usr/include/readline/history.h
+      /usr/include/readline/keymaps.h
+      /usr/include/readline/readline.h
+      /usr/include/readline/tilde.h
+      /usr/lib/libhistory.a
+      /usr/lib/libhistory.so
+      /usr/lib/libreadline.a
+      /usr/lib/libreadline.so
+
+  2) Solaris is not shipped with readline and user should recompile it, same
+     for libtermcap. Both product can be founded on any good GNU mirror.
+     Note: that under solaris neither Readline, neither Termcap are compiled
+     by default as sharable lib. If user want them as sharable lib it should
+     either do the job by hand, or take the binary version shiped with jWrap.
+
+Make a binary distribution
+---------------------------
+
+  [mael@fridu jWrap]$ build.tcl -s install
+    ### Module=cmd OPT=install ###
+    Making install in Etc
+    install in Etc done
+    exe installing /home/fridu/mael/fridu/src/Exe/linux86/bin/jWrap into /home/fridu/mael/fridu/jWrap-1.31/bin
+    ### Module=frontend OPT=install ###
+    frontend directory NOT_INSTALL flag set
+    ### Module=jDoc OPT=install ###
+    Making install in javadoc zDemo Etc
+    javadoc directory NOT_INSTALL flag set
+    Tcl-Tk installing httpdTcp.jTcl into /home/fridu/mael/fridu/jWrap-1.31/lib/jDoc-030/zDemo
+    include installing ContainerCore.h into /home/fridu/mael/fridu/jWrap-1.31/include
+    include installing structure.h into /home/fridu/mael/fridu/jWrap-1.31/include
+    ...
+    Tcl-Tk installing Package.jTcl into /home/fridu/mael/fridu/jWrap-1.31/lib/tornado-032/Etc
+    Docs installing README.shell.tornado into /home/fridu/mael/fridu/jWrap-1.31/docs/tornado-032
+    install in backend runtime shell vxWorks wrs wtx zDemo Etc HowTo done
+    [mael@fridu jWrap]$
+
+  [mael@fridu jWrap]$ ls $FRIDU_HOME
+  Common-3.09   jTcl-3.06     jWrap-1.31    src           tornado-1.01
+  [mael@fridu jWrap]$
+
+

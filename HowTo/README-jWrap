@@ -1,0 +1,69 @@
+jWrap is a C/C++ Wrapper
+
+jWrap --help
+jWrap:
+allowed options
+  --debug     =?? [DebugLevel]
+  --output    =?? [Output File Name [stdout == -]]
+  --outdir    =?? [Output Directory prefix]
+  --implement =?? [ModuleName]
+  --verbose   
+  --proto     
+  --jTcl      
+  --java      
+  --javadoc   
+  --ignore    =?? [Ignore next parameter]
+  --c++       
+  --version   
+  --help      
+Example:
+  jWrap\
+  --verbose --c++ *.cc 
+
+
+jWrap --jTcl toto.cc
+jWrap --jTcl toto.h
+jWrap --jTcl toto.c
+
+Will generated a Tcl/jTcl wrapper in c or C++ depending if class are defined.
+This wrapper should be link with your library and with libTclTargetWrap.so
+and then loaded in tcl interpreter. 
+
+
+DEMOS
+-----
+  Moved in Test directory adapt makefile should be very easy to
+  recompiled from any runtime distribution.
+
+
+WARNING: if TCLLIBPATH does not point on jTcl pkgIndex.tcl directory 
+         following example won't work.
+         See jTcl demo README for more further information
+
+DOC GENERATION
+---------------
+jWrap --javadoc toto.h will generate a pseudo java source for javadoc.
+
+When javadoc as been recompiled move in Test directory and type in
+
+
+EXAMPLE
+-------
+ "build.tcl -s test"
+
+
+BUGS
+----
+ . jWrap ignore any define with () ex: #define toto (0)
+ . jWrap wrap cant interface function with variable arguments
+ . when a function return a pointer on a Tcl knowed wrapped type
+   Tcl will free this pointer with Tcl_Free function as soon
+   as it reference count is null. This can be avoid by making this
+   specific type to be cookie. Risk is to free twice the same pointer.
+
+
+ . egcc can fail to compile oalWrap.cxx with following message
+   oalWrap.cxx:37: Internal compiler error.
+   oalWrap.cxx:37: Please submit a full bug report to `egcs-bugs@cygnus.com'.
+   Remove optimisation and code will pass with no trouble !!!
+Fulup@fridu.bzh

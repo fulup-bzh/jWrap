@@ -1,0 +1,92 @@
+#
+# Copyright(c) 1999 FRIDU a Free Software Company
+# 
+# Projet       : jWrap
+# SubModule    : WTX VxWorks Tornado Interface
+# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# 
+# Last: 
+#  Author      : $Author: Fulup $ Date        :
+#  Date        : $Date: 1999/03/23 15:17:40 $
+#  Revision    : $Revision: 1.4 $
+#  Source      : $Source: /Master/jWrap/tornado/from-wrs/Tcl/shellUsrCmd.jTcl,v $
+# 
+# Modification History
+# --------------------
+# 10mar99,Fulup written
+
+##--------------------------------------------------------------------------
+#   reconnect on target when target server as been restarted
+##--------------------------------------------------------------------------
+proc Usr.Reconnect {} {
+  global TORNADO
+
+  if [catch {Tornado.Reconnect $TORNADO(id)} REPONSE] {
+   puts "Cannot reconnect on target=$TORNADO(target)\nERR=$REPONSE"
+  }
+}
+
+##--------------------------------------------------------------------------
+#   td kill a task knowid
+## --------------------------------------------------------------------------
+proc Usr.Td {TASK_ID} {
+  global TORNADO
+
+  # Tornado Direct call process arguement in an elegant way
+  Tornado.DirectFuncCall $TORNADO(id) "taskDelete" $TASK_ID
+
+}
+
+##--------------------------------------------------------------------------
+#   ld load a file onto target
+## --------------------------------------------------------------------------
+proc Usr.Ld {FILE_NAME} {
+  global TORNADO
+
+   Tornado.ModuleLoad $TORNADO(id) $FILE_NAME
+}
+
+# Define a new unknow proc in order automatically call Tornado.DirectFunCall
+# --------------------------------------------------------------------------
+proc Usr.Unknown {FUNC args} {
+ global TORNADO
+ global JWRAP
+ global env
+
+
+    if {$JWRAP(jWrapDbgValue) > 1} {
+       puts "Usr.Unknown proc func=|$FUNC| args=|args|"
+    }
+    # Warning do try to eval $TORNADO(id) has no valid external rep
+    return [Tornado.DirectFuncCall $TORNADO(id) [jWrap convert char_Ptr $FUNC] $args]
+}
+
+##--------------------------------------------------------------------------
+#   sp spawn a task, reproduce sp routine using taskSpawn on target
+## --------------------------------------------------------------------------
+proc Usr.Sp {ENTRY_SYMBOL args} {
+  global TORNADO
+
+  set len [llength $args]
+
+  # search for function entry point
+  
+  if [catch {Tornado.ExecFindSymbol $TORNADO(id) $ENTRY_SYMBOL} ADDR] {
+     return -code error SYMTBL_SYMBOL_NOT_FOUND
+  }
+
+  # Direct call accept only one arguement list 100=priority 20000=stackSize
+  set ARGS [concat 100 20000 $ADDR $args]
+
+  # Tornado Direct call process arguement in an elegant way
+  set RESULT [Tornado.DirectFuncCall $TORNADO(id) "taskSpawn" $ARGS]
+
+  return $RESULT
+}
+
+
+
+
+
+
+

@@ -1,0 +1,50 @@
+INTRODUCTION
+
+This small example demonstrate how adding a user event inside TCL.
+It only run under Unix because it uses a file descriptor as
+new ressource, and uses Unix hight level event API.
+
+Except demonstrating Tcl event loop, it has no application
+interest and user looking for a network socket interface should use
+Tcl8 native socket command.
+
+When user provides a "EvtClient.start" it gives destination host/port
+and Tcl callback name. The C attached routine create a TCP client and
+registrate a callback on newly created file descriptor with
+"Tcl_CreateFileHandler" command.
+
+When user enter in Tcl main loop "vwait" Tcl stop on a select [Unix].
+Then as soon as socket is readable it call C "sockCallback" routine,
+this routine search Tcl callback from clientdata information and call
+it at Tcl global level.
+
+Under window there is no generic select and user should use window event
+in order waking up application. Tcl lib does not provides "Tcl_CreateFileHandle"
+equivalent command for windows making new event adding more complex.
+
+Low level event adding can be done with "Tcl_CreateEventSource", this command
+registrate a new event type and takes two C callback as parameter. When
+entering in main loop
+
+ 1) C callback is called in order preparing event to be receveived,
+ 2) Tcl enter is waiting for event  [Ex: Unix select],
+ 3) Second callback is call to check is an event as been reach and eventually
+    for pushing the event in event queue.
+
+In oder looking an simple and generic example user can check for tclTimer.c
+source code un generic directory.
+
+WARNING:
+  This example connext on echo TCL socket 7 that should be declare in
+  your /etc/inetd.conf under Linux RH-5.2 default is echo service not
+  to be validated.
+
+BUG
+ 
+ Does not run with jWrap version previous to 1.21
+
+
+
+
+Fulup.LeFoll@fridu.bzh
+

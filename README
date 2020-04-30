@@ -1,0 +1,11 @@
+
+jWrap generate encoder/decoder for TCL and other interface
+
+- dependencies:
+    tcl-devel
+    ncurses-devel
+    bison
+    flex
+
+- build tool
+    gmail + jCommon

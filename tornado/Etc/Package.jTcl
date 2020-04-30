@@ -1,0 +1,63 @@
+#  Copyright(c) 1997-98 FRIDU a Free Software Company
+#
+# Projet    :   jWrap
+# SubModule :   TornadoShell
+# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+#
+# Last
+#      Author      : $Author. Fulup $
+#      Date        : $Date. 1997/02/01 17.29.30 $
+#      Revision    : $Revision. 1.2 $
+#      Source      : $Source. /Master/config/header/header.sh,v $
+#
+# Modification History
+# --------------------
+# 01b,19mar99,Fulup corrected resource make
+# 01a,05mar99,Fulup written
+#
+
+# dont include this file more than one
+# ------------------------------------
+if {![info exist JTCL_LOADED(jWrap.tornado)]} \
+{
+  set JTCL_LOADED(jWrap.tornado) TRUE
+
+  # Set release symbolic name
+  # -------------------------
+  set _TORNADO_REL 001
+
+  # Set directory depending on devlopement status
+  # ---------------------------------------------
+  switch -- $PKG_STATE {
+   dev {
+    set _TORNADO_SHL   $PKG_DIR/wrs/Tcl
+    set _TORNADO_RES   $PKG_DIR/wrs/Resource
+   }
+   prod {
+    set _TORNADO_SHL   $PKG_DIR/Tcl
+    set _TORNADO_RES   $PKG_DIR/Resource
+   }
+   default {
+    puts "ERROR: Unknow PKG_STATE:$PKG_STATE"
+    return ERROR
+   }
+  } ;# end switch
+  
+  # Register ic TORNADO
+  jClassRegister jWrap.tornado.state       $_TORNADO_REL "$PKG_STATE $_TORNADO_REL"
+  jClassRegister jWrap.tornado.core        $_TORNADO_REL $_TORNADO_SHL/shellCore.jTcl
+  jClassRegister jWrap.tornado.compat      $_TORNADO_REL $_TORNADO_SHL/wrsToFridu.jTcl
+  jClassRegister jWrap.tornado.show        $_TORNADO_REL $_TORNADO_SHL/shellShowCmd.jTcl
+  jClassRegister jWrap.tornado.usr         $_TORNADO_REL $_TORNADO_SHL/shellUsrCmd.jTcl
+  jClassRegister jWrap.tornado.wtx         $_TORNADO_REL $_TORNADO_SHL/wtxCore.jTcl
+  jClassRegister jWrap.tornado.res         $_TORNADO_REL $_TORNADO_RES
+
+  # clean up tempry varaibles
+  foreach VAR [info var _TORNADO_*] {
+    unset $VAR
+  }
+} ;# end if already loaded
+
+
+
+

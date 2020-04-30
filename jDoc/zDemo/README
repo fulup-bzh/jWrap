@@ -1,0 +1,34 @@
+Example on how generate doc from jTcl or C++
+--------------------------------------------
+
+Note: Both files are extracted from Rubicon project, javadoc will
+      complain on not finding super class, which is normal because
+      both file are only raw extract.
+
+How to start 
+------------
+    ../../bin/jWrap --javadoc --verbose --outdir=/tmp httpdTcp.jTcl 
+    javadoc /tmp/*.java
+
+Makefile
+--------
+    make clean
+    make 
+
+Looking true Netscape
+---------------------
+    Java doc include link to some gif, you should have those GIF accessible
+    before looking to html document, usually they are located under
+
+                $JAVA_HOME/docs/api/images
+
+   If you don't find them search for: package-index.gif
+
+   When you have find those gif just link or copy this directory in
+   your documentation directory, example:
+
+               ln -s $JAVA_HOME/docs/api/images .
+
+Good luck
+
+Fulup

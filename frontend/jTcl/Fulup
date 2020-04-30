@@ -1,0 +1,1 @@
+Build.mk Fulup lexFrontendTcl.cxx lexFrontendTcl.lex yaccFrontendTcl.cxx yaccFrontendTcl.h yaccFrontendTcl.y y.output /home/fulup/Workspace/Fridu/Exe/linux86/include/libFrontendTcl.i /home/fulup/Workspace/Fridu/Exe/linux86/etc/yaccFrontendTcl.i /home/fulup/Workspace/Fridu/Exe/linux86/etc/lexFrontendTcl.i 

@@ -1,0 +1,258 @@
+Into What is TornadoSh
+-------------------------------------------------------------------------
+Allow access to a VxWorks target thru WTX. TornadoSh proposes
+
+        - Shell interactif        [equivalent to WindSh]
+	- Host-WTX                [equivalent to WtxTcl]
+	- Target-VxWorks    C API [new]
+	- User  application C API [new]
+
+jWrap Tornado module is shipped as binary tool or sources C+TCL
+that allow user to access facilities from Host-WTX and Target-VxWorks
+commands from the same shell. TornadoSh is a super set of
+WindRiver WinSh+WtxTcl.
+
+It is possible to use TornadoSh as a standalone binary to
+access your target, download your module, debug, ... Or as a
+framework to map you own application in order to test them
+using your own API. 
+
+WTX is a Wind River Copyrywrited product and you should have a valid
+Tornado license in order to use it. Your target server can be located
+on any platform including WinBug architecture.  I used a Solaris
+version for my test [I'm not crazy!!!].
+
+jWrap tornado provides:
+
+- 3 set of core interfaces:
+
+  + Wtx     wtx(C) API mapped onto tcl check Wind manual Wtx-C API. 
+  + VxWorks target vxworks C interface to Tcl, check WRS manual for syntaxes
+  + Tornado A fridu custom interface, it provides a more user oriented
+            interface to target server and target using tcl.
+
+- 3 optional interface
+ 
+  + Readline     An interface in between TCL and GNU readline
+  + TkConsole    A Readline interface using TK [currentelly don't works!!!]
+  + ShowRoutines An interface in between fridu WTX and WRS
+                 shell proc [Currentelly only "i"]. 
+
+
+HowTo Start (assuming bash shell)
+-------------------------------------------------------------------------------
+  export   FRIDU_HOME=$HOME/pMaster/linux86
+  mkdir    $FRIDU_HOME
+  cd       $FRIDU_HOME
+  tar -xzf jWrap-linux86-version.tgz
+  tar -xzf jTcl-noarch-version.tgz
+  export   LD_LIBRARY_PATH=$FRIDU_HOME/jWrap-1.30/lib:$LD_LIBRARY_PATH
+  export   PATH=$FRIDU_HOME/jWrap-1.30/bin:$PATH
+  export   TCLLIBPATH=$FRIDU_HOME/jTcl-3.06/bin
+
+  TornadoSh.tcl --registry=YourRegistryHost --target=YourTargetName 
+
+  Note: 
+   - $HOME/pMaster/linux86 is only an example it can be where ever you want
+   - FRIDU_HOME and TCLLIBPATH are usually not mandatory for TornadoSh but
+     they are for many jWrap example.
+   - registry and target should be name and not IP adresse
+
+
+Start WRS target server on a Solaris host (adapt path to your own configuration)
+-------------------------------------------------------------------------------
+ # extract of my .cshrc file sor Solaris2
+  setenv WIND_BASE        /net/sevre/sevre2/tor2_0-beta
+  setenv WIN_HOST_TYPE    $ARCH_OS
+
+  setenv PATH            "$WIND_BASE/host/$WIN_HOST_TYPE/bin:$PATH"
+  setenv LM_LICENSE_FILE  /folk/lang/SunTech_License/licenses_combined
+  setenv WIND_REGISTRY    gesvres
+
+ # start launcher
+   launch&
+
+ # start a target server
+   click on VxSim
+ 
+ # make Tornado 2.0 be compatible with 1.0
+   click on portmap
+
+ # unlock your target server
+   click on key to allows a linux to access your target
+
+
+Start WRS target server on a W95/NT host (from Bob Robison <brobison@swri.org>)
+-------------------------------------------------------------------------------
+   Win95 issues.  Of course for this to work, there must be a Win95 (or NT)
+  machine somewhere that is running the target server.  The steps necessary to
+  set this up are simple on a machine that already has tornado on it.
+
+  1) The first thing is to open an MS-DOS window and run 'torVars.bat'  If you
+  have installed Tornado in the standard place, this will be in
+  C:\Tornado\host\x86-win32\bin.  This just puts the directory in the path, and
+  sets the WIND_HOST_TYPE and WIND_BASE environment variables (which I don't
+  think are really needed in this setup).
+
+  2) Start the registry by typing:  wtxregd
+  It shouldn't need any arguments.  If you don't have the portmapper running, it
+  will ask if one should be launched -- say yes.
+
+  3) In a different window, start the target server with a command like this:
+  tgtsvr <TargetIP address> -n <targetName> -c <path to booted kernel> -V
+
+  That's all it takes!
+
+
+Going further
+-------------
+ # default unknown command is mapped on TornadoDirectFuncCall
+ # .........................................................
+ set BUF   [malloc    1024]
+ set FD    [open      /dev/ttya 0]
+ printf    "string=%s:%s int=%d:%d "  toto {--string 123} 123 {--int 123}
+
+ # shellUsrCmd.jTcl provides some useful alias
+ # ............................................
+ set TID   [sp        MyRoutine Arg0..Arg9]
+ set STS   [ld        //MyLinuxBox/my/file/name.o]
+ 
+ # shellShowCmd.jTcl
+ # ............................................
+ i
+
+ # Tornado Fridu native mapping
+ # ............................................
+ set Tornado(id)    {{targetName Fulup-sim} {toolName MyApplicationSh}}
+ Tornado.Connect    $Tornado(id)
+ Tornado.ModuleLoad $Tornado(id) /My/File/Path/For/MyTarget/Server/Host
+ Tornado.ModuleBind $Tornado(id) MyModuleName BIND_NOW
+ set size   4096
+ set Pool   [VxWorks.malloc $size]
+ set MemId  [VxWorks.memPartCreate $Pool  $size]
+ set Buffer [VxWorks.memPartAlloc  $MemId 512]
+
+ # A wtx native mapping to tcl
+ # ...........................
+ set Adr    [Wtx. ExecFindSymbol $Tornado(id) "MyTargetSymbol"
+
+ # Reconnecting after a target reboot
+ # ----------------------------------
+ reconnect
+
+ # Performance note
+ # ----------------
+ 1) Using VxWorks.malloc" is faster than "malloc" with the
+    unknow proc this because "VxWorks.malloc" use a static
+    mapping for Symbol to address mapping on target.
+
+ 2) With binding a module, you can resolv all symbols at load time
+    with "BIND_NOW" or resolve them one per one at first utilisation
+    "BIND_LAZY". BIND_NOW is nice to find out error, and missing entry
+    point when with "BIND_LAZY" initialisation is faster. 
+
+Recompiling from source code
+----------------------------
+ 0) make accessible Tornado include file 
+  
+  export WIND_BASE=/Where/I/Want/To/see/My/Distrib
+  mkdir  $WIND_BASE
+  mount  MySolarisTornadoHost:/My/Tornado/Distrib $WIND_BASE
+ 
+ 1) install a binary distribution of Common
+  export   FRIDU_HOME=$HOME/pMaster/linux86
+  mkdir    $FRIDU_HOME
+  cd       $FRIDU_HOME
+  tar -xzf common-linux86-version.tgz
+  export   LD_LIBRARY_PATH=$FRIDU_HOME/common-3-08/lib:$LD_LIBRARY_PATH
+  export   PATH=$FRIDU_HOME/common-3.08/bin:$PATH
+   
+ 2) compile source
+  export   TOP=~/Project
+  mkdir    $TOP
+  cd       $TOP
+  tar      -xzf jWrap-src-xxxx.tgz
+  export   ARCH_OS=linux86
+
+  export CCDEBUG=1            ;# in order compiling with -g
+  cd jWrap
+  build proto                 ;# proto generation generate many warning
+  build all                   ;# should produce some warning but not errors
+  build all                   ;# should not try to recompile any thing
+  build install               ;# will install in $FRIDU_HOME directory
+
+ 3) customization of Makefile
+
+  Architecture dependant files are located in: 
+     $FRIDU_HOME/Common-*/Config/arch   (If you don't have Common-src)
+     $TOP/Common/Config/arch
+
+  File are in form $ARCH_OS.mk
+  
+ 4) startup bash file
+  You will find my bashrc file $FRIDU_HOME/Common-*/Config/include
+  
+
+Map your own VxWorks application in TornadoSh
+---------------------------------------------
+ In order to map a user application you only need C ANSI proto file
+ Check zDemo Directory for a basic example
+
+More to do
+----------
+ I only map one WRS shell proc routine. If you want all of them
+you should either include them on target image [ugly but fast]
+Or port from WRS tcl the routine you need. Some really useful
+command as "tt" or "memshow" are really missing. In order to port
+them you have to map WRS specific call to WTX C API. It tooks me
+almost one day to port "i" command. Now all basic low layer functions
+are working and porting new WRS command should be not to long. 
+
+If it does not start
+--------------------
+ Check DLL path using
+ ldd $FRIDU_HOME/jWrap-*/bin/TornadoSh
+
+ set some debug trace
+  export JTCL_DEBUG=1    ;# Tcl debug level
+ 
+ --debug=10              ;# in command line for WTX debug level
+
+Current version [check with "jWrap version" command]
+----------------------------------------------------
+## --- Version Stamp jWrap Modules ---
+# jWrap        jWrap-1.30/jTcl-031.linux86.-O2.the.19-Mar-99[19h02].by.Fulup.on.fridu.sene.bzh
+# Wtx          jWrap-1.30/tornado-031.linux86.-O2.the.19-Mar-99[19h02].by.Fulup.on.fridu.sene.bzh
+# Tornado      jWrap-1.30/tornado-031.linux86.-O2.the.19-Mar-99[19h02].by.Fulup.on.fridu.sene.bzh
+# VxWorks      jWrap-1.30/tornado-031.linux86.-O2.the.19-Mar-99[19h02].by.Fulup.on.fridu.sene.bzh
+# Readline     jWrap-1.30/readline-008.linux86.-O2.the.19-Mar-99[19h02].by.Fulup.on.fridu.sene.bzh
+## --- 
+
+Bug
+----
+ TK  interface with TK console core dump !!!
+ Dynamic loading need a very clean configuration.
+ Miss a lot of show command.
+
+Warning 
+--------
+1) When loading a file with "ld" alias or with original "Tornado.ModuleLoad"
+   command, filename you give is not the file path of your object file Linux
+   but the file path for your target server, you should use NFS or SAMBA in
+   order having a common file directory in between Linux and your target server.
+
+2) When using a PPP link, load can be very long, in this case you should
+   increase default hop number with set JWRAP(tornadoExecHopCount) xxx
+   default value is 10.
+
+Change
+------
+ jWrap 1.30 patch level 1
+   Tornado-031  : Corrected ressource directory make added autosearch for FRIDU_HOME
+   jWrap-031    : Added GetEnv and changed addenv in PutEnv
+   Readline-008 : Added history command
+
+#----------------------------------------------------------------------
+have fun
+
+Fulup.LeFoll@fridu.bzh

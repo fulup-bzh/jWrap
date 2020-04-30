@@ -1,0 +1,33 @@
+jWrap 1.20 is avaliable.
+
+jWrap parse your application C header files and generate automatically
+a dynamic loadable componant for TCL8. This mecanism allows to interface
+all your VxWorks C routines as native TCL commands.
+
+Ex: 
+
+C Header file:
+ MSG_Q_ID    msgQCreate  (int maxMsg, int maxMsgLenght, MSG_options option);
+ int         msgQReceive (MSG_Q_ID msgId, void *buffer, UINT maxNBytes, int timeout);
+
+Tcl new native commands
+ set Msg_ID [DemoMsg.msgQCreate 10 1024 MSG_Q_FIFO] 
+ set STATUS [DemoMsg.msgQSend $Msg_ID $INBUF $LEN $TIMEOUT MSG_PRI_NORMAL]
+
+jWrap supportes almost any C complex type, including struture, structure of structure,
+pointer, union, enumeration, etc. All communications with Tornado target server is done
+automatically and user does not have to deal with WTX call and/or gopher.
+
+jWrap also support UNIXs & WINDOW as target allowing user to have a unique test
+sytaxe for any operating system. 
+
+jWrap allows user to:
+ 
+  - write TCL test programs on host, using it own C target API.
+  - use TCL8/TK8 with VxWorks
+  - have the same TCL Test program for multi-architecture programs VxWorks + Unix + Windows
+
+jWrap is avaliable in binary format [Linux + WIN32 + Solaris] and in source code
+URL: http://www.fridu.bzh/Html/jWrap.html
+
+Fulup@fridu.bzh

@@ -1,0 +1,76 @@
+#
+# Copyright(c) 1999 FRIDU a Free Software Company
+# 
+# Projet       : jWrap
+# SubModule    : jTcl C/Tcl componant interface
+# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# 
+# Last: 
+#  Author      : $Author: Fulup $ Date        :
+#  Date        : $Date: 1999/03/11 12:49:29 $
+#  Revision    : $Revision: 1.3.0.1 $
+#  Source      : $Source: /Master/jWrap/jTcl/Tcl/loaderComponant.jTcl,v $
+# 
+# Modification History
+# --------------------
+# 05mar99,Fulup written
+
+# Provide and acceptable default dynalic lib search
+# -------------------------------------------------
+if {![info exist env(LD_LIBRARY_PATH)]} {
+ global env
+
+   if {![info exist env(ARCH_OS)]} {set env(ARCH_OS) .}
+   if {![info exist env(HOME)]}    {set env(HOME)    /}
+   if {![info exist env(TOP)]}     {set env(TOP)     $env(HOME)/Vues}
+
+   set DEV_TREE             $env(TOP)/Fridu/Exe/$env(ARCH_OS)/lib
+   set PROD_TREE            $env(HOME)/pMaster/$env(ARCH_OS)/shadow/lib:/pMaster/shadow/lib:/usr/local/lib
+   set env(LD_LIBRARY_PATH) $DEV_TREE:$PROD_TREE
+}
+
+# -------------------------------------------------------------------------------
+#   Dynamic load and check of Tnm extention
+# -------------------------------------------------------------------------------
+proc jWrapComponantLoad {DLL COMPONANT} {
+ global tcl_platform
+ global env
+
+  # First check module is not already avaliable (static link)
+  if [catch "jWrap version $COMPONANT list" RESULT] {
+
+      # try a dynamic load from sharable lib
+      switch -- $tcl_platform(platform) {
+        unix    {set SHARELIB $DLL.so}
+        win32   {set SHARELIB $DLL.dll}
+        default {
+           puts "ERROR: Unknow plateform for sharable lib please use static binaries\n"
+           return -code error "Plateform does not supporte sharable lib"
+        }
+      }
+
+      if [catch "load $SHARELIB $COMPONANT" RESULT] {
+          puts "ERROR: could not load <$SHARELIB> for componant <$COMPONANT>"
+          puts "?????: LD_LIBRARY_PATH=$env(LD_LIBRARY_PATH)\n"
+          return -code error "Failled to load <$SHARELIB> dynamically"
+       }
+
+       # check module is effectivelly avaliable after dll load
+       if [catch "jWrap version $COMPONANT list" RESULT] {
+          return -code error  "$COMPONANT not initialiazed in shared lib"
+       }
+   }
+   if [info exist env(JTCL_DEBUG)] {
+     puts "Using $COMPONANT [lindex $RESULT 1]"
+   }
+} ;# end jWrapCheckModule
+
+# We dont want TCL to try to use it own history command
+# -----------------------------------------------------
+proc history {args} {}
+
+
+
+
+
+

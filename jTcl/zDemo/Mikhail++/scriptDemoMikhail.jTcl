@@ -1,0 +1,84 @@
+#
+#  Copyright(c) 1998 FRIDU a Free Software Company [fridu@fridu.bzh]
+#
+# Object    :   show complex Structure and typedef mecanism
+# Projet    :   Jos/jWrap
+# Module    :   Test/jWrap
+# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+#
+# Last
+#      Author      : $Author: Fulup $
+#      Date        : $Date: 1999/03/11 12:49:29 $
+#      Revision    : $Revision: 1.3.0.1 $
+#      Source      : $Source: /Master/jWrap/jTcl/zDemo/Mikhail++/scriptDemoMikhail.jTcl,v $
+#
+# Modification History
+# --------------------
+# 01a,28feb98,Fulup,written
+#
+
+# set debug mode full=* mini=1 selective=*two*
+# --------------------------------------------
+  set env(JTCL_DEBUG)   1
+  # set env(JTCL_DEBUG) *
+
+# Include jTcl wrapper file in demo mode
+# -------------------------------------
+if [catch {package require jTcl}] {
+  puts "---------------------------------------------------------------"
+  puts "Can't find jTcl Package check TCLLIBPATH variable environement"
+  puts "---------------------------------------------------------------"
+  exit
+}
+
+# Import basic Object package
+# ---------------------------
+  jClassImport "lang.object.*"
+
+# Check jWrap DemoMikhail jWrap demonstration module is loaded
+if [catch {jWrap info DemoMikhail} ERR] {
+  puts "ERROR: This demonstration require ModuleMikhail to loaded."
+  puts "Restart stript with DemoMikhailSh Executable or load libDemoMikhail.so in tclsh."
+  return -code error
+}  
+
+# Extend C++ class in jTcl
+# ------------------------
+class two {extends Object extends one} {
+
+  # "We only have one constructer"
+  two {INT_VAL} {
+    puts "  two.two INT_VAL=$INT_VAL"
+    one.one $MY [expr $INT_VAL / 2]
+  }
+} 
+
+puts "\n Create Object one"
+set ID0 [new one 4 5.0]
+set ID1 [new one 4]
+
+puts "\n Create Object Two"
+set ID2 [new two 8]
+
+
+puts \n==================================================================
+puts "First Object use internal C++ signal method (Err is then catched)"
+puts ====================================================================
+if [catch {$ID1 invalidMethodName turlutu} ERR] {
+ puts "IGNORING Error: $ERR"
+}
+
+puts \n===================================================================
+puts "Second Object will have signal method overrided (ANWSER continue)"
+puts =====================================================================
+
+if [catch {$ID2 invalidMethodName turlutu} ERR] {
+ puts "Ignoring invalid method error"
+}
+
+puts \n====================================================================
+puts "ID2 dump shows signal C++ signal method as been overrided with jTcl"
+puts ======================================================================
+$ID2 dump All
+
+free $ID2

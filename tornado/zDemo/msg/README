@@ -1,0 +1,6 @@
+This is a basic example on how interfacing VxWorks routine with jWrap/Wpr
+
+In order avoiding compilation troubles on target this example
+only interface pre existing routine on target. 
+
+Fulup@fridu.bzh

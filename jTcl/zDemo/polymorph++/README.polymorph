@@ -1,0 +1,57 @@
+This example demonstrates jWrap polymorphism capability
+--------------------------------------------------------
+
+If you check for CxxObj class you will notice that is has three
+methods all named "probe". One as two parameters and two have one
+parameter.
+
+When wrapping a polymorph method jWrap add a special half-way method
+that check input parameter type before calling the effective
+jTcl wrapper that is unique to any method.
+
+The halt-way wrapper:
+
+- first check for parameter number. If only one
+  method has the given number of parameter it sub-contract target method.
+  In which case no type control is done on inputs.
+
+- second, if two method have the same number of parameters it control input
+  type for all parameters in order finding the good method to call.
+
+Warning:
+--------
+- polymorphism with a common number of arguments of different type is not
+  very well adapted to TCL because Tcl pass argements by value thus loosing
+  input parameter type at each procedure call. For this raison the example
+  bypass jTcl method calling handler in order keeping the effective internal
+  type of data.
+
+- method searching is not optimal, and no optimization is done on type checking. Even
+  if first param type build two different branches in our possible methods tree, runtime
+  will check all input parameter type.
+
+- usually under jWrap we don't check the "effective type" but the "equivalent type",
+  in this case we check the "effective type" and a type "WPR_id" won't be quivalent
+  to "WPR_id_Ptr" as usually.
+
+Conclusion:
+-----------
+	This mecanism allows interfacing C++ libraries relying on polymorhpism
+without having to touch C++ code. Nevertheless has TCL as not clean way to pass
+result of a function as a reference. User should definitivelly provides a small
+Tcl wrapper to C++ classes in order making those routines syntaxe call more Tcl
+conventionnal.  Under jTcl this could look like:
+
+  class TclCxxObj {extend CxxObj} {
+    probe_int    {NUMBER} {
+      CxxObj.probe [jWrap cast int $NUMBER] 
+    }
+    probe_string {STRING} {
+      CxxObj.probe [jWrap cast char_Ptr $STRING] 
+    }
+    Etc.
+  }
+
+Futur:
+------
+  A C++ version of jTcl method calling low layer would solv this problem!

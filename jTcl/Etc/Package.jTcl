@@ -1,0 +1,56 @@
+#  Copyright(c) 1997-98 FRIDU a Free Software Company
+#
+# Projet    :   jWrap
+# SubModule :   jTcl C/Tcl mapping
+# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+#
+# Last
+#      Author      : $Author. Fulup $
+#      Date        : $Date. 1997/02/01 17.29.30 $
+#      Revision    : $Revision. 1.2 $
+#      Source      : $Source. /Master/config/header/header.sh,v $
+#
+# Modification History
+# --------------------
+# 01a,05mar99,Fulup written
+#
+
+# dont include this file more than one
+# ------------------------------------
+if {![info exist JTCL_LOADED(jWrap.jTcl)]} {
+  set JTCL_LOADED(jWrap.jTcl) TRUE
+
+  # Set release symbolic name
+  # -------------------------
+  set _JWRAP_REL 001
+
+  # Set directory depending on devlopement status
+  # ---------------------------------------------
+  switch -- $PKG_STATE {
+   dev {
+    set _JWRAP_SHL  $PKG_DIR/Tcl
+   }
+   prod {
+    set _JWRAP_SHL  $PKG_DIR/Tcl
+   }
+   default {
+    puts "ERROR: Unknow PKG_STATE:$PKG_STATE"
+    return ERROR
+   }
+  } ;# end switch
+  
+  # Register ic JWRAP
+  jClassRegister jWrap.jTcl.state   $_JWRAP_REL "$PKG_STATE $_JWRAP_REL"
+  jClassRegister jWrap.jTcl.loader  $_JWRAP_REL $_JWRAP_SHL/loaderComponant.jTcl
+  jClassRegister jWrap.jTcl.getopt  $_JWRAP_REL $_JWRAP_SHL/argumentParse.jTcl
+
+  # clean up tempry varaibles
+  foreach VAR [info var _JWRAP_*] {
+    unset $VAR
+  }
+  
+} ;# end if already loaded
+
+
+
+

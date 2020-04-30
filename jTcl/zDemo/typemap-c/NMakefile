@@ -1,0 +1,98 @@
+#
+# Copyright(c) 1997-98 FRIDU a Free Software Company
+# 
+# Projet       : Jos/jWrap
+# SubModule    : Test
+# Implement    : DemoTypemap
+# Object       : Minimal Makefile for runtime tree tesing
+# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# 
+# Last: 
+#  Author      : $Author: Fulup $ Date        :
+#  Date        : $Date: 1999/03/11 12:49:30 $
+#  Revision    : $Revision: 1.3.0.1 $
+#  Source      : $Source: /Master/jWrap/jTcl/zDemo/typemap-c/NMakefile,v $
+# 
+# Modification History
+# -------------------
+# 01a,14jul98, Fulup Written
+# 
+
+## ---------------------------------------------------------------
+#  Visual C++ 2.x and 4.0 makefile
+#
+#  This Makefile is only operation in binary distribution in
+#  source tree user should use Fridu Common Makefile skeleton.
+## ---------------------------------------------------------------
+
+
+# MSVC location
+WIN32_HOME    =c:\pMaster\msvc-4.2
+CC            = $(WIN32_HOME)\bin\cl.exe /nologo 
+LINK          = $(WIN32_HOME)\bin\link.exe /nologo 
+
+# jWrap home
+JWRAP_HOME    = c:\pMaster\Fridu\Jos-4.00
+JWRAP_BIN     = $(JWRAP_HOME)\bin\jWrap
+JWRAP_LIB     = $(JWRAP_HOME)\lib\libRuntimeJwrap.lib
+JWRAP_INCL    = -I$(JWRAP_HOME)\include -I$(JWRAP_HOME)\include\WinDos
+
+# TCL home
+TCL_HOME      = c:\pMaster\tcl-8.0
+TCL_INCL      = -I$(TCL_HOME)\include
+TCL_LIB       = $(TCL_HOME)\lib\tcl80vc.lib
+
+# used WIN32 libraries
+WIN32_INCL    = -I$(WIN32_HOME)/include 
+WIN32_LIB     = /LIBPATH:$(WIN32_HOME)/lib libc.lib kernel32.lib advapi32.lib user32.lib
+
+# Definition of the C++ library to wrap. This are read-only files
+HEADERS       = funcDemoTypemap.h
+LIB_OBJS      = funcDemoTypemap.obj translateDemoTypemap.obj funcDemoTypemap_jWrap.obj 
+BIN_OBJS      = mainDemoTypemap.obj
+
+all : 
+	-@echo WARNING: this Makefile assume Fridu jWrap is in:
+	-@echo ----------------------------------------------------------
+	-@echo .  jWrap home = $(JWRAP_HOME)
+	-@echo .  tcl80 home = $(TCL_HOME)
+	-@echo .  msvc4 home = $(WIN32_HOME)
+	-@echo ----------------------------------------------------------
+	-@echo . avaliable options:
+	-@echo .
+	-@echo .  "make static"  Build a custom tclsh named DemoTypemapSh
+	-@echo .  "make shared"  Build a shared library (Not avaliable with nmake)
+	-@echo .  "make clean"   Clean up all tempry files
+	-@echo ----------------------------------------------------------
+
+clean : 
+	-@erase "funcDemoTypemap_jWrap.obj"
+	-@erase "mainDemoTypemap.obj"
+	-@erase "DemoTypemapSh.exe"
+
+
+shared:
+	-@echo ----------------------------------------------------------
+	-@echo Sorry DLL have not been ported to nmake
+	-@echo Check for FRIDU common skeleton and gnu make for WIN32
+	-@echo ----------------------------------------------------------
+
+static: DemoTypemapSh.exe
+
+.c.obj:
+   $(CC) -c $(WIN32_INCL) $(TCL_INCL) $(JWRAP_INCL) $<  
+
+.cxx.obj:
+   $(CC) -c $(TCL_INCL) $(JWRAP_INCL) $<  
+
+funcDemoTypemap_jWrap.c: $(HEADERS)
+	$(JWRAP_BIN) --verbose --cc2jTcl $(HEADERS)
+
+DemoTypemapSh.exe: $(LIB_OBJS) $(BIN_OBJS)
+	$(LINK) /out:DemoTypemapSh.exe $(LIB_OBJS) $(BIN_OBJS) $(JWRAP_LIB) \
+		$(TCL_LIB) $(WIN32_LIB)
+	-@echo -------------------------------------------------------------------------
+	-@echo . 1) start your custom tclsh "./DemoTypemapSh"
+	-@echo . 2) check jWrap componant is activated "jWrap info"
+	-@echo . 3)source demo "source scriptDemoTypemap.jTcl" 
+	-@echo -------------------------------------------------------------------------
