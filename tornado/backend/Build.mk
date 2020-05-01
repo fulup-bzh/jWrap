@@ -1,9 +1,9 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # SubModule :   WTX VxWorks Tornado interface
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -11,7 +11,7 @@
 #      Revision    : $Revision: 1.3.0.1 $
 #      Source      : $Source: /Master/jWrap/tornado/backend/Build.mk,v $
 #
-#Modification History 
+#Modification History
 #--------------------
 #01c,16feb99,Fulup,remanced modulefrom WPR to Tornado
 #01b,18apr98,Fulup moved to new tree
@@ -40,13 +40,13 @@ ifdef TORNADO_BASE
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
-  MK_INCLUDES =  
+  MK_DEFINES  =
+  MK_INCLUDES =
 
 # set proto if any .i changed
 # ----------------------------------------
-${INCDIR}/libBackendCc2Tornado.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i) 
-	${protoRule} 
+${INCDIR}/libBackendCc2Tornado.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i)
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

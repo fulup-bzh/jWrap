@@ -1,10 +1,10 @@
 #
 #  Copyright(c) 1998 FRIDU a Free Software Company [fridu@fridu.bzh]
 #
-# Object    :   show complex Structure and typedef mecanism
+# Object    :   show complex Structure and typedef mechanism
 # Projet    :   Jos/jWrap
 # Module    :   Test/jWrap
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -18,26 +18,28 @@
 #
 
 
+
 # Check jWrap DemoStruct jWrap demonstration module is loaded
 if [catch {jWrap info DemoStruct} ERR] {
   puts "ERROR: This demonstration require ModuleStruct to loaded."
   puts "Restart stript with DemoStructSh Executable or load libDemoStruct.so in tclsh."
+  puts "Example: load /home/fulup/Workspace/Fridu/Exe/linux86/lib/libDemoStruct.so"
   return -code error
-}  
+}
 
 jWrap debug 10
 
 ## ---------------------------------------------------------------------------
-# WARNING: On Tcl gabage collector [IMPORTANT!!!]
-# ================================================ 
+# WARNING: On Tcl garbage collector [IMPORTANT!!!]
+# ================================================
 # Interfacing complex structure including pointers impose you
-# to cooporate with TCL garbage collector, and it is not obvious !!! 
+# to cooperate with TCL garbage collector, and it is not obvious !!!
 # Don't forget that when doing set A [myCmd "toto"] Tcl will delete
-# "toto" string as soon it will have some time. This is not a probleme
+# "toto" string as soon it will have some time. This is not a problem
 # if toto is only used in myCmd, but is myCmd produce a result that
 # include toto, it can be very complex to debug. The result is usually
-# a core dump in Tcl gabage collector, or puts, or anywhere else !
-# If you are not sure of your application you can cheat Tcl gabage collector
+# a core dump in Tcl garbage collector, or puts, or anywhere else !
+# If you are not sure of your application you can cheat Tcl garbage collector
 # forcing a reference on your input parameters doing:
 #   set PRM "toto"
 #   myCmd $PRM
@@ -47,7 +49,7 @@ jWrap debug 10
 
 
 ## --------------------------------------------------------------------
-# Non regression test comming from Wnadel & Golterman Irps project
+# Non regression test coming from Wandel & Goltermann Irps project
 ## --------------------------------------------------------------------
 jWrap new  str_sadr {}
 jWrap new  str_sadr {{type USER_SPECIFIC} {digits "123452345"}}
@@ -59,18 +61,18 @@ jWrap new  str_CC_S_BIND_REQ [list \
 ]
 
 ## --------------------------------------------------------------------
-# We dont have to force type because testIt is type and
+# We don't have to force type because testIt is type and
 # Will update WPR_ID internal REP automatically
 ## --------------------------------------------------------------------
 set FILE [DemoStruct.fopen /etc/passwd r]
-if [jWrap equal $FILE 0] {
+if [jWrap isnull $FILE] {
   puts "Warning: can't open /etc/passwd"
 } else {
   puts "open /etc/passwd file handle is: $FILE"
 }
 
 ## --------------------------------------------------------------------
-# We dont have to force type because testIt is type and
+# We don't have to force type because testIt is type and
 # Will update WPR_ID internal REP automatically
 ## ---------------------------------------------------------------------
 set WPR_ID "
@@ -87,7 +89,7 @@ set WPR_ID "
   }
   {vIoNum  1024}
   {array 1 2 3 -1 ...}
-  { 
+  {
     fichier $FILE
   }
 "
@@ -104,7 +106,7 @@ set RES_ID [DemoStruct.testIt $WPR_ID]
 puts "\n\Check we can fclose file from cookie"
 puts "-------------------------------------------------------------------"
 set FILE [jWrap cget $RES_ID fichier]
-if {![jWrap equal $FILE 0]} {
+if {![jWrap isnull $FILE]} {
   DemoStruct.fclose $FILE
   puts " done"
 } else {
@@ -115,8 +117,8 @@ if {![jWrap equal $FILE 0]} {
 # Check or external rep; WARNING: after foreach RES_ID
 # change it WPR_ID internal rep for a TclObj_list rep
 # this operation will also free application internal REP
-# CONCLUSION: don't move to a TclList execpt if you know
-#  what you are doing!!! 
+# CONCLUSION: don't move to a TclList except if you know
+#  what you are doing!!!
 ## ------------------------------------------------------------------------
 puts "\n\$WPR_ID Type = [jWrap type $RES_ID] "
 puts "---------------------------------------------------------------------"
@@ -134,11 +136,11 @@ set  RES_ID [DemoStruct.testIt [jWrap cast WPR_ID_Ptr 0]]
 puts " RES_ID=$RES_ID"
 
 ## -------------------------------------------------------------------------
-# Get only one slot from a structure, we first build a 
+# Get only one slot from a structure, we first build a
 # Complex type with testIt routine and then change only
 # toolName, slot value.
 # WARNING: In order values not to be deleted with TCL you should
-#   set them in a value, and not pass them directelly in parameters.
+#   set them in a value, and not pass them directly in parameters.
 ## --------------------------------------------------------------------------
 set INPUT_LST {{toolName toto} {targetName titi}}
 set RES_ID [DemoStruct.testIt $INPUT_LST]
@@ -148,9 +150,9 @@ set  TOOL [jWrap cget $RES_ID  toolName]
 puts "\nToolName Slot = $TOOL"
 
 ## --------------------------------------------------------------------------
-# Create first linked list element, 
+# Create first linked list element,
 # WARNING: linked list are complex because you have to cheat
-#   Tcl garbase collector. A C/C++ list with no preparation will
+#   Tcl garbage collector. A C/C++ list with no preparation will
 #   surely run in bus error. Reading a C/C++ linked list
 #   can be done with no troubles.
 #   linked list from Tcl.
@@ -160,15 +162,15 @@ puts "\nToolName Slot = $TOOL"
 #   JWRAP(DemoStruct.listHead) is a global C variable. As soon
 #   you store a new value [ex: set JWRAP(DemoStruct.listHead) $TWO]
 #   Tcl will free previous value making $ONE internal rep pointing
-#   on a free buffer. The only solution in order advoing this is to
-#   manage malloc/fre routine by it own.
+#   on a free buffer. The only solution in order to avoid this is to
+#   manage malloc/free routine by your own.
 # Why it can works in batch: because we don't go in idle loop making Tcl
-#   1:not going in gabage routines [a miracle !!!]. This should be advoided
-#     because it definitivelly doesn't work.
+#   1:not going in garbage routines [a miracle !!!]. This should be avoided
+#     because it definitively doesn't work.
 #   2:because next field is a cookie [a type unknow to jWrap] in this case
 #     we dont free it. This is the good option, check C structure declaration
 #     in C example and Tcl mandatory cast here after.
-# Conclusion: Execpt if you are locked, it is a good ideas to provide some
+# Conclusion: Except if you are locked, it is a good ideas to provide some
 #     C manual wrapper for handling linked list from Tcl.
 ## ----------------------------------------------------------------------------
 parray JWRAP
@@ -194,7 +196,7 @@ for {set IND 0;set SLOT $JWRAP(DemoStruct.listHead)} \
     {![jWrap equal $SLOT 0]} \
     {set SLOT [jWrap cast linkedList [jWrap cget $SLOT next]]} {
 
-  incr IND  
+  incr IND
   puts "ind=$IND name=[jWrap cget $SLOT name]"
 }
 

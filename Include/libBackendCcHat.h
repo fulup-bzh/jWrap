@@ -5,7 +5,7 @@
  * File      :   libBackendCcHat.h C/C++ hat backend
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -37,7 +37,7 @@ class BackendCcHat : public BackendCcProto {
   virtual void output (Programs  *);         // print out header and move down in object hierarchie
 
   BackendCcHat        (void);             // Dummy C++ Constructor
-  
+
 };
 
 #include <libBackendCcHat.i>

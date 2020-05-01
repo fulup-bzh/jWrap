@@ -6,7 +6,7 @@
  * File      :   cmdTargetWrap.c jWrap core module
  * Project   :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -28,6 +28,7 @@
  *    Help     : jWrap Core module
  *******************************************************/
 
+
 #ifndef JWRAP
 # include <tcl.h>
 # include <stdlib.h>
@@ -46,7 +47,7 @@
  EXTERN void  Tcl_Free    (void*);
  EXTERN void* Tcl_Alloc   (int);
  EXTERN void* memcpy      (void* dest, void* src, int size);
- EXTERN char* strdup      (char *string);
+ EXTERN char* strdup      (const char *string);
  EXTERN int   jWrapDbgValue;
 #endif
 
@@ -57,7 +58,32 @@ typedef union jwrap_basic {
  void   *pointer;
  char   *string;
  double floating;
-} JWRAP_basic; 
+} JWRAP_basic;
+
+
+// map malloc and free to make sure everyone use TCL alloc
+PUBLIC void *jWrapMalloc (size_t size) {
+  return (void*) Tcl_Alloc(size);
+}
+
+PUBLIC void *jWrapCalloc (size_t nmemb, size_t size) {
+  size_t len= nmemb*size;
+  void *ptr = Tcl_Alloc(len);
+  memset (ptr, 0, len);
+  return ptr;
+}
+
+PUBLIC void jWrapFree (void *ptr) {
+  Tcl_Free(ptr);
+  return;
+}
+
+PUBLIC char *jWrapDup (const char*source) {
+  int size= 1+ strlen (source);
+  char *destination = Tcl_Alloc(size);
+  memcpy (destination, source, size);
+  return destination;
+}
 
 // add a small wrapper in order making a staic copy of string
 PUBLIC int jWrapPutEnv (const char *string) {

@@ -1,9 +1,9 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # SubModule :   Java equivalent generatin module
-# Auteur    :   Fulup Le Foll Fulup@fridu.bzh
+# Auteur    :   Fulup Ar Foll Fulup@fridu.bzh
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -11,7 +11,7 @@
 #      Revision    : $Revision: 1.3.0.1 $
 #      Source      : $Source: /Master/jWrap/jDoc/javadoc/Build.mk,v $
 #
-#Modification History 
+#Modification History
 #--------------------
 #01b,18apr98,Fulup moved to new tree
 #01a,06feb98,Fulup written
@@ -34,13 +34,13 @@
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
-  MK_INCLUDES =  
+  MK_DEFINES  =
+  MK_INCLUDES =
 
 # build proto if any .i changed
 # ----------------------------------------
-${INCDIR}/libBackendJavadoc.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i) 
-	${protoRule} 
+${INCDIR}/libBackendJavadoc.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i)
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

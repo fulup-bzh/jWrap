@@ -5,7 +5,7 @@
 # File      :   module.mk, project global definition
 # Projet    : 	jTcl
 # SubModule :   readline
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $

@@ -1,9 +1,9 @@
 #
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # Projet    :   jWrap
 # Module    :   Wtx VxWorks Tornado interface
-# Auteur    :   Fulup Le Foll (Fulup@fridu.bzh)
+# Auteur    :   Fulup Ar Foll (Fulup@fridu.bzh)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -19,7 +19,7 @@
 
 # Only compile this directory if tornado is defined
 # -------------------------------------------------
-ifdef TORNADO_BASE 
+ifdef TORNADO_BASE
 
 # Define modules
 # --------------
@@ -42,10 +42,10 @@ ifdef TORNADO_BASE
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = $(TORNADO_DEF) 
+  MK_DEFINES  = $(TORNADO_DEF)
   MK_INCLUDES = $(TORNADO_INCL)
   override JWRAP_TARGET   := --cc2tornado
-  override JWRAP_CPP_INCL = -I$(TORNADO_BASE) 
+  override JWRAP_CPP_INCL = -I$(TORNADO_BASE)
 
 # rule for jWrap generation from .c
 # ---------------------------------
@@ -55,7 +55,7 @@ cmdDemoMsg_wpr.c: cmdDemoMsg.h $(TOP_JWRAP)
 # set proto if any .i changed
 # ----------------------------------------
 ${INCDIR}/libDemoMsg.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i)
-	${protoRule}           
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

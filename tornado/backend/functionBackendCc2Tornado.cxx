@@ -4,7 +4,7 @@
  * File      :   functionBackendCc2Tornado.cc manage methods output in C++ 2 jTcl backend wrapper
  * Projet    :   jWrap
  * Module    :   WTX VxWorks Troando C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -32,7 +32,7 @@ void BackendCc2Tornado::output (Functions* function) {
   int ind;
   int  method=0;      // Method receive one more parameter
 
-   
+
    /** -----------------------------------------------------------------------
     **  We first build jTcl->c++ binding this is done for any public methods
     ** -----------------------------------------------------------------------*/
@@ -69,13 +69,13 @@ void BackendCc2Tornado::output (Functions* function) {
    fprintf (outFile," if (setjmp (jWrapCheckPoint)) {\n");
    fprintf (outFile,"   if (jWrapStaticMessage[0] != '\\0') {\n");
    fprintf (outFile,"     Tcl_SetResult (interp,jWrapStaticMessage,TCL_STATIC);\n");
-   fprintf (outFile,"   }\n   return TCL_ERROR;\n }\n"); 
+   fprintf (outFile,"   }\n   return TCL_ERROR;\n }\n");
 
    // Check param number
    fprintf (outFile,"\n // First check if params number is OK\n");
    fprintf (outFile," if (objc != %d) goto errorNumArg;\n\n"
                       , function->params.size()+method+1);
- 
+
   // translate each time in corresponding type value
   for (ind=0; ind < function->params.size (); ind ++) {
     fprintf (outFile," // Check for user application object\n");
@@ -104,7 +104,7 @@ void BackendCc2Tornado::output (Functions* function) {
                     , jWrapType(&function->params [ind]->type));
     fprintf (outFile," } else if (currentObj->typePtr->updateStringProc\n");
     fprintf (outFile,"     != usedType[JTYPE_%s].obj->updateStringProc) {\n"
-                     , jWrapType(&function->params [ind]->type)); 
+                     , jWrapType(&function->params [ind]->type));
    fprintf (outFile,"  jWrapPanic (interp,errTypeFmt");
    fprintf (outFile,"  ,%d,currentObj->typePtr->name,usedType[JTYPE_%s].obj->name);\n }\n"
 	    ,ind,jWrapType(&function->params [ind]->type));
@@ -125,12 +125,12 @@ void BackendCc2Tornado::output (Functions* function) {
      fprintf (outFile," resultPtr->internalRep.twoPtrValue.ptr1 = result;\n");
      fprintf (outFile," resultPtr->bytes = NULL;\n");
      fprintf (outFile," resultPtr->typePtr = usedType[JTYPE_%s].obj;\n"
-                       , jWrapType (&function->result)); 
+                       , jWrapType (&function->result));
    } // end if result.size != 0
-          
+
    // in any other case our command succeeded
    fprintf (outFile," return TCL_OK;\n");
-  
+
    fprintf (outFile,"\n errorNumArg:\n");
    fprintf (outFile,"  Tcl_WrongNumArgs (interp,1,objv, helpCmd[%d]);\n",function->number);
    fprintf (outFile,"  return TCL_ERROR;\n");

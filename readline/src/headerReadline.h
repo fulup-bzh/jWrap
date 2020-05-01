@@ -1,21 +1,21 @@
 /** ------------------------------------------------------------
  *
  * Copyright(c) 1999 FRIDU a Free Software Company
- * 
+ *
  * Projet       : jWrap
  * SubModule    : Readline
- * Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+ *
+ * Last:
  *  Author      : $Author: Fulup $
  *  Date        : $Date: 1999/03/22 10:11:46 $
  *  Revision    : $Revision: 1.4 $
  *  Source      : $Source: /Master/jWrap/readline/src/headerReadline.h,v $
- * 
+ *
  * Modification History
  * -------------------
  * 01a,03mar99, Fulup written
- * 
+ *
  * -----------------------------------------------------------------------*/
 
 /* -----------------------------------------------------------------------
@@ -33,7 +33,7 @@
 
 // Force init of Internal jWrap submodule
 LOCAL int customInit (Tcl_Interp *interp)
-{ 
+{
   // Check jWrap as been correctelly inited
   if (Jwrap_Init (interp) != TCL_OK) {
      jWrapPanic (interp,"Readline jWrap Custom Init failled\n");

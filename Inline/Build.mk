@@ -1,9 +1,9 @@
-#       Copyright(c) 97-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 97-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Backend are not installed in production tree
 # Projet    :   jWrap
 # Module    :   Include file
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $

@@ -4,7 +4,7 @@
  * Object    :   demonstrate basic jTcl/C++ multiinheritance mecanism
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -21,13 +21,13 @@
 #include "funcDemoPoly.h"
 
 void CxxObj::probe (int number) {
- fprintf (stderr, "CxxObj::probe: number=%d\n", number);   
+ fprintf (stderr, "CxxObj::probe: number=%d\n", number);
 }
 
 void CxxObj::probe (char *chaine) {
- fprintf (stderr, "CxxObj::probe: chaine=%s\n", chaine);   
+ fprintf (stderr, "CxxObj::probe: chaine=%s\n", chaine);
 }
 
 void CxxObj::probe (int number, char *chaine) {
- fprintf (stderr, "CxxObj::probe: number=%d, chaine=%s\n", number,chaine);   
+ fprintf (stderr, "CxxObj::probe: number=%d, chaine=%s\n", number,chaine);
 }

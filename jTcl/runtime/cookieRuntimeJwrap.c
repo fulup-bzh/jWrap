@@ -4,7 +4,7 @@
  * File      :   cookirCcWrap.c generic interface to pointers
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -48,7 +48,7 @@ LOCAL int cookieStringToInternal  (Tcl_Interp *interp, Tcl_Obj *objPtr)
   int      status;
 
   // All jWrap Cookies are compatible we never accept any casting with no check
-  if ((objPtr->typePtr != NULL) 
+  if ((objPtr->typePtr != NULL)
       && (objPtr->typePtr->setFromAnyProc == cookieStringToInternal)) {
       return TCL_OK;
   } else {
@@ -63,9 +63,9 @@ LOCAL int cookieStringToInternal  (Tcl_Interp *interp, Tcl_Obj *objPtr)
   }
 
   // Hug cannot translate a null string
-  if (TCL_STRING(objPtr) == NULL) goto errNullCookie; 
+  if (TCL_STRING(objPtr) == NULL) goto errNullCookie;
 
-  // retrieve cookie from object  
+  // retrieve cookie from object
   status = sscanf (TCL_STRING(objPtr), "_KRP_0x%x", (int*) &cookie);
   if (status != 1) goto  errNotAValidCookie;
 
@@ -106,17 +106,17 @@ LOCAL void cookieInternalToString  (Tcl_Obj *objPtr)
   cookie =  objPtr->internalRep.otherValuePtr;
 
   // build cookie string with address prefixed with _KRP_
-  len = sprintf (key,"_KRP_0x%x", (int)cookie);
-  objPtr->bytes = Tcl_Alloc (len+1);
-  memcpy (objPtr->bytes, key, len+1);
-  objPtr->length= len+1;
+  len = 1+ snprintf (key,sizeof(key), "_KRP_0x%x", (int)cookie);
+  objPtr->bytes = Tcl_Alloc (len);
+  memcpy (objPtr->bytes, key, len);
+  objPtr->length= len-1; // Warning Tcl external rep should point on '\0'
 
 } // end cookie InternalToString
 
 /*************************************************************************
  * Duplicate a cookie, only duplicated internal longValue of object.
  *************************************************************************/
-LOCAL void cookieDupInternal (Tcl_Obj *srcPtr, Tcl_Obj *copyPtr) 
+LOCAL void cookieDupInternal (Tcl_Obj *srcPtr, Tcl_Obj *copyPtr)
 {
   // Get cookie from Tcl Object
   copyPtr->internalRep.otherValuePtr = srcPtr->internalRep.otherValuePtr;
@@ -127,7 +127,7 @@ LOCAL void cookieDupInternal (Tcl_Obj *srcPtr, Tcl_Obj *copyPtr)
  * type is map on a cookie, this mechanism allows jWrap/tcl to handle
  * any type of C structure even when internal structure is unknown.
  ******************************************************************/
-PUBLIC void jWrapCookieRegisterType (JWRAP_types *jwType,char* typeName) 
+PUBLIC void jWrapCookieRegisterType (JWRAP_types *jwType,char* typeName)
 {
 
   jwType->obj = (Tcl_ObjType*) Tcl_Alloc (sizeof (Tcl_ObjType));

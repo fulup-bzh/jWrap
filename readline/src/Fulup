@@ -1,0 +1,1 @@
+Build.mk cmdRuntimeReadline_jWrap.c Fulup headerReadline.h mainShellReadline.c tclReadline.c /home/fulup/Workspace/Fridu/Exe/linux86/include/libRuntimeReadline.i /home/fulup/Workspace/Fridu/Exe/linux86/etc/tclReadline.i /home/fulup/Workspace/Fridu/Exe/linux86/etc/cmdRuntimeReadline_jWrap.i 

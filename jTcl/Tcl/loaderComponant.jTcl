@@ -1,16 +1,16 @@
 #
 # Copyright(c) 1999 FRIDU a Free Software Company
-# 
+#
 # Projet       : jWrap
 # SubModule    : jTcl C/Tcl componant interface
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
-# 
-# Last: 
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+#
+# Last:
 #  Author      : $Author: Fulup $ Date        :
 #  Date        : $Date: 1999/03/11 12:49:29 $
 #  Revision    : $Revision: 1.3.0.1 $
 #  Source      : $Source: /Master/jWrap/jTcl/Tcl/loaderComponant.jTcl,v $
-# 
+#
 # Modification History
 # --------------------
 # 05mar99,Fulup written

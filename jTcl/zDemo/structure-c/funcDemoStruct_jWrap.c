@@ -3,10 +3,10 @@
  *   This file was automatically generated with
  *   jWrap (C)FRIDU a Free Software Company 97-98
  *   File: funcDemoStruct_jWrap.c Demonstrate Complex Structure handling
- *   Date: Thu Apr 30 17:06:31 2020
+ *   Date: Fri May  1 15:21:43 2020
 
 
- *   jWrap --cc2jTcl /home/fulup/Workspace/Fridu/Exe/linux86/etc/funcDemoStruct.c.cpp
+ *   jWrap --cc2jTcl funcDemoStruct.c
  *
  *   WARNING: Except if you really know what you are doing
  *   you should not edit this file by hand.
@@ -86,538 +86,12 @@
  // build define enumeration
  typedef long Define_DemoStruct;
  static char *Define_DemoStruct_slotNames [] = {
-   "__STDC__",
-   "__STDC_VERSION__",
-   "__STDC_UTF_16__",
-   "__STDC_UTF_32__",
-   "__STDC_HOSTED__",
-   "__GNUC__",
-   "__GNUC_MINOR__",
-   "__GNUC_PATCHLEVEL__",
-   "__ATOMIC_RELAXED",
-   "__ATOMIC_SEQ_CST",
-   "__ATOMIC_ACQUIRE",
-   "__ATOMIC_RELEASE",
-   "__ATOMIC_ACQ_REL",
-   "__ATOMIC_CONSUME",
-   "__FINITE_MATH_ONLY__",
-   "_LP64",
-   "__LP64__",
-   "__SIZEOF_INT__",
-   "__SIZEOF_LONG__",
-   "__SIZEOF_LONG_LONG__",
-   "__SIZEOF_SHORT__",
-   "__SIZEOF_FLOAT__",
-   "__SIZEOF_DOUBLE__",
-   "__SIZEOF_LONG_DOUBLE__",
-   "__SIZEOF_SIZE_T__",
-   "__CHAR_BIT__",
-   "__BIGGEST_ALIGNMENT__",
-   "__ORDER_LITTLE_ENDIAN__",
-   "__ORDER_BIG_ENDIAN__",
-   "__ORDER_PDP_ENDIAN__",
-   "__SIZEOF_POINTER__",
-   "__GXX_ABI_VERSION",
-   "__SCHAR_MAX__",
-   "__SHRT_MAX__",
-   "__INT_MAX__",
-   "__LONG_MAX__",
-   "__LONG_LONG_MAX__",
-   "__WCHAR_MAX__",
-   "__WINT_MAX__",
-   "__WINT_MIN__",
-   "__PTRDIFF_MAX__",
-   "__SIZE_MAX__",
-   "__SCHAR_WIDTH__",
-   "__SHRT_WIDTH__",
-   "__INT_WIDTH__",
-   "__LONG_WIDTH__",
-   "__LONG_LONG_WIDTH__",
-   "__WCHAR_WIDTH__",
-   "__WINT_WIDTH__",
-   "__PTRDIFF_WIDTH__",
-   "__SIZE_WIDTH__",
-   "__INTMAX_MAX__",
-   "__UINTMAX_MAX__",
-   "__INTMAX_WIDTH__",
-   "__SIG_ATOMIC_MAX__",
-   "__SIG_ATOMIC_WIDTH__",
-   "__INT8_MAX__",
-   "__INT16_MAX__",
-   "__INT32_MAX__",
-   "__INT64_MAX__",
-   "__UINT8_MAX__",
-   "__UINT16_MAX__",
-   "__UINT32_MAX__",
-   "__UINT64_MAX__",
-   "__INT_LEAST8_MAX__",
-   "__INT_LEAST8_WIDTH__",
-   "__INT_LEAST16_MAX__",
-   "__INT_LEAST16_WIDTH__",
-   "__INT_LEAST32_MAX__",
-   "__INT_LEAST32_WIDTH__",
-   "__INT_LEAST64_MAX__",
-   "__INT_LEAST64_WIDTH__",
-   "__UINT_LEAST8_MAX__",
-   "__UINT_LEAST16_MAX__",
-   "__UINT_LEAST32_MAX__",
-   "__UINT_LEAST64_MAX__",
-   "__INT_FAST8_MAX__",
-   "__INT_FAST8_WIDTH__",
-   "__INT_FAST16_MAX__",
-   "__INT_FAST16_WIDTH__",
-   "__INT_FAST32_MAX__",
-   "__INT_FAST32_WIDTH__",
-   "__INT_FAST64_MAX__",
-   "__INT_FAST64_WIDTH__",
-   "__UINT_FAST8_MAX__",
-   "__UINT_FAST16_MAX__",
-   "__UINT_FAST32_MAX__",
-   "__UINT_FAST64_MAX__",
-   "__INTPTR_MAX__",
-   "__INTPTR_WIDTH__",
-   "__UINTPTR_MAX__",
-   "__GCC_IEC_559",
-   "__GCC_IEC_559_COMPLEX",
-   "__FLT_EVAL_METHOD__",
-   "__FLT_EVAL_METHOD_TS_18661_3__",
-   "__DEC_EVAL_METHOD__",
-   "__FLT_RADIX__",
-   "__FLT_MANT_DIG__",
-   "__FLT_DIG__",
-   "__FLT_MAX_EXP__",
-   "__FLT_MAX_10_EXP__",
-   "__FLT_DECIMAL_DIG__",
-   "__FLT_MAX__",
-   "__FLT_MIN__",
-   "__FLT_EPSILON__",
-   "__FLT_DENORM_MIN__",
-   "__FLT_HAS_DENORM__",
-   "__FLT_HAS_INFINITY__",
-   "__FLT_HAS_QUIET_NAN__",
-   "__DBL_MANT_DIG__",
-   "__DBL_DIG__",
-   "__DBL_MAX_EXP__",
-   "__DBL_MAX_10_EXP__",
-   "__DBL_DECIMAL_DIG__",
-   "__DBL_HAS_DENORM__",
-   "__DBL_HAS_INFINITY__",
-   "__DBL_HAS_QUIET_NAN__",
-   "__LDBL_MANT_DIG__",
-   "__LDBL_DIG__",
-   "__LDBL_MAX_EXP__",
-   "__LDBL_MAX_10_EXP__",
-   "__DECIMAL_DIG__",
-   "__LDBL_DECIMAL_DIG__",
-   "__LDBL_MAX__",
-   "__LDBL_MIN__",
-   "__LDBL_EPSILON__",
-   "__LDBL_DENORM_MIN__",
-   "__LDBL_HAS_DENORM__",
-   "__LDBL_HAS_INFINITY__",
-   "__LDBL_HAS_QUIET_NAN__",
-   "__FLT32_MANT_DIG__",
-   "__FLT32_DIG__",
-   "__FLT32_MAX_EXP__",
-   "__FLT32_MAX_10_EXP__",
-   "__FLT32_DECIMAL_DIG__",
-   "__FLT32_MAX__",
-   "__FLT32_MIN__",
-   "__FLT32_EPSILON__",
-   "__FLT32_DENORM_MIN__",
-   "__FLT32_HAS_DENORM__",
-   "__FLT32_HAS_INFINITY__",
-   "__FLT32_HAS_QUIET_NAN__",
-   "__FLT64_MANT_DIG__",
-   "__FLT64_DIG__",
-   "__FLT64_MAX_EXP__",
-   "__FLT64_MAX_10_EXP__",
-   "__FLT64_DECIMAL_DIG__",
-   "__FLT64_MAX__",
-   "__FLT64_MIN__",
-   "__FLT64_EPSILON__",
-   "__FLT64_DENORM_MIN__",
-   "__FLT64_HAS_DENORM__",
-   "__FLT64_HAS_INFINITY__",
-   "__FLT64_HAS_QUIET_NAN__",
-   "__FLT128_MANT_DIG__",
-   "__FLT128_DIG__",
-   "__FLT128_MAX_EXP__",
-   "__FLT128_MAX_10_EXP__",
-   "__FLT128_DECIMAL_DIG__",
-   "__FLT128_MAX__",
-   "__FLT128_MIN__",
-   "__FLT128_EPSILON__",
-   "__FLT128_DENORM_MIN__",
-   "__FLT128_HAS_DENORM__",
-   "__FLT128_HAS_INFINITY__",
-   "__FLT128_HAS_QUIET_NAN__",
-   "__FLT32X_MANT_DIG__",
-   "__FLT32X_DIG__",
-   "__FLT32X_MAX_EXP__",
-   "__FLT32X_MAX_10_EXP__",
-   "__FLT32X_DECIMAL_DIG__",
-   "__FLT32X_MAX__",
-   "__FLT32X_MIN__",
-   "__FLT32X_EPSILON__",
-   "__FLT32X_DENORM_MIN__",
-   "__FLT32X_HAS_DENORM__",
-   "__FLT32X_HAS_INFINITY__",
-   "__FLT32X_HAS_QUIET_NAN__",
-   "__FLT64X_MANT_DIG__",
-   "__FLT64X_DIG__",
-   "__FLT64X_MAX_EXP__",
-   "__FLT64X_MAX_10_EXP__",
-   "__FLT64X_DECIMAL_DIG__",
-   "__FLT64X_MAX__",
-   "__FLT64X_MIN__",
-   "__FLT64X_EPSILON__",
-   "__FLT64X_DENORM_MIN__",
-   "__FLT64X_HAS_DENORM__",
-   "__FLT64X_HAS_INFINITY__",
-   "__FLT64X_HAS_QUIET_NAN__",
-   "__DEC32_MANT_DIG__",
-   "__DEC32_MAX_EXP__",
-   "__DEC32_MIN__",
-   "__DEC32_MAX__",
-   "__DEC32_EPSILON__",
-   "__DEC32_SUBNORMAL_MIN__",
-   "__DEC64_MANT_DIG__",
-   "__DEC64_MAX_EXP__",
-   "__DEC64_MIN__",
-   "__DEC64_MAX__",
-   "__DEC64_EPSILON__",
-   "__DEC64_SUBNORMAL_MIN__",
-   "__DEC128_MANT_DIG__",
-   "__DEC128_MAX_EXP__",
-   "__DEC128_MIN__",
-   "__DEC128_MAX__",
-   "__DEC128_EPSILON__",
-   "__DEC128_SUBNORMAL_MIN__",
-   "__GNUC_STDC_INLINE__",
-   "__NO_INLINE__",
-   "__GCC_HAVE_SYNC_COMPARE_AND_SWAP_1",
-   "__GCC_HAVE_SYNC_COMPARE_AND_SWAP_2",
-   "__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4",
-   "__GCC_HAVE_SYNC_COMPARE_AND_SWAP_8",
-   "__GCC_ATOMIC_BOOL_LOCK_FREE",
-   "__GCC_ATOMIC_CHAR_LOCK_FREE",
-   "__GCC_ATOMIC_CHAR16_T_LOCK_FREE",
-   "__GCC_ATOMIC_CHAR32_T_LOCK_FREE",
-   "__GCC_ATOMIC_WCHAR_T_LOCK_FREE",
-   "__GCC_ATOMIC_SHORT_LOCK_FREE",
-   "__GCC_ATOMIC_INT_LOCK_FREE",
-   "__GCC_ATOMIC_LONG_LOCK_FREE",
-   "__GCC_ATOMIC_LLONG_LOCK_FREE",
-   "__GCC_ATOMIC_TEST_AND_SET_TRUEVAL",
-   "__GCC_ATOMIC_POINTER_LOCK_FREE",
-   "__GCC_HAVE_DWARF2_CFI_ASM",
-   "__PRAGMA_REDEFINE_EXTNAME",
-   "__SIZEOF_INT128__",
-   "__SIZEOF_WCHAR_T__",
-   "__SIZEOF_WINT_T__",
-   "__SIZEOF_PTRDIFF_T__",
-   "__amd64",
-   "__amd64__",
-   "__x86_64",
-   "__x86_64__",
-   "__SIZEOF_FLOAT80__",
-   "__SIZEOF_FLOAT128__",
-   "__ATOMIC_HLE_ACQUIRE",
-   "__ATOMIC_HLE_RELEASE",
-   "__GCC_ASM_FLAG_OUTPUTS__",
-   "__k8",
-   "__k8__",
-   "__code_model_small__",
-   "__MMX__",
-   "__SSE__",
-   "__SSE2__",
-   "__FXSR__",
-   "__SSE_MATH__",
-   "__SSE2_MATH__",
-   "__SEG_FS",
-   "__SEG_GS",
-   "__gnu_linux__",
-   "__linux",
-   "__linux__",
-   "linux",
-   "__unix",
-   "__unix__",
-   "unix",
-   "__ELF__",
-   "__DECIMAL_BID_FORMAT__",
-   "__STDC__",
-   "JWRAP",
-   "JWRAP_JTCL",
    "VA",
    "TOTO",
    "TATA",
    NULL
  };
  static long Define_DemoStruct_slotValues [] = {
-   (long)__STDC__,
-   (long)__STDC_VERSION__,
-   (long)__STDC_UTF_16__,
-   (long)__STDC_UTF_32__,
-   (long)__STDC_HOSTED__,
-   (long)__GNUC__,
-   (long)__GNUC_MINOR__,
-   (long)__GNUC_PATCHLEVEL__,
-   (long)__ATOMIC_RELAXED,
-   (long)__ATOMIC_SEQ_CST,
-   (long)__ATOMIC_ACQUIRE,
-   (long)__ATOMIC_RELEASE,
-   (long)__ATOMIC_ACQ_REL,
-   (long)__ATOMIC_CONSUME,
-   (long)__FINITE_MATH_ONLY__,
-   (long)_LP64,
-   (long)__LP64__,
-   (long)__SIZEOF_INT__,
-   (long)__SIZEOF_LONG__,
-   (long)__SIZEOF_LONG_LONG__,
-   (long)__SIZEOF_SHORT__,
-   (long)__SIZEOF_FLOAT__,
-   (long)__SIZEOF_DOUBLE__,
-   (long)__SIZEOF_LONG_DOUBLE__,
-   (long)__SIZEOF_SIZE_T__,
-   (long)__CHAR_BIT__,
-   (long)__BIGGEST_ALIGNMENT__,
-   (long)__ORDER_LITTLE_ENDIAN__,
-   (long)__ORDER_BIG_ENDIAN__,
-   (long)__ORDER_PDP_ENDIAN__,
-   (long)__SIZEOF_POINTER__,
-   (long)__GXX_ABI_VERSION,
-   (long)__SCHAR_MAX__,
-   (long)__SHRT_MAX__,
-   (long)__INT_MAX__,
-   (long)__LONG_MAX__,
-   (long)__LONG_LONG_MAX__,
-   (long)__WCHAR_MAX__,
-   (long)__WINT_MAX__,
-   (long)__WINT_MIN__,
-   (long)__PTRDIFF_MAX__,
-   (long)__SIZE_MAX__,
-   (long)__SCHAR_WIDTH__,
-   (long)__SHRT_WIDTH__,
-   (long)__INT_WIDTH__,
-   (long)__LONG_WIDTH__,
-   (long)__LONG_LONG_WIDTH__,
-   (long)__WCHAR_WIDTH__,
-   (long)__WINT_WIDTH__,
-   (long)__PTRDIFF_WIDTH__,
-   (long)__SIZE_WIDTH__,
-   (long)__INTMAX_MAX__,
-   (long)__UINTMAX_MAX__,
-   (long)__INTMAX_WIDTH__,
-   (long)__SIG_ATOMIC_MAX__,
-   (long)__SIG_ATOMIC_WIDTH__,
-   (long)__INT8_MAX__,
-   (long)__INT16_MAX__,
-   (long)__INT32_MAX__,
-   (long)__INT64_MAX__,
-   (long)__UINT8_MAX__,
-   (long)__UINT16_MAX__,
-   (long)__UINT32_MAX__,
-   (long)__UINT64_MAX__,
-   (long)__INT_LEAST8_MAX__,
-   (long)__INT_LEAST8_WIDTH__,
-   (long)__INT_LEAST16_MAX__,
-   (long)__INT_LEAST16_WIDTH__,
-   (long)__INT_LEAST32_MAX__,
-   (long)__INT_LEAST32_WIDTH__,
-   (long)__INT_LEAST64_MAX__,
-   (long)__INT_LEAST64_WIDTH__,
-   (long)__UINT_LEAST8_MAX__,
-   (long)__UINT_LEAST16_MAX__,
-   (long)__UINT_LEAST32_MAX__,
-   (long)__UINT_LEAST64_MAX__,
-   (long)__INT_FAST8_MAX__,
-   (long)__INT_FAST8_WIDTH__,
-   (long)__INT_FAST16_MAX__,
-   (long)__INT_FAST16_WIDTH__,
-   (long)__INT_FAST32_MAX__,
-   (long)__INT_FAST32_WIDTH__,
-   (long)__INT_FAST64_MAX__,
-   (long)__INT_FAST64_WIDTH__,
-   (long)__UINT_FAST8_MAX__,
-   (long)__UINT_FAST16_MAX__,
-   (long)__UINT_FAST32_MAX__,
-   (long)__UINT_FAST64_MAX__,
-   (long)__INTPTR_MAX__,
-   (long)__INTPTR_WIDTH__,
-   (long)__UINTPTR_MAX__,
-   (long)__GCC_IEC_559,
-   (long)__GCC_IEC_559_COMPLEX,
-   (long)__FLT_EVAL_METHOD__,
-   (long)__FLT_EVAL_METHOD_TS_18661_3__,
-   (long)__DEC_EVAL_METHOD__,
-   (long)__FLT_RADIX__,
-   (long)__FLT_MANT_DIG__,
-   (long)__FLT_DIG__,
-   (long)__FLT_MAX_EXP__,
-   (long)__FLT_MAX_10_EXP__,
-   (long)__FLT_DECIMAL_DIG__,
-   (long)__FLT_MAX__,
-   (long)__FLT_MIN__,
-   (long)__FLT_EPSILON__,
-   (long)__FLT_DENORM_MIN__,
-   (long)__FLT_HAS_DENORM__,
-   (long)__FLT_HAS_INFINITY__,
-   (long)__FLT_HAS_QUIET_NAN__,
-   (long)__DBL_MANT_DIG__,
-   (long)__DBL_DIG__,
-   (long)__DBL_MAX_EXP__,
-   (long)__DBL_MAX_10_EXP__,
-   (long)__DBL_DECIMAL_DIG__,
-   (long)__DBL_HAS_DENORM__,
-   (long)__DBL_HAS_INFINITY__,
-   (long)__DBL_HAS_QUIET_NAN__,
-   (long)__LDBL_MANT_DIG__,
-   (long)__LDBL_DIG__,
-   (long)__LDBL_MAX_EXP__,
-   (long)__LDBL_MAX_10_EXP__,
-   (long)__DECIMAL_DIG__,
-   (long)__LDBL_DECIMAL_DIG__,
-   (long)__LDBL_MAX__,
-   (long)__LDBL_MIN__,
-   (long)__LDBL_EPSILON__,
-   (long)__LDBL_DENORM_MIN__,
-   (long)__LDBL_HAS_DENORM__,
-   (long)__LDBL_HAS_INFINITY__,
-   (long)__LDBL_HAS_QUIET_NAN__,
-   (long)__FLT32_MANT_DIG__,
-   (long)__FLT32_DIG__,
-   (long)__FLT32_MAX_EXP__,
-   (long)__FLT32_MAX_10_EXP__,
-   (long)__FLT32_DECIMAL_DIG__,
-   (long)__FLT32_MAX__,
-   (long)__FLT32_MIN__,
-   (long)__FLT32_EPSILON__,
-   (long)__FLT32_DENORM_MIN__,
-   (long)__FLT32_HAS_DENORM__,
-   (long)__FLT32_HAS_INFINITY__,
-   (long)__FLT32_HAS_QUIET_NAN__,
-   (long)__FLT64_MANT_DIG__,
-   (long)__FLT64_DIG__,
-   (long)__FLT64_MAX_EXP__,
-   (long)__FLT64_MAX_10_EXP__,
-   (long)__FLT64_DECIMAL_DIG__,
-   (long)__FLT64_MAX__,
-   (long)__FLT64_MIN__,
-   (long)__FLT64_EPSILON__,
-   (long)__FLT64_DENORM_MIN__,
-   (long)__FLT64_HAS_DENORM__,
-   (long)__FLT64_HAS_INFINITY__,
-   (long)__FLT64_HAS_QUIET_NAN__,
-   (long)__FLT128_MANT_DIG__,
-   (long)__FLT128_DIG__,
-   (long)__FLT128_MAX_EXP__,
-   (long)__FLT128_MAX_10_EXP__,
-   (long)__FLT128_DECIMAL_DIG__,
-   (long)__FLT128_MAX__,
-   (long)__FLT128_MIN__,
-   (long)__FLT128_EPSILON__,
-   (long)__FLT128_DENORM_MIN__,
-   (long)__FLT128_HAS_DENORM__,
-   (long)__FLT128_HAS_INFINITY__,
-   (long)__FLT128_HAS_QUIET_NAN__,
-   (long)__FLT32X_MANT_DIG__,
-   (long)__FLT32X_DIG__,
-   (long)__FLT32X_MAX_EXP__,
-   (long)__FLT32X_MAX_10_EXP__,
-   (long)__FLT32X_DECIMAL_DIG__,
-   (long)__FLT32X_MAX__,
-   (long)__FLT32X_MIN__,
-   (long)__FLT32X_EPSILON__,
-   (long)__FLT32X_DENORM_MIN__,
-   (long)__FLT32X_HAS_DENORM__,
-   (long)__FLT32X_HAS_INFINITY__,
-   (long)__FLT32X_HAS_QUIET_NAN__,
-   (long)__FLT64X_MANT_DIG__,
-   (long)__FLT64X_DIG__,
-   (long)__FLT64X_MAX_EXP__,
-   (long)__FLT64X_MAX_10_EXP__,
-   (long)__FLT64X_DECIMAL_DIG__,
-   (long)__FLT64X_MAX__,
-   (long)__FLT64X_MIN__,
-   (long)__FLT64X_EPSILON__,
-   (long)__FLT64X_DENORM_MIN__,
-   (long)__FLT64X_HAS_DENORM__,
-   (long)__FLT64X_HAS_INFINITY__,
-   (long)__FLT64X_HAS_QUIET_NAN__,
-   (long)__DEC32_MANT_DIG__,
-   (long)__DEC32_MAX_EXP__,
-   (long)__DEC32_MIN__,
-   (long)__DEC32_MAX__,
-   (long)__DEC32_EPSILON__,
-   (long)__DEC32_SUBNORMAL_MIN__,
-   (long)__DEC64_MANT_DIG__,
-   (long)__DEC64_MAX_EXP__,
-   (long)__DEC64_MIN__,
-   (long)__DEC64_MAX__,
-   (long)__DEC64_EPSILON__,
-   (long)__DEC64_SUBNORMAL_MIN__,
-   (long)__DEC128_MANT_DIG__,
-   (long)__DEC128_MAX_EXP__,
-   (long)__DEC128_MIN__,
-   (long)__DEC128_MAX__,
-   (long)__DEC128_EPSILON__,
-   (long)__DEC128_SUBNORMAL_MIN__,
-   (long)__GNUC_STDC_INLINE__,
-   (long)__NO_INLINE__,
-   (long)__GCC_HAVE_SYNC_COMPARE_AND_SWAP_1,
-   (long)__GCC_HAVE_SYNC_COMPARE_AND_SWAP_2,
-   (long)__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4,
-   (long)__GCC_HAVE_SYNC_COMPARE_AND_SWAP_8,
-   (long)__GCC_ATOMIC_BOOL_LOCK_FREE,
-   (long)__GCC_ATOMIC_CHAR_LOCK_FREE,
-   (long)__GCC_ATOMIC_CHAR16_T_LOCK_FREE,
-   (long)__GCC_ATOMIC_CHAR32_T_LOCK_FREE,
-   (long)__GCC_ATOMIC_WCHAR_T_LOCK_FREE,
-   (long)__GCC_ATOMIC_SHORT_LOCK_FREE,
-   (long)__GCC_ATOMIC_INT_LOCK_FREE,
-   (long)__GCC_ATOMIC_LONG_LOCK_FREE,
-   (long)__GCC_ATOMIC_LLONG_LOCK_FREE,
-   (long)__GCC_ATOMIC_TEST_AND_SET_TRUEVAL,
-   (long)__GCC_ATOMIC_POINTER_LOCK_FREE,
-   (long)__GCC_HAVE_DWARF2_CFI_ASM,
-   (long)__PRAGMA_REDEFINE_EXTNAME,
-   (long)__SIZEOF_INT128__,
-   (long)__SIZEOF_WCHAR_T__,
-   (long)__SIZEOF_WINT_T__,
-   (long)__SIZEOF_PTRDIFF_T__,
-   (long)__amd64,
-   (long)__amd64__,
-   (long)__x86_64,
-   (long)__x86_64__,
-   (long)__SIZEOF_FLOAT80__,
-   (long)__SIZEOF_FLOAT128__,
-   (long)__ATOMIC_HLE_ACQUIRE,
-   (long)__ATOMIC_HLE_RELEASE,
-   (long)__GCC_ASM_FLAG_OUTPUTS__,
-   (long)__k8,
-   (long)__k8__,
-   (long)__code_model_small__,
-   (long)__MMX__,
-   (long)__SSE__,
-   (long)__SSE2__,
-   (long)__FXSR__,
-   (long)__SSE_MATH__,
-   (long)__SSE2_MATH__,
-   (long)__SEG_FS,
-   (long)__SEG_GS,
-   (long)__gnu_linux__,
-   (long)__linux,
-   (long)__linux__,
-   (long)linux,
-   (long)__unix,
-   (long)__unix__,
-   (long)unix,
-   (long)__ELF__,
-   (long)__DECIMAL_BID_FORMAT__,
-   (long)__STDC__,
-   (long)JWRAP,
-   (long)JWRAP_JTCL,
    (long)VA,
    (long)TOTO,
    (long)TATA,
@@ -625,7 +99,7 @@
  };
  static JWRAP_enums Define_DemoStruct_enum  = {
   JWRAP_ENUM,  &usedType [JTYPE_Define_DemoStruct],
-  266,
+  3,
   Define_DemoStruct_slotNames,
   (long*)Define_DemoStruct_slotValues
  };
@@ -1185,7 +659,7 @@ static Tcl_ObjType linkedList_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_char_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_char_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -1210,7 +684,7 @@ static Tcl_ObjType linkedList_ptr = {
    currentObj  = objv[2];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_char_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_char_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -1225,8 +699,9 @@ static Tcl_ObjType linkedList_ptr = {
  result.shared.appli =  fopen (param_0, param_1);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(FILE**)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_FILE_Ptr].obj;
@@ -1276,7 +751,7 @@ static Tcl_ObjType linkedList_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_FILE_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_FILE_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -1291,8 +766,9 @@ static Tcl_ObjType linkedList_ptr = {
  result.shared.appli =  fclose (param_0);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(int*)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_int].obj;
@@ -1344,7 +820,7 @@ static Tcl_ObjType linkedList_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_void_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_void_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -1369,7 +845,7 @@ static Tcl_ObjType linkedList_ptr = {
    currentObj  = objv[2];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_void_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_void_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -1394,7 +870,7 @@ static Tcl_ObjType linkedList_ptr = {
    currentObj  = objv[3];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_size_t].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_size_t].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -1409,8 +885,9 @@ static Tcl_ObjType linkedList_ptr = {
  result.shared.appli =  memcpy (param_0, param_1, param_2);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(void**)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_void_Ptr].obj;
@@ -1460,7 +937,7 @@ static Tcl_ObjType linkedList_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_WPR_ID_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_WPR_ID_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -1475,8 +952,9 @@ static Tcl_ObjType linkedList_ptr = {
  result.shared.appli =  testIt (param_0);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(WPR_ID**)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_WPR_ID_Ptr].obj;

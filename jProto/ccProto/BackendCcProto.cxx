@@ -5,7 +5,7 @@
  * File      :   ccProtoWrap.cc C++ prototype generation
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -36,21 +36,21 @@ void BackendCcProto::output (McString* doc) {
    fprintf (outFile,"\n/** ");
    fputs (*doc, outFile);
    fprintf (outFile,"\n");
- } 
+ }
 }
 
 void BackendCcProto::output (Enums* enumeration) {
    int ind;
 
-   fprintf (outFile," enum %s {\n   ",(char*)enumeration->name); 
+   fprintf (outFile," enum %s {\n   ",(char*)enumeration->name);
    for (ind=0; ind < enumeration->values.size(); ind++) {
         if (ind != 0) fprintf (outFile,"  ,");
         fprintf (outFile, "%-15s"
-           ,(char*)enumeration->values[ind]->name 
+           ,(char*)enumeration->values[ind]->name
         );
         if (enumeration->values[ind]->value.size() > 1) {
           fprintf (outFile, " = %s"
-            ,(char*)enumeration->values[ind]->value 
+            ,(char*)enumeration->values[ind]->value
           );
         }
         fprintf (outFile, ";\n");
@@ -63,12 +63,12 @@ void BackendCcProto::output (Structs* structure) {
    Elements *element;
    int       ind;
 
-   fprintf (outFile,"\n struct %s  {\n",(char*)structure->name); 
+   fprintf (outFile,"\n struct %s  {\n",(char*)structure->name);
    for (ind=0; ind < structure->elements.size(); ind++) {
         element = structure->elements [ind];
         fprintf (outFile, "  %s %s"
-           ,(char*)element->type 
-           ,(char*)element->name 
+           ,(char*)element->type
+           ,(char*)element->name
         );
         if (element->array >= 0) {
         fprintf (outFile, " []");
@@ -89,15 +89,15 @@ void BackendCcProto::output (Typedefs* alias) {
    for (ind=0; (name [ind] != ' ') && (name[ind] != '\0'); ind++) {};
    name[ind] = '\0';
 
-   if (!strcmp ("unsigned", name)) return; 
-   if (!strcmp ("bool"    , name)) return; 
-   if (!strcmp ("int"     , name)) return; 
-   if (!strcmp ("float"   , name)) return; 
-   if (!strcmp ("double"  , name)) return; 
-   if (!strcmp ("long"    , name)) return; 
-   if (!strcmp ("char"    , name)) return; 
+   if (!strcmp ("unsigned", name)) return;
+   if (!strcmp ("bool"    , name)) return;
+   if (!strcmp ("int"     , name)) return;
+   if (!strcmp ("float"   , name)) return;
+   if (!strcmp ("double"  , name)) return;
+   if (!strcmp ("long"    , name)) return;
+   if (!strcmp ("char"    , name)) return;
 
-   fprintf (outFile,"typedef  %s %s;\n",(char*)alias->source, (char*) alias->name); 
+   fprintf (outFile,"typedef  %s %s;\n",(char*)alias->source, (char*) alias->name);
 
 } // end output typedef
 
@@ -179,22 +179,22 @@ void BackendCcProto::output (Classes* classe)
    // Enum Section
    for (ind=0; ind < classe->enums.size(); ind++) {
         if (ind == 0)  fprintf (outFile, "\n    // Enum sub-section\n");
-        output (classe->enums  [ind]);     
+        output (classe->enums  [ind]);
    }
 
    for (visibility=(VISIBILITY)0; visibility < PROT_UNKNOW
                     ; visibility= (VISIBILITY) ((int)visibility + 1)) {
 
      switch (visibility) {
-   
-     case PROT_PUBLIC: 
+
+     case PROT_PUBLIC:
         fprintf (outFile, "\n    public:\n");
         break;
 
      case PROT_PROTECTED:
         fprintf (outFile, "\n    protected:\n");
         break;
-        
+
      case PROT_PRIVATE:
         fprintf (outFile, "\n    private:\n");
         break;
@@ -202,13 +202,13 @@ void BackendCcProto::output (Classes* classe)
      default:
         fprintf (stderr,"BackendCcProto.cc ERROR: Fatal internal unknown visibility\n");
         exit;
-     } // end switch  
-        
-     // Var section 
+     } // end switch
+
+     // Var section
      fprintf (outFile, "    // Vars sub-section\n");
      for (ind=0; ind < classe->vars.size(); ind++) {
        if (classe->vars[ind]->visibility == visibility) {
-         output (classe->vars  [ind]);     
+         output (classe->vars  [ind]);
        }
      }
 
@@ -216,7 +216,7 @@ void BackendCcProto::output (Classes* classe)
      fprintf (outFile,"\n    // Methods sub-section\n");
      for (ind=0; ind < classe->methods.size(); ind++) {
        if (classe->methods[ind]->visibility == visibility) {
-         output (classe->methods [ind]);     
+         output (classe->methods [ind]);
        }
      }
    }   // end for each visibility
@@ -236,13 +236,13 @@ void BackendCcProto::output (Programs *program) {
   fprintf (outFile,"\n/*  ----------------------------------------------------------");
   fprintf (outFile,"\n *   This file was automatically generated with");
   fprintf (outFile,"\n *   jWrap (C)FRIDU a Free Software Company 97-98");
-  fprintf (outFile,"\n *   File: %s %s\n", (char*)outName,(char*)program->help); 
-  fprintf (outFile,"\n *   Date: %s",getDate()); 
+  fprintf (outFile,"\n *   File: %s %s\n", (char*)outName,(char*)program->help);
+  fprintf (outFile,"\n *   Date: %s",getDate());
   fprintf (outFile,"\n *   jWrap --cproto %s\n", (char*)program->name);
-  fprintf (outFile,"\n *   Except if you really know what you are doing you should"); 
+  fprintf (outFile,"\n *   Except if you really know what you are doing you should");
   fprintf (outFile,"\n *   not edit this file by hand.");
   fprintf (outFile,"\n *");
-  fprintf (outFile,"\n *   In order rebuilding it use jWrap");   
+  fprintf (outFile,"\n *   In order rebuilding it use jWrap");
   fprintf (outFile,"\n + ------------------------------------------------------------ */\n");
 
 
@@ -323,7 +323,7 @@ void BackendCcProto::setOutName (Programs *program) {
   // check assert implementation was set before first include
   if (program->assertLine < 0) goto errorNoAssert;
   if (program->assertLine >= program->firstInclude) goto errorPlaceAssert;
- 
+
   // if assert implement and basename differ print a warning
   if (strcmp (program->implement, baseName)) {
      fprintf (stderr, "Note: [%s] implement [%s]\n"
@@ -351,7 +351,7 @@ void BackendCcProto::init (Programs* program,char *outDir, char* usrName) {
   char *tmpName;
   char *dirName;
   char *stripName;
-    
+
     // save full include name
     inName = program->name;
 
@@ -367,15 +367,15 @@ void BackendCcProto::init (Programs* program,char *outDir, char* usrName) {
 
     // generate define name from input name without .
     defName =  baseName;
-    tmpName = (char*)baseName; 
+    tmpName = (char*)baseName;
     for (ind=0; ind < defName.size()-1 ; ind++) {
        if (tmpName [ind] == '.') {
           defName[ind] = '_';
        }
     }
-    
+
     // remove extension from basename
-    tmpName = (char*)baseName; 
+    tmpName = (char*)baseName;
     for (ind=0; ind < baseName.size()-1 ; ind++) {
        if (tmpName [ind] == '.') {
           baseName[ind] = '\0';
@@ -409,7 +409,7 @@ void BackendCcProto::init (Programs* program,char *outDir, char* usrName) {
     }
 
     // now we have directory look for file name
-    if (usrName != NULL) 
+    if (usrName != NULL)
     {
       // If output name given just use it
       outName += usrName;
@@ -424,7 +424,7 @@ void BackendCcProto::init (Programs* program,char *outDir, char* usrName) {
         }
       }
       outName += stripName;
- 
+
       // No extension as been founded
       if (ind == 0) goto badExtention;
 
@@ -467,7 +467,7 @@ invalidFileName:
   fprintf (stderr,"ERROR: BackendCcProto Can't open file:%s\n", (char*)outName);
   status=ERROR;
   return;
-  
+
 } // end Constructor
 
 BackendCcProto::BackendCcProto (void) {};

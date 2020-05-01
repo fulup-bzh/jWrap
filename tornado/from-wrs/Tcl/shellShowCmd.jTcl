@@ -1,16 +1,16 @@
 #
 # Copyright(c) 1999 FRIDU a Free Software Company
-# 
+#
 # Projet       : jWrap
 # SubModule    : WTX VxWorks Tornado Interface
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
-# 
-# Last: 
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+#
+# Last:
 #  Author      : $Author: Fulup $ Date        :
 #  Date        : $Date: 1999/03/11 12:49:31 $
 #  Revision    : $Revision: 1.3.0.1 $
 #  Source      : $Source: /Master/jWrap/tornado/from-wrs/Tcl/shellShowCmd.jTcl,v $
-# 
+#
 # Modification History
 # --------------------
 # 05mar99,Fulup hacked from WRS shellShowCmd.tcl
@@ -62,7 +62,7 @@ proc Local.TaskPrintBanner {} {
 ##----------------------------------------------------------------------
 proc taskInfoPrint {vxClock taskInfo} {
    global TORNADO
-     
+
     set DEST [list taskId status priority pc sp errno timeout entry priNormal name]
     Tornado.DirectVarsToValues $DEST  $taskInfo
 
@@ -137,7 +137,7 @@ proc Show.I {args} {
 		puts stdout "System context : Suspended"
 	    } else {
 		puts stdout "System context : Running"
-	    }	
+	    }
 	}
     }
     return 0

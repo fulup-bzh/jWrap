@@ -5,7 +5,7 @@
  * File      :   libBackendCcProto.h C/C++ ansi proto backend
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -31,7 +31,7 @@ class BackendCcProto {
   McString              outName;             // Output file name
   McString              inName;              // InputFilename
   McString              baseName;            // Input name with no extention
-  McString              defName;             // Output Name compatible with define 
+  McString              defName;             // Output Name compatible with define
   FILE*                 outFile;             // Output FileId
   int                   status;              // set to ERROR on order breaking ccproto
 
@@ -49,7 +49,7 @@ class BackendCcProto {
 
   void init      (Programs*,char* outDir, char*outFile);   // Application Constructor
   BackendCcProto        (void);             // Dummy C++ Constructor
-  
+
 };
 
 #include <libBackendCcProto.i>

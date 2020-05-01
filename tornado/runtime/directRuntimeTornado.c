@@ -1,10 +1,10 @@
 /*
- *      Copyright(c) 1996-1999 Fridu a Free Software Company Fulup Le Foll
+ *      Copyright(c) 1996-1999 Fridu a Free Software Company Fulup Ar Foll
  *
  * Object       : direct call to VxWorks target thru target server
  * Projet       : jWrap
  * SubModule    : VxWorks Wtx Tornado interface
- * Auteur       : Fulup Le Foll (Fulup@fridu.bzh)
+ * Auteur       : Fulup Ar Foll (Fulup@fridu.bzh)
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -33,7 +33,7 @@ typedef enum {
    GOPHER_UNKNOW = -1
 } GOPHER_tape_val;
 
-// tornado info will be initialiazed at first 
+// tornado info will be initialiazed at first
 static TORNADO_infos tornadoInfo;
 static Tcl_Obj       *zero;
 
@@ -75,7 +75,7 @@ PUBLIC void tornadoDirectGopher  (TORNADO_id* tornadoId
    int	bufIx;
    int len;
 
-   // request gopher on target 
+   // request gopher on target
    tape = wtxGopherEval (tornadoId->wtxId, command);
    if (tape == NULL) goto errRead;
 
@@ -124,7 +124,7 @@ PUBLIC void tornadoDirectGopher  (TORNADO_id* tornadoId
 		bufIx += strlen (tape->data + bufIx) + 1;
                 break;
 	    }
-            
+
             // If you need float you will have to work sory !!!
             default: goto errFloat;
 	}
@@ -154,11 +154,11 @@ errSyntaxe:
 }
 
 /**------------------------------------------------------------------------------
- * This function can be used to assign names to list elements. 
+ * This function can be used to assign names to list elements.
  * For example, the following call will set the variables a, b, and c in
  * the procedure scope with the values 10, 11, and 12, respectively:
  * Original function is a WRS internal non documented routine.
- * 
+ *
  * @param  names Variables name we want to set
  * @param  value Value to affect to name
  * @note   If there is more names that value remainding are set to zero
@@ -168,15 +168,15 @@ PUBLIC void tornadoDirectVarsToValues  (JWRAP_varg *vars, JWRAP_varg *values) {
   int     ind;
 
     // We should not have more values than variable name
-    if (vars->argc < values->argc) goto errSyntaxe; 
+    if (vars->argc < values->argc) goto errSyntaxe;
 
-    // Start to fill up variables with values 
+    // Start to fill up variables with values
     for (ind = 0; ind < values->argc; ind ++) {
        if (NULL == Tcl_ObjSetVar2 (vars->interp,vars->argv[ind],NULL
                       ,values->argv[ind],TCL_LEAVE_ERR_MSG)) goto errSetVar;
     }
-    
-    // Remainder should be set with zero 
+
+    // Remainder should be set with zero
     for (; ind  < vars->argc; ind++) {
          if (NULL == Tcl_ObjSetVar2 (vars->interp,vars->argv[ind],NULL
                       ,zero,TCL_LEAVE_ERR_MSG)) goto errSetVar;
@@ -192,7 +192,7 @@ PUBLIC void tornadoDirectVarsToValues  (JWRAP_varg *vars, JWRAP_varg *values) {
     jWrapPanic (vars->interp,"Could not set var [%s]\n", vars->argv[ind]->bytes);
 }
 
-/**----------------------------------------------------------- 
+/**-----------------------------------------------------------
  ** this routine is the one used by jWrap.
  ** @param  tornadoId TORNADO handle
  ** @wtxCtx a valid wtx function handle
@@ -222,17 +222,17 @@ PUBLIC void *tornadoDirectFuncCall (TORNADO_id* tornadoId
   memset (&wtxCtx, 0, sizeof (WTX_CONTEXT_DESC));
   wtxCtx.name  = funcName;
 
-  // loop on each Argument and check 
+  // loop on each Argument and check
   for (ind=0; ind < varg->argc; ind++) {
 
     // we save slot type before llength change it
     tclType = varg->argv[ind]->typePtr;
     slot    = varg->argv[ind];
 
-    // if object is a string or a list check for casting value 
+    // if object is a string or a list check for casting value
     if ((tclType == NULL) || (tclType == jWrapTypeList)) {
       status = Tcl_ListObjLength (varg->interp, slot, &len);
- 
+
       if ((status == TCL_OK) && (len == 2)) {
         // does first element start with a --
         (void)Tcl_ListObjIndex (varg->interp, slot, 0, &element);
@@ -243,12 +243,12 @@ PUBLIC void *tornadoDirectFuncCall (TORNADO_id* tornadoId
           if (!strcmp ("double", &element->bytes[3])) goto errUnsupportedType;
 
 	  // impose user not to user char*
-          if ((!strncmp ("char", &element->bytes[2],4)) && (element->bytes[6] != '\0')) { 
+          if ((!strncmp ("char", &element->bytes[2],4)) && (element->bytes[6] != '\0')) {
             goto errShouldBeString;
           }
 
           // process string as target string
-          if (!strcmp ("string", &element->bytes[2])) { 
+          if (!strcmp ("string", &element->bytes[2])) {
 	     Tcl_Free (element->bytes);
              jWrapStrDup (element, "--Tornado_String_Ptr");
           }
@@ -260,13 +260,13 @@ PUBLIC void *tornadoDirectFuncCall (TORNADO_id* tornadoId
           // get object from second element of list
           (void)Tcl_ListObjIndex (varg->interp, varg->argv[ind], 1, &slot);
 
-          // Try to convert string to an int if not possible take it as a full string 
+          // Try to convert string to an int if not possible take it as a full string
           if (Tcl_ConvertToType (varg->interp,slot,tclType) != TCL_OK) goto errCastFailed;
         } else {
           // Try first to map to integer then to a string
           if (Tcl_ConvertToType (varg->interp,slot,jWrapTypeInt) != TCL_OK) {
              (void)Tcl_ConvertToType (varg->interp,slot,&TornadoStringType);
-          } 
+          }
         } // slot had two elements
       } else {
         // Try first to map to integer then to a string
@@ -274,16 +274,16 @@ PUBLIC void *tornadoDirectFuncCall (TORNADO_id* tornadoId
            (void)Tcl_ConvertToType (varg->interp,slot,&TornadoStringType);
         }
       } // slot was a list
-    } // end argv was passed typed to directcall routine       
- 
-    // Now we can give internal rep to Tornado function call 
+    } // end argv was passed typed to directcall routine
+
+    // Now we can give internal rep to Tornado function call
     wtxCtx.args[ind] =(long) slot->internalRep.twoPtrValue.ptr1;
   }    // end for argv
 
   // fill up remainning arguement with zero
-  for (; ind < 10; ind++) wtxCtx.args[ind] = 0; 
- 
-  // spwan task and take exec function wtxCtx id 
+  for (; ind < 10; ind++) wtxCtx.args[ind] = 0;
+
+  // spwan task and take exec function wtxCtx id
   result = tornadoExecFuncCall (tornadoId, &wtxCtx);
 
   return (result); // ------------------ OK ----------------
@@ -313,16 +313,16 @@ PUBLIC void *tornadoDirectFuncCall (TORNADO_id* tornadoId
                    ,tclType->name, slot->bytes);
 
    return NULL;
-}  //end tornadoDirectFuncCall 
+}  //end tornadoDirectFuncCall
 
 /** ------------------------------------------------------------
  *   Register Tornado String type and build zero static object
  * -------------------------------------------------------------*/
 RESTRICTED void tornadoDirectInit (Tcl_Interp * interp) {
 
-   // Register Tornado String now  
+   // Register Tornado String now
    Tcl_RegisterObjType (&TornadoStringType);
-   
+
    // We dont need a full tornado info because DirectCall is not a real jWrap module
    tornadoInfo.magic         = TORNADO_INFO_MAGIC;
    tornadoInfo.wtxCtx        = NULL;

@@ -1,10 +1,10 @@
 /*
- *      Copyright(c) 1999 FRIDU a Free Software Company Philipppe Le Foll
+ *      Copyright(c) 1999 FRIDU a Free Software Company Philipppe Ar Foll
  *
  * Projet       : jWrap
  * SubModule    : Readline
  * Oject        : Interface with GNU readline
- * Auteur       : Johannes Zellner & Fulup Le Foll
+ * Auteur       : Johannes Zellner & Fulup Ar Foll
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -20,6 +20,12 @@
  * 01a,14mar96,Fulup, writen from realine example
  */
 
+// test:
+// tclsh
+// # load /home/fulup/Workspace/Fridu/Exe/linux86/lib/libRuntimeReadline.so Readline
+// # set JWRAP(ReadlinePrompt1) "-->"
+// # Readline.Start
+
 #ifndef SOLARIS
 # define __FUNCTION_DEF
 #endif
@@ -34,6 +40,8 @@
 
 #include "libRuntimeReadline.h"
 
+
+
 typedef enum {
   LINE_COMPLETED,
   LINE_EOF,
@@ -45,6 +53,8 @@ EXPORT char *ReadlinePrompt1 = "--> ";
 EXPORT char *ReadlinePrompt2 = "--? ";
 EXPORT char *ReadlineName    = "TclSh ";
 
+EXPORT char *tclEmptyStringRep;
+EXPORT char tclEmptyString;
 
 LOCAL Tcl_DString lineString;
 LOCAL LineStatus lineStatus;
@@ -72,7 +82,7 @@ ReadlineCompletion (char *text, int start, int end)
   sprintf (textStar, "%s*", text);
 
   /*
-   * ask TCL to return Var or List Variable 
+   * ask TCL to return Var or List Variable
    */
   Tcl_ResetResult (staticInterp);
   Tcl_AppendElement (staticInterp, text);
@@ -81,7 +91,7 @@ ReadlineCompletion (char *text, int start, int end)
   if (status == TCL_OK)
     if (Tcl_GetStringResult(staticInterp)[0] != '\0') {
       /*
-       * add a dummy trailing element for 0x0000 termination 
+       * add a dummy trailing element for 0x0000 termination
        */
       result = strdup (Tcl_GetStringResult(staticInterp));
       Tcl_ResetResult (staticInterp);
@@ -90,7 +100,7 @@ ReadlineCompletion (char *text, int start, int end)
     }
 
   /*
-   * if no proc founded search for a variable 
+   * if no proc founded search for a variable
    */
   if (nbCmd == 0) {
 
@@ -101,7 +111,7 @@ ReadlineCompletion (char *text, int start, int end)
     if (status == TCL_OK)
       if (Tcl_GetStringResult(staticInterp)[0] != '\0') {
 	/*
-	 * add a dummy trailing element for 0x0000 termination 
+	 * add a dummy trailing element for 0x0000 termination
 	 */
 	result = strdup (Tcl_GetStringResult(staticInterp));
 	Tcl_ResetResult (staticInterp);
@@ -110,13 +120,13 @@ ReadlineCompletion (char *text, int start, int end)
       }
   }
   /*
-   * if no command or var founded leave readline search for a file 
+   * if no command or var founded leave readline search for a file
    */
   if (nbCmd == 0) {
     return ((char **) NULL);
   }
   /*
-   * if we only have one command maches array has a different shape 
+   * if we only have one command maches array has a different shape
    */
   if (nbCmd == 1) {
     oneCmdMatches = (char **) malloc (2 * (sizeof (char *)));
@@ -125,9 +135,9 @@ ReadlineCompletion (char *text, int start, int end)
     oneCmdMatches[1] = NULL;
 
     /*
-     * free previous maches array 
+     * free previous maches array
      */
-    free (matches);
+    Tcl_Free (matches);
     return (oneCmdMatches);
   }
   /*
@@ -155,7 +165,7 @@ ReadlineCompletion (char *text, int start, int end)
     mlist[ind+1] = strdup (matches[ind]);
   }
   // free original match and close mlist
-  free (matches);
+  Tcl_Free (matches);
   mlist [ind+1] = NULL;
   return (mlist);
 }
@@ -164,10 +174,10 @@ ReadlineCompletion (char *text, int start, int end)
 /** --------------------------------------------------------
  *  Call by TCL each time a new char if avaliable on stdin
  * ---------------------------------------------------------*/
-LOCAL void 
+LOCAL void
 ReadlineDataAvailableHandler (ClientData clientData, int mask) {
 
-  // If a character is readable read it now inside readline buffer 
+  // If a character is readable read it now inside readline buffer
   if (mask & TCL_READABLE)
     rl_callback_read_char ();
 }
@@ -175,7 +185,7 @@ ReadlineDataAvailableHandler (ClientData clientData, int mask) {
 /** ---------------------------------------------------
  *  Call by readline each time a line if completed
  * ----------------------------------------------------*/
-LOCAL void 
+LOCAL void
 ReadlineLineCompleteHandler (char *line) {
   int  status;
   int  offset;
@@ -186,7 +196,7 @@ ReadlineLineCompleteHandler (char *line) {
   Tcl_DeleteFileHandler (0);
   rl_callback_handler_remove ();
 
-  // If line is complete try to process it thru TCL 
+  // If line is complete try to process it thru TCL
   if (line && *line) {
 
     // check if we are facing an history command
@@ -205,7 +215,7 @@ ReadlineLineCompleteHandler (char *line) {
       using_history ();
       result = get_history_event (line, &status, 0) ;
       if (result != NULL) {
-          lineStatus = LINE_COMPLETED; 
+          lineStatus = LINE_COMPLETED;
           printf ("%s\n", result);
           (void) Tcl_DStringAppend (&lineString, result, -1);
           (void) Tcl_DStringAppend (&lineString, "\n", -1);
@@ -233,7 +243,7 @@ PUBLIC void ReadlineHistory (void) {
     for (ind = 0; list[ind]; ind++) {
          printf ("%d: %s\r\n", ind+1, list[ind]->line);
     }
-  }  
+  }
 }
 
 /** ------------------------------------------------------
@@ -245,39 +255,39 @@ PUBLIC void  ReadlineStart (void)
   int status;
 
   // Allow conditiannal parsing of readline
-  rl_readline_name = ReadlineName; 
+  rl_readline_name = ReadlineName;
 
   /*
-   * Tell the completer that we want a crack first. 
+   * Tell the completer that we want a crack first.
    */
   rl_attempted_completion_function = (CPPFunction *) ReadlineCompletion;
 
 
   /*
-   * Loop reading and executing lines until the user quits. 
+   * Loop reading and executing lines until the user quits.
    */
 
   for (;;)			// Loop forever on reading lines until EOF
    {
-    // reset command line 
+    // reset command line
     Tcl_DStringInit (&lineString);
 
     // when starting line is uncompleted
     lineStatus = LINE_UNKNOW;
 
-    // readline line handler is called when line is full 
+    // readline line handler is called when line is full
     rl_callback_handler_install (ReadlinePrompt1, ReadlineLineCompleteHandler);
 
 
     for (;;) {
 
-      // validate a TCL file handler on stdin 
+      // validate a TCL file handler on stdin
       Tcl_CreateFileHandler (0, TCL_READABLE, ReadlineDataAvailableHandler, (ClientData) NULL);
 
-      // wait for line to be completed before processing it           
+      // wait for line to be completed before processing it
       while (lineStatus == LINE_UNKNOW) Tcl_DoOneEvent (TCL_FILE_EVENTS);
 
- 
+
       // check user did not EOF
       if ((lineStatus == LINE_EOF) || (lineStatus == LINE_EMPTY)) {
         printf ("\n");
@@ -288,17 +298,17 @@ PUBLIC void  ReadlineStart (void)
       cmd = Tcl_DStringValue (&lineString);
       if (Tcl_CommandComplete (cmd)) break;
 
-      // readline line handler is called when line is full 
+      // readline line handler is called when line is full
       rl_callback_handler_install (ReadlinePrompt2, ReadlineLineCompleteHandler);
       lineStatus = LINE_UNKNOW;
     }
 
-    // when user EOF leave readline 
+    // when user EOF leave readline
     if (lineStatus == LINE_EOF) break;
 
     // if line is empty ignore
     if (lineStatus == LINE_EMPTY) continue;
-  
+
     // excecute command
     status = Tcl_Eval (staticInterp, cmd);
     Tcl_DStringFree (&lineString);
@@ -318,20 +328,22 @@ PUBLIC void  ReadlineStart (void)
  * -------------------------------------------------------*/
 RESTRICTED int  ReadlineLibInit (Tcl_Interp * interp)
 {
-  char *line,
-   *s;
+  char *line, *s;
   char *param[2];
   int status;
   int done = 0;
   int gotPartial = 0;
   Tcl_DString command;
 
+  // TCL 8.0 compat;
+  tclEmptyStringRep= &tclEmptyString;
+
   if (isatty (0) == 0) {
     Tcl_SetResult(interp, "WARNING: rlStart ignored [not a tty]\n",TCL_VOLATILE) ;
     return (TCL_OK);
   }
   /*
-   * current version is mono interpreter 
+   * current version is mono interpreter
    */
   staticInterp = interp;
 

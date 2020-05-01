@@ -2,7 +2,7 @@
 #
 # Projet    :   jWrap
 # SubModule :   jTcl C/Tcl mapping
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author. Fulup $
@@ -38,7 +38,7 @@ if {![info exist JTCL_LOADED(jWrap.jTcl)]} {
     return ERROR
    }
   } ;# end switch
-  
+
   # Register ic JWRAP
   jClassRegister jWrap.jTcl.state   $_JWRAP_REL "$PKG_STATE $_JWRAP_REL"
   jClassRegister jWrap.jTcl.loader  $_JWRAP_REL $_JWRAP_SHL/loaderComponant.jTcl
@@ -48,7 +48,7 @@ if {![info exist JTCL_LOADED(jWrap.jTcl)]} {
   foreach VAR [info var _JWRAP_*] {
     unset $VAR
   }
-  
+
 } ;# end if already loaded
 
 

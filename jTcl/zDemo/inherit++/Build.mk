@@ -1,8 +1,8 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # Projet    :   jWrap
 # Module    :   Test/jWrap
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -12,7 +12,7 @@
 #
 #Modification History
 #--------------------
-#011,20feb98,Fulup written from jIc 
+#011,20feb98,Fulup written from jIc
 #
 
 # We do not install binaries
@@ -25,10 +25,10 @@
   LIB_SRCXXS = $(WRAPPERS) funcDemoInherit.cxx
   LIB_OBJS  = $(LIB_SRCXXS:%.cxx=${OBJDIR}/%${OBJ_SFX})
 
-  BIN_SRCXXS = mainDemoInherit.cxx 
+  BIN_SRCXXS = mainDemoInherit.cxx
   BIN_OBJS  = $(BIN_SRCXXS:%.cxx=${OBJDIR}/%${OBJ_SFX})
 
-  SRCXXS= $(BIN_SRCXXS) $(LIB_SRCXXS) 
+  SRCXXS= $(BIN_SRCXXS) $(LIB_SRCXXS)
 
 # define meta rules
 # ------------------
@@ -45,14 +45,14 @@ endif
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
+  MK_DEFINES  =
   MK_INCLUDES =
 
 # set proto if any .i changed make a local copy for non Fridu makefile
 # --------------------------------------------------------------------
 ${INCDIR}/libDemoInherit.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i)
 	${protoRule}
-	@cp $@ . 
+	@cp $@ .
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

@@ -5,7 +5,7 @@
 # File      :   module.mk, project global definition
 # Projet    : 	jTcl
 # SubModule :   Core
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -20,4 +20,4 @@
 #
   MOD_VERSION   := frontend-030
   MOD_INCLUDES  := -DYY_NEVER_INTERACTIVE
-  MOD_DEFINES   := 
+  MOD_DEFINES   :=

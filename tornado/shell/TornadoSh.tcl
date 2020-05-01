@@ -2,20 +2,20 @@
 #
 # Start Tcl interpretor
 # \
-exec tclsh  "$0" ${1+"$@"} 
+exec tclsh  "$0" ${1+"$@"}
 #
 # Copyright(c) 1999 FRIDU a Free Software Company
-# 
+#
 # Projet       : jWrap
 # SubModule    : WTX VxWorks Tornado Interface
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
-# 
-# Last: 
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+#
+# Last:
 #  Author      : $Author: Fulup $ Date        :
 #  Date        : $Date: 1999/03/19 17:59:07 $
 #  Revision    : $Revision: 1.5 $
 #  Source      : $Source: /Master/jWrap/tornado/shell/TornadoSh.tcl,v $
-# 
+#
 # Modification History
 # --------------------
 # 01b, 19mar99,Fulup added an automode from fridu_home+history maping
@@ -41,8 +41,8 @@ if {![info exist env(FRIDU_HOME)]} {
          set dir  [file dirname $SLOT]
          uplevel #0 source $SLOT
       }
-  }  
-} 
+  }
+}
 
 # we use jTcl package management
 if [catch {package require jTcl}] {
@@ -85,7 +85,7 @@ if [catch {jWrapCheckArgument SET_OPT GET_OPT $argv} RESULT] {
         registry {jWrap.PutEnv "WIND_REGISTRY=$VALUE"}
     }
   }
-} 
+}
 
 # If arguement are OK load all needed modules
  jWrapComponantLoad  libRuntimeReadline Readline

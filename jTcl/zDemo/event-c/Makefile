@@ -5,7 +5,7 @@
 # SubModule    : Test/jWrap
 # Implement    : DemoEvent
 # Object       : Minimal Makefile for runtime tree tesing
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last:
 #  Author      : $Author: Fulup $ Date        :

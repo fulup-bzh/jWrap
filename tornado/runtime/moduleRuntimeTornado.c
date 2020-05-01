@@ -1,10 +1,10 @@
 /*
- *      Copyright(c) 1996-99 FRIDU a Free Software Company Philipppe Le Foll
+ *      Copyright(c) 1996-99 FRIDU a Free Software Company Philipppe Ar Foll
  *
  * File         : ModuleRuntimeTornado.c load/unload/list of Object module
  * Projet       : jWrap
  * SubModule    : WTX VxWorks Tornado Interface
- * Auteur       : Fulup Le Foll (Fulup@fridu.bzh)
+ * Auteur       : Fulup Ar Foll (Fulup@fridu.bzh)
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -15,8 +15,8 @@
  * Modificatin History
  * -------------------
  * 1.4  1999/03/22 Fulup,changed ModuleLoad to return moduleId
- * 1.3  1999/02/16 Fulup,externalized WTX module 
- * 1.2  1998/05/06 Fulup,adapted to jWrap 
+ * 1.3  1999/02/16 Fulup,externalized WTX module
+ * 1.2  1998/05/06 Fulup,adapted to jWrap
  * 1.1  1996/05/13 Fulup,written from pad example
  */
 
@@ -168,7 +168,7 @@ PUBLIC void tornadoModuleBind (TORNADO_id *tornadoId, char *moduleName, TORNADO_
 
  module = (JWRAP_modules*) Tcl_GetHashValue (entryPtr);
 
- // Check we receveived a valid Tornado module 
+ // Check we receveived a valid Tornado module
  info = (TORNADO_infos*) module->info;
  if (info->magic != TORNADO_INFO_MAGIC) goto errNotTornadoModule;
 
@@ -177,7 +177,7 @@ PUBLIC void tornadoModuleBind (TORNADO_id *tornadoId, char *moduleName, TORNADO_
 
  // Loop on all Tornado module functions name and get target adress
  for (ind=0; info->nameCmd [ind] != NULL; ind++) {
-    // using WTX low level in order grouping errors 
+    // using WTX low level in order grouping errors
     if (lazy == BIND_NOW) {
       wtxSymId  = wtxSymFind (tornadoId->wtxId, info->nameCmd [ind], 0, FALSE, 0, 0);
       if (wtxSymId == NULL) {
@@ -186,7 +186,7 @@ PUBLIC void tornadoModuleBind (TORNADO_id *tornadoId, char *moduleName, TORNADO_
       } else {
         info->wtxCtx[ind].entry = wtxSymId->value;
       }
-    } 
+    }
     info->wtxCtx[ind].name      = info->nameCmd [ind];
     info->wtxCtx[ind].redirOut  = tornadoId->vOut;
  }
@@ -200,7 +200,7 @@ errNotTornadoModule:
 
 errUnresolved:
  jWrapPanic (NULL, "tornadoModuleBind module=%s %d unresolved references\n",moduleName,unresolved);
- 
+
 }
 
 /** ----------------------------------------------------------------
@@ -224,7 +224,7 @@ PUBLIC char** tornadoModuleUnresolved (char *moduleName) {
 
  module = (JWRAP_modules*) Tcl_GetHashValue (entryPtr);
 
- // Check we receveived a valid Tornado module 
+ // Check we receveived a valid Tornado module
  info = (TORNADO_infos*) module->info;
  if (info->magic != TORNADO_INFO_MAGIC) goto errNotTornadoModule;
 
@@ -235,7 +235,7 @@ PUBLIC char** tornadoModuleUnresolved (char *moduleName) {
 
  if (unresolved == 0) goto errUnresolved;
 
- // return result in a jWrap char** list 
+ // return result in a jWrap char** list
  result = (char**) Tcl_Alloc ((1+unresolved)*sizeof (char*));
  if (result == NULL) goto errMalloc;
 
@@ -248,7 +248,7 @@ PUBLIC char** tornadoModuleUnresolved (char *moduleName) {
     }
  }
 
- // jWrap char** as to be NULL closed 
+ // jWrap char** as to be NULL closed
  result [unresolved] = NULL;
 
 
@@ -264,7 +264,7 @@ errMalloc:
  jWrapPanic (NULL, "tornadoModuleUnresolved module=%s %d unresolved ref cannot malloc\n"
             ,moduleName,unresolved);
 
-return NULL; 
+return NULL;
 }
 
 /**-------------------------------------------------------------------------
@@ -274,10 +274,10 @@ return NULL;
  ** @module a valid jWrap module handle
  ** @see jWrapModuleRegister
  **-------------------------------------------------------------------------*/
-RESTRICTED void tornadoModuleRegister (Tcl_Interp *interp,JWRAP_modules *module) 
+RESTRICTED void tornadoModuleRegister (Tcl_Interp *interp,JWRAP_modules *module)
 {
 
   // register module in jWrap hashtable
   jWrapModuleRegister (interp, module);
 
-} 
+}

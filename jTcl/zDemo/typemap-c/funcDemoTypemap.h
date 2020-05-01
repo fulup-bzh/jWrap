@@ -1,9 +1,9 @@
 /*
  *  Copyright(c) 1997-99 FRIDU a Free Software Company [fridu@fridu.bzh]
  *
- * File      :   Demonstrate custom internal/external type maping 
+ * File      :   Demonstrate custom internal/external type maping
  * Projet    :   jWrap
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -21,7 +21,7 @@
  *  Interface: DemoTypemap
  *  Help     : jTcl C wrapping DemoTypemap
  * -----------------------------------------------*/
- 
+
 
 
 #ifndef __TYPE_MAP_LIB__
@@ -58,7 +58,7 @@ typedef enum Some_Options {
 // Some extra functions not in lib we want in our Wrapper
 #ifdef JWRAP_EXTRA
   EXTERN FILE*     fopen   (char*, char*);
-  EXTERN char*     fgets   (void*, int, FILE*); // WARNING: take a void* COOKIE as input param
+  EXTERN const char* fgets   (void*, int, FILE*); // WARNING: take a void* COOKIE as input param
   EXTERN void      fclose  (FILE*);             // WARNING: return a COOKIE(void*)
 #endif
 
@@ -81,6 +81,6 @@ typedef enum Some_Options {
 
 
 
- 
+
 
 

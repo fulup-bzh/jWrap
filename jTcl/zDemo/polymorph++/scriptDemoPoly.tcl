@@ -4,7 +4,7 @@
 # Object    :   show basic jTcl/C++ multiheritage mecanism
 # Projet    :   Jos/jWrap
 # Module    :   Test/jWrap
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -27,7 +27,7 @@
 # -------------------------------------
 if [catch {package require jTcl}] {
   puts "Can't find jTcl Package check TCLLIBPATH variable environemnt"
-  return -code error 
+  return -code error
 }
 
 # Check jWrap DemoPoly jWrap demonstration module is loaded
@@ -35,7 +35,7 @@ if [catch {jWrap info DemoPoly} ERR] {
   puts "ERROR: This demonstration require ModulePoly to loaded."
   puts "Restart stript with DemoPolySh Executable or load libDemoPoly.so in tclsh."
   return -code error
-}  
+}
 
 # Import basic Object package
 # ---------------------------

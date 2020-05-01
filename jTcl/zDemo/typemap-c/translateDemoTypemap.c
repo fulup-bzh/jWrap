@@ -4,7 +4,7 @@
  * File      :   translateLibType.c map application type into jWrap
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -37,7 +37,7 @@ static Tcl_ObjType adrCustomType = {
     dupAdrInt,		                /* dupIntRepProc */
     getAdrFromC,	        	/* updateStringProc */
     putAdrIntoC			        /* setFromAnyProc */
-}; 
+};
 
 
 /******************************************************************
@@ -69,7 +69,7 @@ LOCAL void dupAdrInt(Tcl_Obj *srcPtr, Tcl_Obj *copyPtr)
     return;
 
 errMalloc:
-   jWrapPanic (NULL,"DupAdrInt: can't malloc %s", TCL_STRING (copyPtr));   
+   jWrapPanic (NULL,"DupAdrInt: can't malloc %s", TCL_STRING (copyPtr));
 }
 
 /**************************************************************************
@@ -80,10 +80,10 @@ LOCAL void getAdrFromC (Tcl_Obj *objPtr)
   char *argv[5];
   char zip  [10];
   unsigned int  len;
-  typeMapAdrs *adr;  
+  typeMapAdrs *adr;
 
     if (objPtr->internalRep.otherValuePtr == NULL) {
-      // if C value is NULL 
+      // if C value is NULL
       objPtr->bytes = tclEmptyStringRep;
       objPtr->length = 0;
     } else {
@@ -97,7 +97,7 @@ LOCAL void getAdrFromC (Tcl_Obj *objPtr)
       sprintf (zip,"%d",adr->zip);
       argv[3] = zip;
       argv[4] = adr->town;
-   
+
       // Allocate room to receive result
       objPtr->bytes  = Tcl_Merge (5,argv);
       objPtr->length = strlen (objPtr->bytes);
@@ -114,7 +114,7 @@ LOCAL int putAdrIntoC (Tcl_Interp *interp,Tcl_Obj *objPtr)
   int len;
   Tcl_Obj *slot;
 
-   // check this is a valid list 
+   // check this is a valid list
    status = Tcl_ListObjLength (interp, objPtr,&len);
    if (status == TCL_ERROR) goto errList;
 
@@ -134,7 +134,7 @@ LOCAL int putAdrIntoC (Tcl_Interp *interp,Tcl_Obj *objPtr)
    (void) Tcl_ListObjIndex (interp, objPtr, 1, &slot);
    if (slot->length > 20) goto errTooBig;
    adr->firstName = Tcl_GetStringFromObj (slot,NULL);
-   
+
    (void) Tcl_ListObjIndex (interp, objPtr, 2, &slot);
    if (slot->length > 20) goto errTooBig;
    adr->adress = Tcl_GetStringFromObj (slot,NULL);
@@ -167,7 +167,7 @@ errTooBig:
 
 errMalloc:
   jWrapPanic (interp,"Cannot malloc adress :%s", TCL_STRING(objPtr));
- 
+
 // for gcc not to complain
   return JWRAP_IMPOSSIBLE;
 }

@@ -5,7 +5,7 @@
  * File      :   libBackendCc2Tornado.h generate C/C++ to Tornado/Wtx Wrapper
  * Projet    :   jWrap
  * Module    :   Tornado/Wtx Tornado/VxWorks interface
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -15,7 +15,7 @@
  *
  * Modification History
  * --------------------
- * 01b,16feb99,Fulup,remanced modulefrom WPR to Tornado  
+ * 01b,16feb99,Fulup,remanced modulefrom WPR to Tornado
  * 01a,30may98,Fulup,written
  */
 
@@ -30,7 +30,7 @@ class BackendCc2Tornado : public BackendCc2jTcl {
  public:
 
   virtual void output (Functions *);            // Print out all function and methods
-  virtual void output (Programs  *);            // print out header program 
+  virtual void output (Programs  *);            // print out header program
   virtual void setOutName (Programs *program);  // build output name from input
   virtual void tornadoTypeStdMap (void);            // map all basic type with target & tornadoId
   BackendCc2Tornado ();                             // dummy c++ constructor

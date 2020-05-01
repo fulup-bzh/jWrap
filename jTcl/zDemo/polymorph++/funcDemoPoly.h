@@ -5,7 +5,7 @@
  * SubModule :   Test/jWrap
  * Interface :   DemoPoly
  * Object    :   demonstrate basic jTcl/C++ multi-inheritance mecanism
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -29,7 +29,7 @@
  ** This class is a base boject for multi inheritage demo
  *********************************************************************/
 class CxxObj  {
- public: 
+ public:
   // define a method for checking C++ handle validity
   void probe (int     number) ;
   void probe (char*   chaine) ;

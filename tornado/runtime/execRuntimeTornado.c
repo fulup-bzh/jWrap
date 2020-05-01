@@ -1,10 +1,10 @@
 /*
- *      Copyright(c) 1996-1999 Fridu a Free Software Company Fulup Le Foll
+ *      Copyright(c) 1996-1999 Fridu a Free Software Company Fulup Ar Foll
  *
  * File         : execRuntimeTornado.c  Exec a function on to VxWork thru target server
  * Projet       : jWrap
  * SubModule    : VxWorks Wtx Tornado interface
- * Auteur       : Fulup Le Foll (Fulup@fridu.bzh)
+ * Auteur       : Fulup Ar Foll (Fulup@fridu.bzh)
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -24,7 +24,7 @@
 
 /** --------------------------------------------------------
  ** Manages all facilities for executing function on VxWorks
- ** target. 
+ ** target.
  ** --------------------------------------------------------*/
 #include "libRuntimeTornado.h"
 #include <string.h>
@@ -72,17 +72,17 @@ tornadoExecSplitEvent (TORNADO_id * tornadoId, WTX_EVENT_DESC * evtId)
       evtRet.argv[evtRet.argc] = &evtId->event[ind];
     }
   }				/*
-				 * end for ind 
+				 * end for ind
 				 */
 
   /*
-   * tornadoCtxSpawn need evtId in order to free it 
+   * tornadoCtxSpawn need evtId in order to free it
    */
   evtRet.id = evtId;
   evtRet.tornadoId = tornadoId;
 
   /*
-   * we have an event but not the one we have waiting for 
+   * we have an event but not the one we have waiting for
    */
   evtRet.evtNum = wtxStrToEventType (tornadoId->wtxId, evtRet.argv[TORNADO_EVT_TYPE]);
 
@@ -94,7 +94,7 @@ tornadoExecSplitEvent (TORNADO_id * tornadoId, WTX_EVENT_DESC * evtId)
 
   return (&evtRet);
 }				/*
-				 * end tornadoSplitEvent 
+				 * end tornadoSplitEvent
 				 */
 
 /**---------------------------------------------------------
@@ -105,7 +105,7 @@ tornadoExecSplitEvent (TORNADO_id * tornadoId, WTX_EVENT_DESC * evtId)
  ** @param tornadoId  TORNADO handle
  ** @param funcId function handle in WTX given with tornadoExecCall
  ** @return none
- ** @see wtxEventGet 
+ ** @see wtxEventGet
  **---------------------------------------------------------*/
 PUBLIC void *
 tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
@@ -118,11 +118,11 @@ tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
   WTX_EVENT_DESC *evtId;
 
   /*
-   * pool event for result 
+   * pool event for result
    */
   for (hop = 0; done == FALSE; hop++) {
     /*
-     * event works in pool mode wait for not killing host 
+     * event works in pool mode wait for not killing host
      */
 #   ifndef WinDos
         usleep (100000);
@@ -131,7 +131,7 @@ tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
     evtId = wtxEventGet (tornadoId->wtxId);
     /*
      * if wtxEventGet was sucesfull but no event raised
-     * retry (huggly pool method) 
+     * retry (huggly pool method)
      */
     if (evtId == NULL) {
       // Tcl_DoOneEvent (TCL_ALL_EVENTS);
@@ -140,7 +140,7 @@ tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
     }
 
     /*
-     * parse event 
+     * parse event
      */
     evtSplit = tornadoExecSplitEvent (tornadoId, evtId);
 
@@ -149,18 +149,18 @@ tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
       case WTX_EVENT_CALL_RETURN:
 
 	/*
-	 * check eventId->event look nice 
+	 * check eventId->event look nice
 	 */
 	if (evtSplit->argc != 3)
 	  goto errEvtFmt;
 
 	/*
-	 * is this the one we are looking for ? 
+	 * is this the one we are looking for ?
 	 */
 	jWrapLog (8,"[%#x==%#x ?] \n" ,(void*)funcId, (void*)evtSplit->funcId);
 
 	/*
-	 * hum hum, is this what we are waiting for 
+	 * hum hum, is this what we are waiting for
 	 */
 	if (funcId == evtSplit->funcId)
 	  done = TRUE;
@@ -169,22 +169,22 @@ tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
       case WTX_EVENT_VIO_WRITE:
 
 	/*
-	 * print all VIO message on stdout 
+	 * print all VIO message on stdout
 	 */
 	fwrite (evtId->addlData, sizeof (char), (size_t)evtId->addlDataLen, stdout);
         fflush (stdout);
 
 	hop--;			/*
-				 * each VIO_WRITE increase hop timeout 
+				 * each VIO_WRITE increase hop timeout
 				 */
 
 	/*
-	 * free unsued event before asking a new one 
+	 * free unsued event before asking a new one
 	 */
 	wtxResultFree (tornadoId->wtxId, evtId);
 
 	break;
-  
+
       case WTX_EVENT_EXCEPTION:
 
         jWrapLog (1, "[%s]\n", evtId->event);
@@ -195,36 +195,36 @@ tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
 
       default:
 	/*
-	 * free unsued event before asking a new one 
+	 * free unsued event before asking a new one
 	 */
 	wtxResultFree (tornadoId->wtxId, evtId);
 
     }				/*
-				 * end switch 
+				 * end switch
 				 */
 
     /*
-     * did we hopTimeout ? 
+     * did we hopTimeout ?
      */
     if (hop >= tornadoExecHopCount)
       goto errTimeout;
   }				// end for
 
   /*
-   * process return status 
+   * process return status
    */
   returnStatus = wtxStrToInt32 (tornadoId->wtxId, evtSplit->argv[TORNADO_EVT_FUNC_STATUS]);
   if (returnStatus != WTX_OK)
     goto errRetStatus;
 
   /*
-   * we finaly have a good result process it as an adress 
+   * we finaly have a good result process it as an adress
    */
   returnValue = wtxStrToTgtAddr (tornadoId->wtxId, evtSplit->argv[TORNADO_EVT_FUNC_RET]);
 
 #ifdef NOT_DONE
   /*
-   * now we can free event ID 
+   * now we can free event ID
    */
   wtxResultFree (tornadoId->wtxId, evtId);
 #endif
@@ -233,7 +233,7 @@ tornadoExecWaitReturn (TORNADO_id * tornadoId, WTX_CONTEXT_ID_T funcId)
   return (void *) returnValue;
 
   /*
-   * ---------------------- ERROR --------------------- 
+   * ---------------------- ERROR ---------------------
    */
 
 errEvtFmt:
@@ -253,7 +253,7 @@ errRetStatus:
   return NULL;			// for gcc not to complain
 
 }				/*
-				 * end tornadoExecWaitReturn 
+				 * end tornadoExecWaitReturn
 				 */
 
 /** ---------------------------------------------------------------------
@@ -263,8 +263,8 @@ errRetStatus:
  **   @note does not use strict symbol search
  **   @see wtxSymFind
  ** ---------------------------------------------------------------------*/
-PUBLIC char* tornadoExecFindAddr (TORNADO_id * tornadoId, char *symbol) { 
- WTX_SYMBOL *wtxSymId; 
+PUBLIC char* tornadoExecFindAddr (TORNADO_id * tornadoId, char *symbol) {
+ WTX_SYMBOL *wtxSymId;
  TGT_ADDR_T address;
  int        len;
  char       *result;
@@ -287,7 +287,7 @@ errScanAddr:
 	      ,symbol);
 
    return NULL;
-} 
+}
 
 /** ---------------------------------------------------------------------
  **   Search a symbol in target server. Is symbol exist in target server
@@ -298,11 +298,11 @@ errScanAddr:
  **   @note does not use strict symbol search
  **   @see wtxSymFind
  ** ---------------------------------------------------------------------*/
-PUBLIC TGT_ADDR_T tornadoExecFindSymbol (TORNADO_id * tornadoId, char *symbol) { 
- WTX_SYMBOL *wtxSymId; 
+PUBLIC TGT_ADDR_T tornadoExecFindSymbol (TORNADO_id * tornadoId, char *symbol) {
+ WTX_SYMBOL *wtxSymId;
  TGT_ADDR_T result;
  int        len;
- 
+
     wtxSymId = wtxSymFind (tornadoId->wtxId, symbol, 0, FALSE, 0, 0);
     if (wtxSymId == NULL) goto errSymFind;
 
@@ -316,7 +316,7 @@ errSymFind:
               ,wtxErrMsgGet (tornadoId->wtxId));
 
    return (unsigned)JWRAP_IMPOSSIBLE;
-} 
+}
 
 /**----------------------------------------------------
  ** Start a function as a task on VxWorks target
@@ -339,19 +339,19 @@ PUBLIC WTX_CONTEXT_ID_T tornadoExecFuncSpawn (TORNADO_id * tornadoId, WTX_CONTEX
      wtxCtx->redirOut  = tornadoId->vOut;
   }
   /*
-   * call function 
+   * call function
    */
   funcId = wtxFuncCall (tornadoId->wtxId, wtxCtx);
   if (funcId == (WTX_CONTEXT_ID_T) WTX_ERROR)
     goto errFuncCall;
 
     /*
-     * return funcId for tornadoExecWaitReturn 
+     * return funcId for tornadoExecWaitReturn
      */
   return (funcId);
 
   /*
-   * ---------------------------- ERROR -------------------- 
+   * ---------------------------- ERROR --------------------
    */
 errSymbol:
   jWrapPanic (NULL,"ERROR: tornadoExecFuncCall [%s] Unknow Symbol\nWTX_ErrMsg=[%s]\n"
@@ -364,10 +364,10 @@ errFuncCall:
   return 0;			// for Gcc warning
 
 }				/*
-				 * end tornadoExecFuncCall 
+				 * end tornadoExecFuncCall
 				 */
 
-/**----------------------------------------------------------- 
+/**-----------------------------------------------------------
  ** Short interface for tornadoExecFuncCall & tornadoExecWaitReturn
  ** this routine is the one used by jWrap.
  ** @param  tornadoId TORNADO handle
@@ -381,12 +381,12 @@ PUBLIC void *tornadoExecFuncCall (TORNADO_id *tornadoId, WTX_CONTEXT_DESC *wtxCt
   if (tornadoId== NULL) goto errTornadoId;
   if (tornadoId->wtxId == NULL) goto errWtxId;
   /*
-   * spwan task and take exec function wtxCtx id 
+   * spwan task and take exec function wtxCtx id
    */
   funcId = tornadoExecFuncSpawn (tornadoId, wtxCtx);
 
   /*
-   * wait for result and return it 
+   * wait for result and return it
    */
 #ifndef WTX_SIMULATION
   result = tornadoExecWaitReturn (tornadoId, funcId);
@@ -405,5 +405,5 @@ PUBLIC void *tornadoExecFuncCall (TORNADO_id *tornadoId, WTX_CONTEXT_DESC *wtxCt
    jWrapPanic (NULL,"ERROR: tornadoExecFuncCall TornadoId->wtxId==NULL [not bind|connected]\n");
    return NULL;
 }				/*
-				 * end tornadoFuncCall 
+				 * end tornadoFuncCall
 				 */

@@ -1,8 +1,8 @@
-#       Copyright(c) 96-98 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-98 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # Projet    :   jWrap
 # Module    :   jTcl wrapping Demo
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -12,12 +12,13 @@
 #
 #Modification History
 #--------------------
-#011,20feb98,Fulup written from jIc 
+#011,20feb98,Fulup written from jIc
 #
 
 # We do not install binaries
 # --------------------------
   NOT_INSTALL=1
+  MK_DEFINES  = -DJWRAP_MALLOC
 
 # Define modules
 # ------------------------
@@ -25,10 +26,10 @@
   LIB_SRCXXS = $(WRAPPERS) funcDemoMikhail.cxx
   LIB_OBJS  = $(LIB_SRCXXS:%.cxx=${OBJDIR}/%${OBJ_SFX})
 
-  BIN_SRCXXS = mainDemoMikhail.cxx 
+  BIN_SRCXXS = mainDemoMikhail.cxx
   BIN_OBJS  = $(BIN_SRCXXS:%.cxx=${OBJDIR}/%${OBJ_SFX})
 
-  SRCXXS= $(BIN_SRCXXS) $(LIB_SRCXXS) 
+  SRCXXS= $(BIN_SRCXXS) $(LIB_SRCXXS)
 
 # define meta rules
 # ------------------
@@ -46,14 +47,14 @@ endif
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
+  MK_DEFINES  =
   MK_INCLUDES =
 
 # set proto if any .i changed make a local copy for non Fridu makefile
 # --------------------------------------------------------------------
 ${INCDIR}/libDemoMikhail.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i)
 	${protoRule}
-	@$(CP) $@ . 
+	@$(CP) $@ .
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

@@ -79,8 +79,9 @@ extern int yycc_debug;
     UNION_TAG = 289,
     G_PTR = 290,
     COMPLEX_TYPE = 291,
-    OPEN_BRAKET = 292,
-    CLOSE_BRAKET = 293
+    CONST_TYPE = 292,
+    OPEN_BRAKET = 293,
+    CLOSE_BRAKET = 294
   };
 #endif
 /* Tokens.  */
@@ -118,8 +119,9 @@ extern int yycc_debug;
 #define UNION_TAG 289
 #define G_PTR 290
 #define COMPLEX_TYPE 291
-#define OPEN_BRAKET 292
-#define CLOSE_BRAKET 293
+#define CONST_TYPE 292
+#define OPEN_BRAKET 293
+#define CLOSE_BRAKET 294
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -142,7 +144,7 @@ union YYSTYPE
   Elements*   element;
   Defines*    define;
 
-#line 146 "y.tab.h" /* yacc.c:1909  */
+#line 148 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

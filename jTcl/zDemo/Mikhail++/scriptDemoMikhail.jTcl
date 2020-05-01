@@ -4,7 +4,7 @@
 # Object    :   show complex Structure and typedef mecanism
 # Projet    :   Jos/jWrap
 # Module    :   Test/jWrap
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -40,7 +40,7 @@ if [catch {jWrap info DemoMikhail} ERR] {
   puts "ERROR: This demonstration require ModuleMikhail to loaded."
   puts "Restart stript with DemoMikhailSh Executable or load libDemoMikhail.so in tclsh."
   return -code error
-}  
+}
 
 # Extend C++ class in jTcl
 # ------------------------
@@ -51,7 +51,7 @@ class two {extends Object extends one} {
     puts "  two.two INT_VAL=$INT_VAL"
     one.one $MY [expr $INT_VAL / 2]
   }
-} 
+}
 
 puts "\n Create Object one"
 set ID0 [new one 4 5.0]

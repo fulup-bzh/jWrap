@@ -3,7 +3,7 @@
  *
  * Projet    :   jWrap
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -31,7 +31,7 @@
 #include "funcDemoTypemap.h"
 
 
-EXPORT char        *TypeMap_help = "Demonstrate how convert basic C type to Tcl";
+EXPORT char *TypeMap_help = "Demonstrate how convert basic C type to Tcl";
 EXPORT typeMapAdrs *lastAdr = NULL;
 
 // This routine demonstrate how translate a string token to an int
@@ -43,7 +43,7 @@ PUBLIC int checkOpt (SomeOptions option) {
   case OPT_3:
    fprintf (stderr,"Option:%d valid\n", (int) option);
    break;
-   
+
   default: fprintf (stderr, "Imposible opt=%d\n", option);
   }
 
@@ -53,22 +53,21 @@ PUBLIC int checkOpt (SomeOptions option) {
 
 // return input parameter + one
 PUBLIC int addOneToInt (int number) {
- 
+
   return (number+1);
-} 
+}
 
 
 // return upperstring to Tcl
 PUBLIC char* stringToUpper (char* chaine) {
  static char result [255];
  int ind;
- 
+
  for (ind=0; chaine [ind] != '\0'; ind ++) {
    result [ind] = toupper (chaine [ind]);
  }
  result [ind] = '\0';
-
- return result; // WARNING: Tcl will do a private copy at first puts only
+ return strdup (result);
 
 toBig:
  return "Input string ig bigger than 255 character";
@@ -82,11 +81,11 @@ PUBLIC char** listToUpper (char ** list) {
 
  // count list length in order returning it
  for (ind=0; list[ind] != NULL; ind++);
- res = (char**) Tcl_Alloc (sizeof(char**) * (ind+1));
- 
+ res = (char**) malloc ((ind+1) * sizeof(char**));
+
  for (ind=0; list[ind] != NULL; ind++) {
-   if (ind > 9) goto tooBig;
-   res [ind] = strdup (stringToUpper (list [ind]));
+   if (ind > 9) goto tooBig; // make test impossible to read
+   res [ind] = stringToUpper (list [ind]);
  }
  res [ind] = NULL; // close the list
 
@@ -103,8 +102,8 @@ PUBLIC int evalTclInC (Tcl_Interp *interp, Tcl_Obj *objPtr) {
  Tcl_Obj result;
 
  status = Tcl_GlobalEvalObj (interp, objPtr);
- 
- return status;    
+
+ return status;
 }
 
 // retreive a custom C structure
@@ -126,7 +125,7 @@ PUBLIC void checkVarg (JWRAP_varg *varg) {
  char *typeName;
 
   printf ("argc = %d\n", varg->argc);
-  
+
 
   for (ind =0 ; ind <varg->argc; ind++) {
     if (varg->argv[ind]->typePtr != NULL) {
@@ -139,6 +138,6 @@ PUBLIC void checkVarg (JWRAP_varg *varg) {
       , typeName);
   }
 
-} 
+}
 
 

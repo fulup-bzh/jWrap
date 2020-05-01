@@ -4,7 +4,7 @@
  * File      :   programBackendCc2Tornado
  * Projet    :   jWrap
  * Module    :   Tornado Wtx/Tornado VxWorks interface
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -20,12 +20,12 @@
  */
 
 #include <stdio.h>
-#include <ctype.h> 
+#include <ctype.h>
 
 #include "libBackendCc2Tornado.h"
 
 /******************************************************************************
- *** Effectively build C++ jTcl wrapper 
+ *** Effectively build C++ jTcl wrapper
  ******************************************************************************/
 
 void BackendCc2Tornado::output (Programs *program) {
@@ -33,18 +33,18 @@ void BackendCc2Tornado::output (Programs *program) {
   McString enumDefine;
   int usedType=0;  // number of different type in module
   char initName [55];
-  
+
   // start printing an information header
   fprintf (outFile,"\n/*  ----------------------------------------------------------");
   fprintf (outFile,"\n *   File: %s %s",(char*)outName,(char*)program->help);
   fprintf (outFile,"\n *   This file was automatically generated with");
   fprintf (outFile,"\n *   jWrap (C)FRIDU a Free Software Company 97-98");
-  fprintf (outFile,"\n *   the %s\n",getDate()); 
+  fprintf (outFile,"\n *   the %s\n",getDate());
   fprintf (outFile,"\n *   jWrap --cc2tornado %s\n *", (char*)program->name);
-  fprintf (outFile,"\n *   WARNING: Except if you really know what you are doing"); 
+  fprintf (outFile,"\n *   WARNING: Except if you really know what you are doing");
   fprintf (outFile,"\n *   you should not edit this file by hand.");
   fprintf (outFile,"\n *");
-  fprintf (outFile,"\n *   In order finding jWrap check: http://www.fridu.bzh");   
+  fprintf (outFile,"\n *   In order finding jWrap check: http://www.fridu.bzh");
   fprintf (outFile,"\n + ------------------------------------------------------------ */\n\n");
 
   // printout assert for jWrap proto extraction
@@ -52,7 +52,7 @@ void BackendCc2Tornado::output (Programs *program) {
   fprintf (outFile,"#define EASYC_PROTO_ONLY\n");
   fprintf (outFile,"#endif\n");
 
-  // include mandatory jWrap header 
+  // include mandatory jWrap header
   fprintf (outFile,"#define JWRAP_CC2TORNADO\n");
 
   fprintf (outFile, "\n#include \"libRuntimeTornado.h\"\n");
@@ -91,7 +91,7 @@ void BackendCc2Tornado::output (Programs *program) {
   fprintf (outFile," #define tornadoTypeTcl2Cc   tornadoTargetTypeTcl2Cc\n");
   fprintf (outFile," #define tornadoStringTcl2Cc tornadoTargetStringTcl2Cc\n");
   fprintf (outFile," #endif\n");
-  
+
 
   fprintf (outFile,"\n // Build module static informations\n");
   fprintf (outFile," static JWRAP_modules module;\n");
@@ -122,14 +122,14 @@ void BackendCc2Tornado::output (Programs *program) {
     for (knd =0; knd < program->structs[ind]->elements.size(); knd ++) {
       registerType (&program->structs[ind]->elements[knd]->type
                    ,program->structs[ind]->elements[knd]->array, TYPE_NATIVE);
-    } 
+    }
   }
   for (ind=0; ind < program->unions.size(); ind ++) {
     registerType (&program->unions[ind]->name,-1,TYPE_UNION);
     for (knd =0; knd < program->unions[ind]->elements.size(); knd ++) {
       registerType (&program->unions[ind]->elements[knd]->type
                    ,-1,TYPE_NATIVE);
-    } 
+    }
   }
   for (ind=0; ind < program->enums.size(); ind ++) {
     registerType (&program->enums[ind]->name,-1,TYPE_ENUM);
@@ -140,7 +140,7 @@ void BackendCc2Tornado::output (Programs *program) {
     function = program->functions[ind];
     usedCmd.append (function);
     registerType (&function->result,-1,TYPE_NATIVE);
-   
+
     for (jnd=0; jnd < function->params.size(); jnd++) {
      registerType (&function->params[jnd]->type,-1,TYPE_NATIVE);
     }
@@ -148,20 +148,20 @@ void BackendCc2Tornado::output (Programs *program) {
 
 
  // we now know used type array size
-  fprintf (outFile," static JWRAP_types usedType [%d];\n",cTypes.size());  
+  fprintf (outFile," static JWRAP_types usedType [%d];\n",cTypes.size());
 
   // We print an enumeration in order program to used symbolic name for type
   fprintf (outFile,"\n // Build used type enumeration\n");
   fprintf (outFile," enum enumType {\n   ");
   for (ind=0; ind < cTypes.size(); ind++) {
-    if (ind != 0) fprintf (outFile, "  ,"); 
+    if (ind != 0) fprintf (outFile, "  ,");
     fprintf (outFile,"JTYPE_%-25s = %d\n", jWrapType (cTypes [ind]->name), ind);
   }
   fprintf (outFile," }; // end of usedType enumeration\n");
 
   // Command help is a static array of string with one line of help for each command
   fprintf (outFile,"\n // Build used commands arrays\n");
-  fprintf (outFile," static WTX_CONTEXT_DESC wtxCtx [%d];\n",usedCmd.size()); 
+  fprintf (outFile," static WTX_CONTEXT_DESC wtxCtx [%d];\n",usedCmd.size());
   fprintf (outFile," static char *helpCmd[] = {\n");
   // each module as at least module management command
   for (ind=0; ind < usedCmd.size(); ind++) {
@@ -181,7 +181,7 @@ void BackendCc2Tornado::output (Programs *program) {
      fprintf (outFile,"\n\n/* *** Define Section *** */\n\n");
      BackendCc2jTcl::output (&enumDefine, program->defines);
   }
- 
+
   for (ind=0; ind < program->enums.size(); ind ++) {
      if(ind ==0)  fprintf (outFile,"\n\n/* *** Enumeration Section *** */\n\n");
      BackendCc2jTcl::output (program->enums[ind]);
@@ -189,7 +189,7 @@ void BackendCc2Tornado::output (Programs *program) {
 
   // prepare an array to old enumeration references for jWrap cmd
   if ((program->defines.size() + program->enums.size())> 0) {
-    fprintf (outFile,"\n // Hold Defines & Enum reference for jWrap struct help cmd\n"); 
+    fprintf (outFile,"\n // Hold Defines & Enum reference for jWrap struct help cmd\n");
     fprintf (outFile," static JWRAP_enums *enumerations[]={\n");
     if (program->defines.size() > 0) {
       fprintf (outFile,"  &%s_enum,\n",(char*)enumDefine);
@@ -213,7 +213,7 @@ void BackendCc2Tornado::output (Programs *program) {
 
   // prepare an array to hold module structures
   if ((program->structs.size()+program->unions.size())>0) {
-    fprintf (outFile,"\n // Hold structure & unions reference for jWrap struct help cmd\n"); 
+    fprintf (outFile,"\n // Hold structure & unions reference for jWrap struct help cmd\n");
     fprintf (outFile," static JWRAP_structs *structures[]={\n");
     for (ind=0; ind < program->structs.size (); ind ++) {
       fprintf (outFile,"  &%s_struct,\n", (char*)program->structs [ind]->name);
@@ -223,7 +223,7 @@ void BackendCc2Tornado::output (Programs *program) {
     }
     fprintf (outFile,"  NULL\n };\n");
   }
-  
+
   for (ind=0; ind < program->functions.size(); ind ++) {
     if (ind == 0)  fprintf (outFile,"\n/* *** Functions Section *** */\n\n");
     output (program->functions[ind]);
@@ -256,8 +256,8 @@ void BackendCc2Tornado::output (Programs *program) {
 
   fprintf (outFile,"\n module.magic        = JWRAP_MODULE;\n");
   fprintf (outFile," module.name           = \"%s\";\n", (char*)modName);
-  fprintf (outFile," module.help           = \"%s\";\n", (char*)program->help); 
-  fprintf (outFile," module.helpCmd        = helpCmd;\n"); 
+  fprintf (outFile," module.help           = \"%s\";\n", (char*)program->help);
+  fprintf (outFile," module.helpCmd        = helpCmd;\n");
   fprintf (outFile," module.nbCmd          = %d;\n", usedCmd.size());
   fprintf (outFile," module.hashTable      = NULL;\n");
   fprintf (outFile," module.version        = %s_CUSTOM_STAMP;\n",(char*)modName);
@@ -273,7 +273,7 @@ void BackendCc2Tornado::output (Programs *program) {
   }
   fprintf (outFile," module.info           = (ClientData) &tornadoInfo;\n");
 
-  fprintf (outFile,"\n // prepare emergency panic return\n"); 
+  fprintf (outFile,"\n // prepare emergency panic return\n");
   fprintf (outFile," if (setjmp (jWrapCheckPoint)) {\n");
   fprintf (outFile,"   return TCL_ERROR;\n }\n");
 
@@ -333,7 +333,7 @@ void BackendCc2Tornado::output (Programs *program) {
        if (strncmp ((char*)*cTypes[ind]->name, "union ",6)) fprintf (outFile,"union ");
        break;
       case TYPE_ENUM:
-       if (strncmp ((char*)*cTypes[ind]->name, "enum ",5)) fprintf (outFile,"enum "); 
+       if (strncmp ((char*)*cTypes[ind]->name, "enum ",5)) fprintf (outFile,"enum ");
        break;
     }
     fprintf (outFile,"%s));\n", (char*)*cTypes[ind]->name);
@@ -362,6 +362,6 @@ void BackendCc2Tornado::output (Programs *program) {
    fprintf (stderr,"ERROR:BackendCc2Tornado: C++ not supported yet!!!\n");
    status=ERROR;
    return;
-  
+
 } // end output program
 

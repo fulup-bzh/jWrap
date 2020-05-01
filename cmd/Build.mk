@@ -1,11 +1,11 @@
 #  $Header: /Master/jWrap/cmd/Build.mk,v 1.3.0.1 1999/03/11 12:49:29 Fulup Exp $
 #
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # Module    :   Parser main binary
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $

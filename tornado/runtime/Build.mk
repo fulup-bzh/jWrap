@@ -1,10 +1,10 @@
 #
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # Module    :   Wtx VxWorks Tornado interface
-# Auteur    :   Fulup Le Foll (Fulup@fridu.bzh)
+# Auteur    :   Fulup Ar Foll (Fulup@fridu.bzh)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -20,7 +20,7 @@
 
 # Only compile this directory if tornado is defined
 # -------------------------------------------------
-ifdef TORNADO_BASE 
+ifdef TORNADO_BASE
 
 # Define modules
 # --------------
@@ -36,15 +36,15 @@ ifdef TORNADO_BASE
 
 # define meta rules
 # ------------------
-  LIBS   :=  libRuntimeTornado 
+  LIBS   :=  libRuntimeTornado
   JDOC   :=  libRuntimeTornado
   SHARED :=  libRuntimeTornado
   SHARED :=  libRuntimeTornado
 
-ifeq (${ARCH_OS_NAME},Linux) 
+ifeq (${ARCH_OS_NAME},Linux)
   override SHLIBS := $(WTX_DLL) $(JWRAP_DLL) $(TORNADO_LIB)
 endif
-ifeq (${ARCH_OS_NAME},WinDos) 
+ifeq (${ARCH_OS_NAME},WinDos)
   override SHLIBS := $(WTX_DLL) $(JWRAP_DLL) $(TORNADO_LIB) $(TCL_LIB) $(SHLIBS)
 endif
 
@@ -56,12 +56,12 @@ endif
 # rule for jWrap generation from .c
 # ---------------------------------
 cmdRuntimeTornado_jWrap.c: headerTornado.h ../../Include/libRuntimeTornado.h $(TOP_JWRAP)
-	${jWrapRule}           
+	${jWrapRule}
 
 # set proto if any .i changed
 # ----------------------------------------
 ${INCDIR}/libRuntimeTornado.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i)
-	${protoRule}           
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

@@ -1,24 +1,24 @@
 /*
  * Copyright(c) 1997-99 FRIDU a Free Software Company
- * 
+ *
  * File   	: libRuntimeTornado.h Interface for VxWorks/Tornado test lib
  * Projet       : jWrap
  * SubModule    : WTX VxWorks Tornado Interface
- * Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+ *
+ * Last:
  *  Author      : $Author: Fulup $ Date        :
  *  Date        : $Date: 1999/03/11 12:49:29 $
  *  Revision    : $Revision: 1.3.0.1 $
  *  Source      : $Source: /Master/jWrap/Include/libRuntimeTornado.h,v $
- * 
+ *
  * Modification History
  * -------------------
  * 1.3  16feb99, Fulup externalized WTX module
  * 1.2  06may98, Fulup adapted to jWrap
  * 1.1  13mar96, Fulup Writen
- * 
- * 
+ *
+ *
  */
 
 #ifndef _libRuntimeTornado_
@@ -33,7 +33,7 @@
 typedef enum tornado_endian {
   ENDIAN_IS_BIG,
   ENDIAN_IS_LITTLE,
- 
+
   ENDIAN_IS_UNKNOW
 } TORNADO_endian;
 
@@ -83,7 +83,7 @@ typedef enum TORNADOevt {
 
 /** -----------------------------------------------------------------
  ** TORNADO_ID hold stdin/out vio redictio and tool to target ID
- ** is a super set of wtx id 
+ ** is a super set of wtx id
  ** -----------------------------------------------------------------*/
 typedef struct TORNADOid {
   /** Magic number */

@@ -2,7 +2,7 @@
 : Ansi prototypes generated automaticaly 
 : file /home/fulup/Workspace/Fridu/Exe/linux86/include/libDemoTypemap.i 
 : from funcDemoTypemap.i translateDemoTypemap.i funcDemoTypemap_jWrap.i 
-: by fulup on fulup-desktop the 28-Apr-20[11h59] 
+: by fulup on fulup-desktop the 01-May-20[19h28] 
 : ------------------------------------ */
 #ifndef JWRAP_JTCL 
 #ifdef __cplusplus 
@@ -16,7 +16,7 @@ IMPORT char *vStamp_libDemoTypemap ;
 #ifdef __cplusplus
  extern "C" {
 #endif
-extern  char        *TypeMap_help ;
+extern  char *TypeMap_help ;
 extern  typeMapAdrs *lastAdr ;
 PUBLIC int checkOpt (SomeOptions option) ;
 PUBLIC int addOneToInt (int number) ;

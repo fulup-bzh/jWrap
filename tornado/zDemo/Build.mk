@@ -1,10 +1,10 @@
 #
-#       Copyright(c) 97-98 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 97-98 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk Force install and non compling of Test Routines
 # Projet    :   jWrap
 # Module    :   Test
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -15,7 +15,7 @@
 #
 #Modification History
 #--------------------
-#01a,10mar99,Fulup written from jIc 
+#01a,10mar99,Fulup written from jIc
 #
 
 install::

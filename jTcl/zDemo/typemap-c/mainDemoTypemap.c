@@ -4,7 +4,7 @@
  * File   	:   debugSimple.c
  * Projet	:   Rubicon/jWrap
  * SubModule    :   Test
- * Auteur       :   Fulup Le Foll FRIDU a Free Software company
+ * Auteur       :   Fulup Ar Foll FRIDU a Free Software company
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -23,14 +23,14 @@
 #include "libRuntimeJwrap.h"
 #include "funcDemoTypemap.h"
 
-// Hook from TCL init provide a vliad Interp 
+// Hook from TCL init provide a vliad Interp
 LOCAL int modulesInit (Tcl_Interp *interp)
 {
    Demotypemap_Init  (interp);
    Tcl_Init (interp);
    return TCL_OK;
 }
-    
+
 int main (int argc, char** argv)
 {
     Tcl_Main(argc, argv, (Tcl_AppInitProc *) modulesInit);

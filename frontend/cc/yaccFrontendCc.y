@@ -6,7 +6,7 @@
  * File      :   yaccCcWrap.y define wrapper grammar
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -89,7 +89,7 @@ LOCAL void debugMsg (int level, const char *format, const char *mesg1, const cha
 %token ENUM_TAG     DOC_BLOCK     SECTION_TAG   DEFINE_TAG   G_EQUAL
 %token LINE_TAG     END_CODE      OPEN_BRACE    CLOSE_BRACE  IGNORE_TAG
 %token WARNING_TAG  TYPEDEF_TAG   STRUCT_TAG    UNION_TAG    G_PTR
-%token COMPLEX_TYPE OPEN_BRAKET   CLOSE_BRAKET
+%token COMPLEX_TYPE CONST_TYPE    OPEN_BRAKET   CLOSE_BRAKET
 
 // Specify Token type for those returning a value
 %union
@@ -117,6 +117,7 @@ LOCAL void debugMsg (int level, const char *format, const char *mesg1, const cha
 %type <intVar>      G_OPERATOR
 %type <prot>        SECTION_TAG
 %type <dString>     COMPLEX_TYPE
+%type <dString>     CONST_TYPE
 %type <dString>     G_LINE
 
 // Yacc typed token
@@ -1019,6 +1020,13 @@ VarType: G_WORD {
      free ($1);
      free ($2);
      debugMsg (3, "Get Vars Complex Type",currentType);
+   }
+   | CONST_TYPE G_WORD {
+     currentType =  "const ";
+     currentType += *$2;
+     free ($1);
+     free ($2);
+     debugMsg (3, "Get Vars Const Type",currentType);
    }
    | ENUM_TAG G_WORD {
      currentType =  "enum ";

@@ -5,7 +5,7 @@
 # SubModule    : Test
 # Implement    : DemoSimple
 # Object       : Minimal Makefile for runtime tree tesing
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last:
 #  Author      : $Author: Fulup $ Date        :
@@ -30,13 +30,13 @@ CC_LIB    =
 CC_INCL   =
 
 # Adapt jWrap location to your site
-JWRAP_HOME = $(HOME)/local
+JWRAP_HOME = $(HOME)/pMaster/pMaster/jWrap-1.30
 JWRAP_BIN  = $(JWRAP_HOME)/bin/jWrap
 JWRAP_LIB  = -L$(JWRAP_HOME)/lib -lRuntimeJwrap
 JWRAP_INCL = -I$(JWRAP_HOME)/include -I$(JWRAP_HOME)/include/Unix
 
 # Tcl 8.x location
-TCL_HOME   =  /usr/local
+TCL_HOME   =  /usr
 TCL_LIB    = -L$(TCL_HOME)/lib -ltcl8.6 -lm -ldl
 TCL_INCL   = -I$(TCL_HOME)/include
 

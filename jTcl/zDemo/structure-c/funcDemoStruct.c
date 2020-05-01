@@ -1,22 +1,22 @@
 /*
  * Copyright(c) 1997-98 FRIDU a Free Software Company
- * 
+ *
  * Projet       : Jos/jWrap
  * SubModule    : Test/jWrap
  * Implement    : DemoStruct
  * Object   	: Demonstrate Complex Structure handling
- * Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+ *
+ * Last:
  *  Author      : $Author: Fulup $ Date        :
  *  Date        : $Date: 1999/03/11 12:49:30 $
  *  Revision    : $Revision: 1.3.0.1 $
  *  Source      : $Source: /Master/jWrap/jTcl/zDemo/structure-c/funcDemoStruct.c,v $
- * 
+ *
  * Modification History
  * -------------------
  * 1.1  06may98, Fulup Written
- * 
+ *
  */
 
 /** -----------------------------------------------------------------
@@ -54,7 +54,7 @@ typedef unsigned long UINT32;
 
 /** -----------------------------------------------------------------
  ** WPR_ID hold stdin/out vio redictio and tool to target ID
- ** is a super set of wtx id 
+ ** is a super set of wtx id
  ** -----------------------------------------------------------------*/
 
 // Extract from Wandel IRPS bug
@@ -69,19 +69,19 @@ typedef enum  {
    SPECIAL_SADR      = 0X0A,
    RESERVE_2         = 0X0B,
    UNKNOWN_SADR_TYPE = 0XFF
-} t_sadr_type;       
+} t_sadr_type;
 
 typedef struct str_sadr {
    t_sadr_type  type;
    char *digits;
 } t_sadr;
 
-typedef struct str_CC_S_BIND_REQ 
+typedef struct str_CC_S_BIND_REQ
 {
-  int16u    app_q_id;	
-  int8u	    ref;			
-  int8u	    ctx_max;	
-  int8u	    con_type;	
+  int16u    app_q_id;
+  int8u	    ref;
+  int8u	    ctx_max;
+  int8u	    con_type;
   int8u	    mode;
   int8u	    *user_to_user;
   boolean   data_service;
@@ -89,7 +89,7 @@ typedef struct str_CC_S_BIND_REQ
 
 
 
-// ------ First Fridu structure test --------------           
+// ------ First Fridu structure test --------------
 enum choix {A,B,C,D};
 
 typedef struct wprId {		/*  Structure du tableau des commandes */
@@ -101,9 +101,9 @@ typedef struct wprId {		/*  Structure du tableau des commandes */
   struct {
    int A;
    int B;
-   int C; 
+   int C;
   } within;
-  
+
   enum choix option;
 
   union {
@@ -112,7 +112,7 @@ typedef struct wprId {		/*  Structure du tableau des commandes */
    char   C[8];
    double D;
   } jointure;
-   
+
   /** vio Target device name computed on target */
   UINT32          vIoNum;
   FILE *          fichier;
@@ -123,12 +123,12 @@ typedef struct wprId {		/*  Structure du tableau des commandes */
  ** try to build a linked list, check WARNING in Tcl example
  ** -------------------------------------------------------*/
 typedef struct linkedList {
-  /** They is no limittation on application field */ 
+  /** They is no limittation on application field */
    char   *name;
    int    ind;
    /** this as to be a TCL unknow type in order TCL not
     trying to handle it with garbade collection, replacing
-    in this example void* with "struct linkedList" will 
+    in this example void* with "struct linkedList" will
     make this example fail when run in interractiv mode */
    void   *next;
 } LINKED_LST;
@@ -153,7 +153,7 @@ char line [255];
 
   // try to read first line from file
   if (wprId->fichier != NULL) {
-    fgets (line,sizeof (line),wprId->fichier);
+    fgets (line, sizeof (line),wprId->fichier);
   }
 
   fprintf (stderr,"testIt WPR_ID*wprId %p dump within C\n", (void*) wprId);
@@ -175,12 +175,12 @@ char line [255];
      fprintf (stderr,line);
   }
 
-  result = (WPR_ID*)Tcl_Alloc (sizeof (WPR_ID));
+  result = (WPR_ID*)malloc (sizeof (WPR_ID));
   memcpy (result, wprId, sizeof (WPR_ID));
 
   fprintf (stderr,"returned wprId %p dump within C\n", (void*) result);
   fprintf (stderr,"\n--------------------------------------------------\n");
-  
+
   return result;
 }
 
@@ -198,12 +198,12 @@ PUBLIC void testLst (void) {
   }
 
   for (current=listHead; current != NULL; current=(LINKED_LST*)current->next) {
-    fprintf (stderr, "ind=%d name=%s\n",current->ind, current->name); 
+    fprintf (stderr, "ind=%d name=%s\n",current->ind, current->name);
     if ((LINKED_LST*)current->next == listHead) {
      fprintf (stderr, "list loop detected\n");
      break;
     }
   }
   fprintf (stderr,"--------------------------------------------------\n");
-  
+
 }

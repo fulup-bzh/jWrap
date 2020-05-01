@@ -3,7 +3,7 @@
  *
  * Projet    :   Jos/jWrap
  * Module    :   Test/jWrap
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -44,17 +44,17 @@ char *CxxConvert::int2hexa (int number) {
   int status;
 
   // if int < 0 we refuse to convert it (stupid but simple to test)
-  status = sprintf (hexa,"0x%x",number); 
+  status = sprintf (hexa,"0x%x",number);
   if (number BAND 0xFFFF0000) goto invalidInteger;
 
-  
+
   return hexa;
 
 invalidInteger:
   char msg [255];
   sprintf (msg,"[too big]\ncan't translate number %d to short int hexa", number);
   signal   (msg);
-  return NULL; 
+  return NULL;
 } // end int2hexa
 
 // translate a string to int equilalent fail if string is invalid
@@ -63,18 +63,18 @@ int CxxConvert::hexa2int (char* chaine) {
   int number;
 
   status = sscanf (chaine,"0x%x",&number);
-  if (status == 0) goto invalidHexaString; 
-  
+  if (status == 0) goto invalidHexaString;
+
   return number;
 
 invalidHexaString:
   char msg [255];
   sprintf (msg,"[invalid string]\n|%s| is not a valid hexa 0x... string", chaine);
   signal   (msg);
-  return   -1; 
+  return   -1;
 } // end hexa2int
 
-// Destructor 
+// Destructor
 CxxConvert::~CxxConvert () {
  fprintf (stderr, "CxxConvert::~CxxConvert destructor called\n");
 }

@@ -2,7 +2,7 @@
 #
 # Projet    :   jWrap
 # SubModule :   readline
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author. Fulup $
@@ -39,7 +39,7 @@ if {![info exist JTCL_LOADED(jWrap.readline)]} \
     return ERROR
    }
   } ;# end switch
-  
+
   # Register ic RL
   jClassRegister jWrap.readline.state    $_RL_REL "$PKG_STATE $_RL_REL"
   jClassRegister jWrap.readline.console  $_RL_REL $_RL_SHL/readlineConsole.jTcl
@@ -48,7 +48,7 @@ if {![info exist JTCL_LOADED(jWrap.readline)]} \
   foreach VAR [info var _RL_*] {
     unset $VAR
   }
-  
+
 } ;# end if already loaded
 
 

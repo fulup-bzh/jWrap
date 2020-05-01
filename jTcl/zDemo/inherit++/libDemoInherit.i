@@ -2,7 +2,7 @@
 : Ansi prototypes generated automaticaly 
 : file /home/fulup/Workspace/Fridu/Exe/linux86/include/libDemoInherit.i 
 : from funcDemoInherit_jWrap.i funcDemoInherit.i 
-: by fulup on fulup-desktop the 28-Apr-20[11h59] 
+: by fulup on fulup-desktop the 01-May-20[10h01] 
 : ------------------------------------ */
 #ifndef JWRAP_JTCL 
 #ifdef __cplusplus 
@@ -13,20 +13,6 @@ IMPORT char *vStamp_libDemoInherit ;
 } 
 #endif 
 #endif 
-#ifdef __cplusplus
- extern "C" {
-#endif
 RESTRICTED int Demoinherit_Init (Tcl_Interp *interp) ;
-#ifdef __cplusplus
-}
-#endif
-
-#ifdef __cplusplus
- extern "C" {
-#endif
 extern  char *Inherit_help;
-#ifdef __cplusplus
-}
-#endif
-
 

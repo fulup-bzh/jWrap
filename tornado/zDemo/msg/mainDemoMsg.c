@@ -3,7 +3,7 @@
  *
  * Projet	:   Jos/jWrap
  * SubModule    :   Test/Tornado
- * Auteur       :   Fulup Le Foll FRIDU a Free Software company
+ * Auteur       :   Fulup Ar Foll FRIDU a Free Software company
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -23,9 +23,9 @@
 #include "libRuntimeVxWorks.h"
 
 // We don't have a valid proto
-extern Demomsg_Init  (Tcl_Interp *interp); 
+extern Demomsg_Init  (Tcl_Interp *interp);
 
-// Hook from TCL init provide a vliad Interp 
+// Hook from TCL init provide a vliad Interp
 LOCAL int modulesInit (Tcl_Interp *interp)
 {
    // Warning componant init order should be respected
@@ -36,7 +36,7 @@ LOCAL int modulesInit (Tcl_Interp *interp)
    Demomsg_Init  (interp);
    return TCL_OK;
 }
-    
+
 int main (int argc, char** argv)
 {
     Tcl_Main(argc, argv, (Tcl_AppInitProc *) modulesInit);

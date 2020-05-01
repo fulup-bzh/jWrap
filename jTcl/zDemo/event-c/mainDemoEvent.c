@@ -3,7 +3,7 @@
  *
  * Projet	:   Jos/jWrap
  * SubModule    :   Test/jWrap
- * Auteur       :   Fulup Le Foll FRIDU a Free Software company
+ * Auteur       :   Fulup Ar Foll FRIDU a Free Software company
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -21,14 +21,14 @@
 #include "libRuntimeJwrap.h"
 #include "libDemoEvent.h"
 
-// Hook from TCL init provide a vliad Interp 
+// Hook from TCL init provide a vliad Interp
 LOCAL int modulesInit (Tcl_Interp *interp)
 {
    Tcl_Init       (interp);
    Demoevent_Init (interp);
    return TCL_OK;
 }
-    
+
 int main (int argc, char** argv)
 {
     Tcl_Main(argc, argv, (Tcl_AppInitProc *) modulesInit);

@@ -4,7 +4,7 @@
  * File      :   interpTclTarWrap.c interface internal to TCL structure
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -32,7 +32,7 @@ static Tcl_ObjType tclInterpType = {
     (Tcl_DupInternalRepProc *) NULL,               /* dupIntRepProc */
     getInterpFromC,	                           /* updateStringProc */
     putInterpIntoC	                           /* setFromAnyProc */
-}; 
+};
 
 // define char** as a list of pointer
 LOCAL void freeTclObjClone   (Tcl_Obj    *objPtr);
@@ -73,7 +73,7 @@ LOCAL void getInterpFromC (Tcl_Obj *objPtr)
 LOCAL int putInterpIntoC (Tcl_Interp *interp,Tcl_Obj *objPtr)
 {
     // WARNING: in this case TCL object is only used for param position and counting
-   
+
     // place Interp address in long value for C
     objPtr->internalRep.otherValuePtr= (void*)interp;
     return TCL_OK;
@@ -87,13 +87,13 @@ LOCAL void freeTclObjClone (Tcl_Obj *objPtr) {
 
   // If ptr1 dont loop on ourself they is an attached clone
   if (objPtr->internalRep.otherValuePtr != objPtr) {
-     // free clone if usage count allow it 
+     // free clone if usage count allow it
      clone = (Tcl_Obj*) objPtr->internalRep.twoPtrValue.ptr1;
   } else {
      // free internal rep with dummy clone internal rep
      clone = (Tcl_Obj*) objPtr->internalRep.twoPtrValue.ptr2;
      if ((clone->typePtr != NULL) && (clone->typePtr->freeIntRepProc != NULL)) {
-       (*clone->typePtr->freeIntRepProc) (clone); 
+       (*clone->typePtr->freeIntRepProc) (clone);
      }
   }
 
@@ -104,7 +104,7 @@ LOCAL void freeTclObjClone (Tcl_Obj *objPtr) {
 
 /****************************************************************************
  * We only convert Tcl_Obj to external rep when an application routine
- * returned a Tcl_Obj, in This case we subcontract application object 
+ * returned a Tcl_Obj, in This case we subcontract application object
  * in order getting effective external rep.
  ****************************************************************************/
 LOCAL void getTclObjFromC (Tcl_Obj *objPtr)
@@ -113,10 +113,10 @@ LOCAL void getTclObjFromC (Tcl_Obj *objPtr)
 
    // restore original Tcl Object
    clone = (Tcl_Obj*) objPtr->internalRep.otherValuePtr;
- 
+
    // call presentation routine
    if (clone->bytes == NULL) {
-     if (clone->typePtr->updateStringProc == getTclObjFromC) goto looping; 
+     if (clone->typePtr->updateStringProc == getTclObjFromC) goto looping;
      objPtr->typePtr->updateStringProc (clone);
    }
    objPtr->bytes  = clone->bytes;
@@ -137,10 +137,10 @@ noType:
  * Update Internal Interp list value from external Interp, this allows
  * a C routine jWrap interfaced to get a native Tcl objet as parameter.
  **********************************************************************/
-LOCAL int putTclObjIntoC (Tcl_Interp *interp,Tcl_Obj *objPtr) 
+LOCAL int putTclObjIntoC (Tcl_Interp *interp,Tcl_Obj *objPtr)
 {
    Tcl_Obj *clone = Tcl_NewObj ();
-   
+
    // store original type and internal rep in a clone
    clone->typePtr  = objPtr->typePtr;
    clone->internalRep.twoPtrValue.ptr1 = objPtr->internalRep.twoPtrValue.ptr1;
@@ -160,11 +160,11 @@ LOCAL void freeVarg (Tcl_Obj *objPtr) {
  int ind;
  JWRAP_varg *internal;
 
-  // get internal from object 
+  // get internal from object
   internal = (JWRAP_varg*) objPtr->internalRep.twoPtrValue.ptr1;
 
   // loop on all command parameter
-  for (ind=0; ind < internal->argc; ind ++) { 
+  for (ind=0; ind < internal->argc; ind ++) {
      Tcl_DecrRefCount (internal->argv[ind]);
   }
 
@@ -185,7 +185,7 @@ LOCAL void getVargFromC (Tcl_Obj *objPtr)
  Tcl_Obj     *tclObj=NULL; // gcc warning
  char        **listSlot;
 
-  // get internal from object 
+  // get internal from object
   internal = (JWRAP_varg*) objPtr->internalRep.twoPtrValue.ptr1;
 
   // repare a list for final result
@@ -218,8 +218,8 @@ LOCAL void getVargFromC (Tcl_Obj *objPtr)
 }
 
 /**--------------------------------------------------------------------
- * Update internal rep from external routine, this routine will 
- * increment each object usage count in order tcl not to free 
+ * Update internal rep from external routine, this routine will
+ * increment each object usage count in order tcl not to free
  * internal rep, and then will save a pointer in Varg struct.
  **--------------------------------------------------------------------*/
 LOCAL int putVargIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
@@ -228,7 +228,7 @@ LOCAL int putVargIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
  JWRAP_varg  *internal;
  int         status;
  Tcl_Obj     *element;
-  
+
   // Allocate internal rep struct
   internal = (JWRAP_varg*) Tcl_Alloc (sizeof (JWRAP_varg));
   internal->interp = interp;
@@ -241,17 +241,17 @@ LOCAL int putVargIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
   if (internal->argc > 0) {
     internal->argv = (Tcl_Obj**) Tcl_Alloc (sizeof (Tcl_Obj*) * internal->argc);
   } else {
-     internal->argv = (Tcl_Obj**)NULL; 
+     internal->argv = (Tcl_Obj**)NULL;
   }
 
-  // loop on all object list 
+  // loop on all object list
   for (ind=0; ind < internal->argc; ind ++) {
 
     // increment internal rep of object in order TCL to keep it
     status = Tcl_ListObjIndex (interp, tclObj, ind, &element);
     if (status == TCL_ERROR) goto errList;
     Tcl_IncrRefCount(element);
-   
+
     // save object in internal rep
     internal->argv[ind] = element;
   }
@@ -259,7 +259,7 @@ LOCAL int putVargIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
   // update tcl object internal rep
   tclObj->internalRep.twoPtrValue.ptr1 = (void*) internal;
   tclObj->typePtr = &tclVargType;
-    
+
   return TCL_OK;
 
 errList:

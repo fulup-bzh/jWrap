@@ -1,17 +1,17 @@
  # --------------------------------------------------------------------------------
  # Copyright(c) 1997-98 FRIDU a Free Software Company
- # 
+ #
  # Projet       : Jos/jWrap
  # SubModule    : Test/Tornado
  # Object       : Demo jTcl Stript for complex structure interfacing on VxWorks/Tornado
- # Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
- # 
- # Last: 
+ # Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+ #
+ # Last:
  #  Author      : $Author: Fulup $ Date        :
  #  Date        : $Date: 1999/03/22 08:58:02 $
  #  Revision    : $Revision: 1.5 $
  #  Source      : $Source: /Master/jWrap/tornado/zDemo/msg/scriptDemoMsg.jTcl,v $
- # 
+ #
  # Modification History
  # -------------------
  # 1.1  02jun98, Fulup Written
@@ -20,7 +20,7 @@
 
  ## --------------------------------------------------------------------------
  #    In order running this example:
- #      1: Startit with "DemoMsgSh scriptDemoMsg.jTcl targetName" 
+ #      1: Startit with "DemoMsgSh scriptDemoMsg.jTcl targetName"
  ## --------------------------------------------------------------------------
 
 
@@ -39,7 +39,7 @@ proc test_init {} {
    puts "ERROR: This demonstration require Jwrap/Tornado ModuleMsg to loaded."
    puts "Restart stript with DemoMsgSh Executable or load libDemoMsg.so in tclsh."
    return -code error
- }  
+ }
 
  if {![info exist env(WIND_REGISTRY)]} {
    puts "WARNING: WIND_REGISTRY not set in environment using $DEFAULT_REGISTRY"
@@ -57,14 +57,14 @@ proc test_init {} {
  }
 
  # Force module name (WARNING: must fit with jWrap info)
- set MODULE_NAME DemoMsg 
+ set MODULE_NAME DemoMsg
 
  # Connect onto target server
  set TORNADO_ID [jWrap new TORNADO_id [list [list targetName $TARGET]]]
  if [catch {Tornado.Connect $TORNADO_ID} REPONSE] {
     puts "Cannot connect on target=$TARGET ERR=$REPONSE"
     return -code error
- } 
+ }
 
  # Normally we should load our target applicatin object module now
  # set JOB_ID [Tornado.load $TORNADO_ID "Noting to load on target for this example"]
@@ -111,15 +111,15 @@ proc test_complexStruct {} {
 
  # Build global structure that embeded a Union that itself home a pointer on an other struct
  set HDR [jWrap new  MsgLists [list {A 1 2 3 4} {name toto} $UNION]]
- puts "MsgList type=[jWrap type $HDR] value=$HDR" 
+ puts "MsgList type=[jWrap type $HDR] value=$HDR"
 
- # Retreive structure from the list 
+ # Retreive structure from the list
  set JOINTURE [jWrap cget $HDR jointure]
  puts "jointure type=[jWrap type $JOINTURE] value=$JOINTURE"
 
  # Get buffer from union
  set PTR [jWrap cget $JOINTURE buffer]
- puts "buffer type=[jWrap type $PTR] value=$PTR"  
+ puts "buffer type=[jWrap type $PTR] value=$PTR"
 
  # Cast buffer in original type32 struct
  set BUF [jWrap cast type32 $PTR]
@@ -152,7 +152,7 @@ proc test_directCall {} {
  set CTX   [jWrap new WTX_CONTEXT_DESC [list {name printf} $ARGS]]
  Tornado.ExecFuncCall $TORNADO_ID $CTX
 }
- 
+
 proc test_memPartLib {} {
 
  puts "\nMemPartLib test"
@@ -177,7 +177,7 @@ proc test_msgQ {} {
    puts "ERROR: cannot create message queue on target"
    return -code error
  }
- 
+
  # send a message on list
  set INBUF  "This is a jWrap-TORNADO demonstration message"
  set LEN     [expr [string length $INBUF] + 1]
@@ -195,8 +195,8 @@ proc test_msgQ {} {
  if {$NB_MSG != 1} {
    puts "ERROR: we should have only one message in queue ($NB_MSG != 1)"
    return -code error
- } 
- 
+ }
+
  # read message from list
  set OUTBUF  [DemoMsg.malloc 255]
  set STATUS  [DemoMsg.msgQReceive $Msg_ID $OUTBUF 255 $TIMEOUT]
@@ -205,7 +205,7 @@ proc test_msgQ {} {
   return -code error
  }
 
- # print message 
+ # print message
  puts "got message OUTBUF=$OUTBUF"
 
  # Delete queue works but return an invalid status
@@ -219,12 +219,12 @@ proc test_msgQ {} {
  }
 
  # free target
- DemoMsg.free $OUTBUF 
+ DemoMsg.free $OUTBUF
 }
 # ------------------------ Test Program start ---------------------------
- 
+
  # Set a debug level for TORNADO interface
- test_init 
+ test_init
  jWrap debug 10
 
  if $tcl_interactive return
@@ -244,4 +244,4 @@ proc test_msgQ {} {
  puts "Test ended"
  set A [gets stdin]
  puts "Kenavo"
- 
+

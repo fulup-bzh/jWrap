@@ -4,7 +4,7 @@
  * File      :   libRuntimeJwrap.h Entry points for jWrap cc2jTcl backend runtime lib
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -25,7 +25,7 @@
  * under Unix, nevertheless under Win32 user should be aware that when using DLL
  * there is no way to trap a strcopy error, making union interfacing with embedded
  * char* almost impossible.
- -------------------------------------------------------------------------------- */ 
+ -------------------------------------------------------------------------------- */
 
 /** do not come here twice */
 #ifndef _libRuntimeJwrap_
@@ -34,6 +34,9 @@
 #include <tcl.h>
 #include <easyc.h>
 #include <setjmp.h>
+#include <string.h>
+#include <stdlib.h>
+
 
 #ifdef __cplusplus
 extern "C"
@@ -56,17 +59,29 @@ extern "C"
 MODULE_SCOPE char * tclEmptyStringRep;
 MODULE_SCOPE char   tclEmptyString;
 
+// Force to to user Tcl_Alloc
+#ifdef JWRAP_MALLOC
+#  define malloc jWrapMalloc
+#  define free jWrapFree
+#  define calloc jWrapCalloc
+#  define strdup jWrapDup
+#endif
 
-/** Define common var struct type symbolic name */ 
-#define JWRAP_MAX_NAME 120
-#define JWRAP_MAX_ARGV 10
+PUBLIC void *jWrapMalloc (size_t size);
+PUBLIC void *jWrapCalloc (size_t nmemb, size_t size);
+PUBLIC void jWrapFree (void *ptr);
+PUBLIC char *jWrapDup (const char*source);
 
-/* Define a macro equivalent to strdup but using Tcl_Alloc */
 #define jWrapStrDup(DEST,SRC) \
-{ DEST->length = strlen (SRC)+1; \
+{ DEST->length = strlen (SRC); \
   DEST->bytes  = Tcl_Alloc (DEST->length +1); \
   memcpy (DEST->bytes,SRC,DEST->length +1); \
-} 
+}
+
+
+/** Define common var struct type symbolic name */
+#define JWRAP_MAX_NAME 120
+#define JWRAP_MAX_ARGV 10
 
   /** Magic number for jWrap complex data */
   typedef enum JWRAPmagics {
@@ -149,7 +164,7 @@ MODULE_SCOPE char   tclEmptyString;
   typedef struct JWRAPobjs
     {
       /** magic is use to know what type of object we retrieve from hashtable */
-      JWRAP_magics magic; 
+      JWRAP_magics magic;
 
       /** object type name */
       JWRAP_types *type;
@@ -160,7 +175,7 @@ MODULE_SCOPE char   tclEmptyString;
   typedef struct JWRAPenums
     {
       /** magic is use to know what type of object we retrieve from hashtable */
-      JWRAP_magics magic; 
+      JWRAP_magics magic;
       /** enumeration name */
       JWRAP_types *type;
       /** number of values in enum */
@@ -221,7 +236,7 @@ MODULE_SCOPE char   tclEmptyString;
 	  VOID *otherValuePtr;
 	}
       internalRep;
-      /** extra data slot for any specific to module supplementary informations */ 
+      /** extra data slot for any specific to module supplementary informations */
       ClientData info;
     }
   JWRAP_vars;
@@ -263,7 +278,7 @@ MODULE_SCOPE char   tclEmptyString;
       /** Each module as a private hashtable */
       Tcl_HashTable *hashTable;
       /** Clientdata hold any extra informations for module */
-      ClientData info; 
+      ClientData info;
       /** pointer to next module in linked list */
       struct JWRAPmodules *next;
     }
@@ -293,7 +308,7 @@ MODULE_SCOPE char   tclEmptyString;
     int        argc;
     Tcl_Obj    **argv;
   } JWRAP_varg;
-   
+
 
 #ifdef __cplusplus
 }

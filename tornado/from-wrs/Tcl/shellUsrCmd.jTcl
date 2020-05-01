@@ -1,16 +1,16 @@
 #
 # Copyright(c) 1999 FRIDU a Free Software Company
-# 
+#
 # Projet       : jWrap
 # SubModule    : WTX VxWorks Tornado Interface
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
-# 
-# Last: 
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+#
+# Last:
 #  Author      : $Author: Fulup $ Date        :
 #  Date        : $Date: 1999/03/23 15:17:40 $
 #  Revision    : $Revision: 1.4 $
 #  Source      : $Source: /Master/jWrap/tornado/from-wrs/Tcl/shellUsrCmd.jTcl,v $
-# 
+#
 # Modification History
 # --------------------
 # 10mar99,Fulup written
@@ -70,7 +70,7 @@ proc Usr.Sp {ENTRY_SYMBOL args} {
   set len [llength $args]
 
   # search for function entry point
-  
+
   if [catch {Tornado.ExecFindSymbol $TORNADO(id) $ENTRY_SYMBOL} ADDR] {
      return -code error SYMTBL_SYMBOL_NOT_FOUND
   }

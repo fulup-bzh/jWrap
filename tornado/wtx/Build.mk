@@ -1,9 +1,9 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # Module    :   Wtx VxWorks Tornado interface
-# Auteur    :   Fulup Le Foll (Fulup@fridu.bzh)
+# Auteur    :   Fulup Ar Foll (Fulup@fridu.bzh)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -18,12 +18,12 @@
 
 # Only compile this directory if tornado is defined
 # -------------------------------------------------
-ifdef TORNADO_BASE 
+ifdef TORNADO_BASE
 
 # Define modules
 # --------------
   WRAPPERS   = cmdWtxTornado_jWrap.c
-  SOURCES    = 
+  SOURCES    =
   LIB_SRCS   = $(SOURCES) $(WRAPPERS)
   LIB_OBJS   = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
@@ -31,11 +31,11 @@ ifdef TORNADO_BASE
 
 # define meta rules
 # ------------------
-  LIBS   :=  libRuntimeWtx 
+  LIBS   :=  libRuntimeWtx
   JDOC   :=  libRuntimeWtx
   SHARED :=  libRuntimeWtx
-  override SHLIBS := $(JWRAP_DLL) $(TORNADO_LIB) $(TCL_LIB) $(SHLIBS)      
-  EXE    :=  
+  override SHLIBS := $(JWRAP_DLL) $(TORNADO_LIB) $(TCL_LIB) $(SHLIBS)
+  EXE    :=
 
 # define some extra option for TK
 # --------------------------------
@@ -51,7 +51,7 @@ cmdWtxTornado.def: headerWtxTornado.h
 	@echo aglomerating Tornado header in $@
 	$(CC_CMD) -I. -DJWRAP_JTCL -DJWRAP -DARCH_OS_NAME=$(ARCH_OS_TYPE) \
 	-E $(TORNADO_DEF) \
-	-dD -nostdinc -C $< >$@ 2>$(NULL_DEV) || exit 0 
+	-dD -nostdinc -C $< >$@ 2>$(NULL_DEV) || exit 0
 endif
 
 # rule for jWrap generation from .c
@@ -63,7 +63,7 @@ cmdWtxTornado_jWrap.c: cmdWtxTornado.def  headerWtxTornado.h $(TOP_JWRAP)
 # set proto if any .i changed
 # ----------------------------------------
 ${INCDIR}/libRuntimeWtx.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i)
-	${protoRule}           
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

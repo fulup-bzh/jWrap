@@ -1,10 +1,10 @@
 /**------------------------------------------------------------------------------
- *      Copyright(c) 1996-99 FRIDU a Free Software Company Philipppe Le Foll
+ *      Copyright(c) 1996-99 FRIDU a Free Software Company Philipppe Ar Foll
  *
  * File         : miscRuntimeTroando.c misc function for Tornado componant
  * Projet       : jWrap
  * SubModule    : WTX VxWorks Tornado Interface
- * Auteur       : Fulup Le Foll (Fulup@fridu.bzh)
+ * Auteur       : Fulup Ar Foll (Fulup@fridu.bzh)
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -22,7 +22,7 @@
 
 /** --------------------------------------------------------------
  ** provides control handler and custom Tcl exit function in order
- ** cleanning target resources before killing tclsh 
+ ** cleanning target resources before killing tclsh
  **---------------------------------------------------------------*/
 #include <wtx.h>
 #include <signal.h>
@@ -64,14 +64,14 @@ PUBLIC TORNADO_endian checkEndian () {
  ** ---------------------------------------------------------------------*/
 PUBLIC void* tornadoMemBlock (TORNADO_memflag flag, char *value) {
   void         *memBlock;
-  Endian_check source,dest; 
+  Endian_check source,dest;
   int          status;
 
   // if endian type unknow check it now
   if (endian == ENDIAN_IS_UNKNOW) {
     endian = checkEndian();
   }
-  
+
 
   switch (flag) {
    case TORNADO_MEM_HEXA:
@@ -84,18 +84,18 @@ PUBLIC void* tornadoMemBlock (TORNADO_memflag flag, char *value) {
    case TORNADO_MEM_BIG_ENDIAN:
        status = sscanf (value, "%d", (int*) &source);
        if (status != 1) goto invalidNumber;
-      
+
        if (endian == ENDIAN_IS_BIG) {
          memBlock = (void*) source.number;
        } else {
-         dest.unit [0] =   source.unit [3];        
-         dest.unit [1] =   source.unit [2];        
-         dest.unit [2] =   source.unit [3];        
-         dest.unit [3] =   source.unit [0];        
+         dest.unit [0] =   source.unit [3];
+         dest.unit [1] =   source.unit [2];
+         dest.unit [2] =   source.unit [3];
+         dest.unit [3] =   source.unit [0];
          memBlock = (void*) dest.number;
        }
 
-    break;   
+    break;
    case TORNADO_MEM_LITTLE_ENDIAN:
        status = sscanf (value, "%d", (int*) &source);
        if (status != 1) goto invalidNumber;
@@ -103,10 +103,10 @@ PUBLIC void* tornadoMemBlock (TORNADO_memflag flag, char *value) {
        if (endian == ENDIAN_IS_LITTLE) {
          memBlock = (void*) source.number;
        } else {
-         dest.unit [0] =   source.unit [3];        
-         dest.unit [1] =   source.unit [2];        
-         dest.unit [2] =   source.unit [3];        
-         dest.unit [3] =   source.unit [0];        
+         dest.unit [0] =   source.unit [3];
+         dest.unit [1] =   source.unit [2];
+         dest.unit [2] =   source.unit [3];
+         dest.unit [3] =   source.unit [0];
          memBlock = (void*) dest.number;
        }
     break;
@@ -123,7 +123,7 @@ invalidHexa:
   jWrapPanic (NULL,"Invalid (%s) haxa number\n", value);
 invalidNumber:
   jWrapPanic (NULL,"Invalid (%s) integer number\n", value);
-  
+
   return NULL; // for gcc not to complain
 }
 
@@ -134,18 +134,18 @@ invalidNumber:
  ** ---------------------------------------------------------------------*/
 LOCAL void tornadoCtrlC (int ind) {
   TORNADO_id *tornadoId;
-  
+
    jWrapLog (1,"tornadoCtrlC emergency Shutdown\n");
 
    for (tornadoId = tornadoIdHead;  tornadoId != NULL; tornadoId = (TORNADO_id*)tornadoId->next) {
-      tornadoEnd (tornadoId);       
+      tornadoEnd (tornadoId);
    }
    exit (1);
 }
 /**-----------------------------------------------------------------------
  ** We remap TCL exit in order producing a clean exit and free target
  ** resources each time user make a tcl syntaxe error, or type in CTRL-D
- ** in interative mode. 
+ ** in interative mode.
  ** @note input paramters are ignored
  ** @return function should never return, if a tornadoEnd call fail result
  ** is unpredicable, probabelly a core dump !
@@ -157,27 +157,27 @@ LOCAL int tornadoExit (ClientData cld, Tcl_Interp *interp
 
   jWrapLog (1,"tornadoExit Closing Tgt Connection\n");
   for (tornadoId = tornadoIdHead;  tornadoId != NULL; tornadoId = (TORNADO_id*)tornadoId->next) {
-    tornadoEnd (tornadoId);       
+    tornadoEnd (tornadoId);
   }
   jWrapLog (1,"tornadoExit Tornado Wtx Ended\n");
-  exit (0);  
+  exit (0);
 
   return JWRAP_IMPOSSIBLE;
 }
 
 /** ---------------------------------------------------------------------
  ** Validate Ctrl-C handler, and map tornadoExit function call on tcl exit
- ** command. 
+ ** command.
  * ---------------------------------------------------------------------*/
 RESTRICTED void tornadoMiscInit (Tcl_Interp *interp) {
 
-#ifndef _WINDOWS_ 
+#ifndef _WINDOWS_
  // Warning: Windows does not handle properly ctrl-C signal check for CV manual
  signal (SIGINT ,tornadoCtrlC);
 #endif
 
- tornadoDirectInit (interp); 
- 
+ tornadoDirectInit (interp);
+
  // Overload Tcl exit command
  Tcl_CreateObjCommand (interp,"exit", tornadoExit
         , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);

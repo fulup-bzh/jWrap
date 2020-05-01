@@ -4,7 +4,7 @@
  * File      :   micsBackendCc2jTcl.cc misceleanous method in C++ 2 jTcl backend wrapper
  * Projet    :   Rubicon/jWrap
  * Module    :   jWrap C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -41,14 +41,14 @@ void BackendCc2jTcl::setOutName (Programs *program) {
 void BackendCc2jTcl::init (Programs* program, char *outDir, char* usrName) {
   char * tmpName;
   int    ind;
-  
+
   BackendCcProto::init (program, outDir, usrName);
 
   // check we effectively have an implement name
   if (program->implement.size() <= 1) goto noModuleName;
 
   // Module name is implement name without dot
-  modName = program->implement; 
+  modName = program->implement;
   tmpName = modName;
   for (ind=0; ind < modName.size()-1 ; ind++) {
        if (tmpName [ind] == '.') {
@@ -57,14 +57,14 @@ void BackendCc2jTcl::init (Programs* program, char *outDir, char* usrName) {
   }
 
   return;
- 
+
 noModuleName:
   fprintf (stderr, "ERROR:BackendCc2jTcl no module implementation name found plus use  --implement flag\n");
   status = ERROR;
 
-} // end application constructor    
+} // end application constructor
 
 // Dummy empty constructor for stupid c++
 BackendCc2jTcl::BackendCc2jTcl () {
-  
-} // end constructor    
+
+} // end constructor

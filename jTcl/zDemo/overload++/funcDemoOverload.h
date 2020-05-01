@@ -5,7 +5,7 @@
  * Module    :   Test/jWrap
  * Interface :   DemoOverload
  * Object    :   Demonstrate how overloading a C++ function from jTcl
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $

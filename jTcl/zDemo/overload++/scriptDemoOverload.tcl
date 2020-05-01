@@ -3,7 +3,7 @@
 #
 # Projet    :   Jos/jWrap
 # Module    :   jTcl C++ wrapper
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -21,7 +21,7 @@
 # -------------------------------------
 if [catch {package require jTcl}] {
   puts "Can't find jTcl Package check TCLLIBPATH variable environemnt"
-  return -code error 
+  return -code error
 }
 
 # Check jWrap DemoOverload jWrap demonstration module is loaded
@@ -29,7 +29,7 @@ if [catch {jWrap info DemoOverload} ERR] {
   puts "ERROR: This demonstration require ModuleOverload to loaded."
   puts "Restart stript with DemoOverloadSh Executable or load libDemoOverload.so in tclsh."
   return -code error
-}  
+}
 
 jClassImport "lang.object.*"
 

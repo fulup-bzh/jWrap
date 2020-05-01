@@ -4,7 +4,7 @@
  * File      :   varTornado.c provide access to instance and static var
  * Projet    :   jWrap
  * Module    :   WTX VxWorks Tornado Interface
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -55,7 +55,7 @@ LOCAL char *traceCallback (JWRAP_vars *clientData, Tcl_Interp *interp
     if (clientData->address == NULL) goto errUnknownVar;
   }
 
-  if (flag & TCL_TRACE_READS) { 
+  if (flag & TCL_TRACE_READS) {
        // If this is not first call we check for previous checksum
        if (clientData->previous != NULL) {
          checksum = wtxMemChecksum (info->tornadoId->wtxId
@@ -76,7 +76,7 @@ LOCAL char *traceCallback (JWRAP_vars *clientData, Tcl_Interp *interp
        valueObj->internalRep.longValue = 0;
        if (WTX_ERROR == (INT32) wtxMemRead (info->tornadoId->wtxId
             , (TGT_ADDR_T) clientData->address
-            , &valueObj->internalRep 
+            , &valueObj->internalRep
             , clientData->jwType->size)) goto errWtxMemRead;
 
        valueObj->bytes=NULL;
@@ -98,7 +98,7 @@ LOCAL char *traceCallback (JWRAP_vars *clientData, Tcl_Interp *interp
 
        // effectively update data in C++ area
        if (WTX_ERROR == (INT32) wtxMemWrite (info->tornadoId->wtxId
-            , &valueObj->internalRep 
+            , &valueObj->internalRep
             , (TGT_ADDR_T) clientData->address
             , clientData->jwType->size)) goto errWtxMemWrite;
   }
@@ -150,19 +150,19 @@ RESTRICTED JWRAP_vars* tornadoVarRegister (TORNADO_infos *info, Tcl_Interp *inte
   // We dont support complex structure mapping
   if (jwType->magic ==  JWRAP_STRUCT) goto cannotSetTrace;
 
-  // build on structure for each var 
+  // build on structure for each var
   variable = (JWRAP_vars*)Tcl_Alloc (sizeof (JWRAP_vars));
   if (variable == NULL) goto errorMalloc;
 
   // store TORNADO info struct in order variable to know about WTX link
   variable->info = (ClientData) info;
-  
+
   // create a tempry object for index in jTcl object
   jTclIndex = Tcl_NewStringObj (varName, len);
 
   // Check if this is an object or an ordinary C procedure
   if (jTclObj != NULL) {
-    variable->array   = jTclObj; 
+    variable->array   = jTclObj;
     // set tcl object inside jTcl array
     variable->tclObj  = Tcl_ObjSetVar2 (interp, jTclObj
     , jTclIndex, Tcl_NewObj(), TCL_GLOBAL_ONLY);
@@ -173,7 +173,7 @@ RESTRICTED JWRAP_vars* tornadoVarRegister (TORNADO_infos *info, Tcl_Interp *inte
          ,(Tcl_VarTraceProc*)traceCallback, (ClientData)variable);
 
   } else {
-    // get tcl object as global 
+    // get tcl object as global
     variable->array   = tornadoGlobalVar;
     variable->tclObj  = Tcl_ObjSetVar2 (interp,tornadoGlobalVar,jTclIndex
                       ,Tcl_NewObj(),TCL_GLOBAL_ONLY);
@@ -202,7 +202,7 @@ RESTRICTED JWRAP_vars* tornadoVarRegister (TORNADO_infos *info, Tcl_Interp *inte
 cannotSetTrace:
  jWrapPanic (NULL,"tornadoRegisterVar cannot set trace var=%s type=%s"
             ,varName,jwType->obj->name);
-  
+
 errorMalloc:
  jWrapPanic (NULL,"tornadoRegisterVar: can't malloc objType var=%s type=%s"
            ,varName,jwType->obj->name);
@@ -219,5 +219,5 @@ errorRegistering:
  ** -------------------------------------------------------------------------*/
 RESTRICTED void tornadoVarInit (Tcl_Interp *interp) {
 
-   tornadoGlobalVar     = Tcl_NewStringObj("TORNADO" ,-1) ; Tcl_IncrRefCount(jWrapGlobalVar);          
+   tornadoGlobalVar     = Tcl_NewStringObj("TORNADO" ,-1) ; Tcl_IncrRefCount(jWrapGlobalVar);
 }

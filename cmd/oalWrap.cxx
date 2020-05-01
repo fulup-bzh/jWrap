@@ -2,10 +2,10 @@
  *
  *  Copyright(c) 199 a Free Software Company [fridu@fridu.bzh]
  *
- * File      :   oalWrap.cc Object Abstraction layer 
+ * File      :   oalWrap.cc Object Abstraction layer
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -39,7 +39,7 @@
  EXPORT   VISIBILITY currentVisibility;
 
  // some static starting option save
- EXPORT   BOOL     asDebugYacc =FALSE; 
+ EXPORT   BOOL     asDebugYacc =FALSE;
  EXPORT   BOOL     verbose     =FALSE;
  EXPORT   SINT32   debugLevel  =0;
 
@@ -99,7 +99,7 @@ Elements::Elements (char* nom) {
 
 // build a default help message from paramters
 void Functions::defaultHelp (void) {
- 
+
  int ind;
 
  // if function is not valid return
@@ -127,12 +127,12 @@ Vars::Vars (McString* nom) {
  name = *nom;
  array = -1;
 }
- 
+
 // typedef alias constructor
 Typedefs::Typedefs (McString* alias, McString *destination) {
  name   = *destination;
  source = *alias;
-}; 
+};
 
 // Final Class Program constructor
 Programs::Programs (char* fileName, LANGUAGE language) {

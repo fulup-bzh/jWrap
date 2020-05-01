@@ -3,7 +3,7 @@
  *
  * Projet	:   Rubicon/jWrap
  * Module       :   DemoInherit
- * Auteur       :   Fulup Le Foll FRIDU a Free Software company
+ * Auteur       :   Fulup Ar Foll FRIDU a Free Software company
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -20,13 +20,13 @@
 
 #include "funcDemoInherit.h"
 
-// Hook from TCL init provide a valid Interp 
+// Hook from TCL init provide a valid Interp
 LOCAL void modulesInit (Tcl_Interp *interp)
 {
    Demoinherit_Init (interp);
    Tcl_Init     (interp);
 }
-    
+
 int main (int argc, char** argv)
 {
     Tcl_Main(argc, argv, (Tcl_AppInitProc *) modulesInit);

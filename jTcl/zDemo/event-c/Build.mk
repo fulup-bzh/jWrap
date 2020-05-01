@@ -1,8 +1,8 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # Projet    :   jWrap
 # Module    :   Test/jWrap jTcl module
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -18,17 +18,18 @@
 # We do not install binaries
 # --------------------------
   NOT_INSTALL=1
+  MK_DEFINES  = -DJWRAP_MALLOC
 
 # Define modules
 # ------------------------
   WRAPPERS = libDemoEvent_jWrap.c
-  LIB_SRCS = funcDemoEvent.c $(WRAPPERS) 
+  LIB_SRCS = funcDemoEvent.c $(WRAPPERS)
   LIB_OBJS  = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
-  BIN_SRCS = mainDemoEvent.c 
+  BIN_SRCS = mainDemoEvent.c
   BIN_OBJS  = $(BIN_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
-  SRCS= $(BIN_SRCS) $(LIB_SRCS) 
+  SRCS= $(BIN_SRCS) $(LIB_SRCS)
 
 # define meta rules
 # ------------------
@@ -41,12 +42,12 @@ ifeq (${ARCH_OS_NAME},Linux)
 endif
 ifeq (${ARCH_OS_NAME},WinDos)
   override SHLIBS := $(JWRAP_DLL) $(TCL_LIB) $(SHLIBS)
-endif    
+endif
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
-  MK_INCLUDES = 
+  MK_DEFINES  =
+  MK_INCLUDES =
 
 # set proto if any .i changed
 # ----------------------------------------

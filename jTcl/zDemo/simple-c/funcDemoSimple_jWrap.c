@@ -3,10 +3,10 @@
  *   This file was automatically generated with
  *   jWrap (C)FRIDU a Free Software Company 97-98
  *   File: funcDemoSimple_jWrap.c Swig basic example.c adapted to jWrap
- *   Date: Wed Feb 17 14:19:10 1999
+ *   Date: Fri May  1 10:25:43 2020
 
 
- *   jWrap --cc2jTcl /home/fridu/Fulup/Vues/Fridu/Exe/linux86/etc/funcDemoSimple.c.cpp
+ *   jWrap --cc2jTcl funcDemoSimple.c
  *
  *   WARNING: Except if you really know what you are doing
  *   you should not edit this file by hand.

@@ -1,8 +1,8 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # Projet    :   jWrap
 # Module    :   Test/jWrap/jTcl module
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -12,7 +12,7 @@
 #
 #Modification History
 #--------------------
-#011,20feb98,Fulup written from jIc 
+#011,20feb98,Fulup written from jIc
 #
 
 # We do not install binaries
@@ -25,10 +25,10 @@
   LIB_SRCS =  $(WRAPPERS)
   LIB_OBJS  = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
-  BIN_SRCS = mainDemoStruct.c 
+  BIN_SRCS = mainDemoStruct.c
   BIN_OBJS  = $(BIN_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
-  SRCS= $(BIN_SRCS) $(LIB_SRCS) 
+  SRCS= $(BIN_SRCS) $(LIB_SRCS)
 
 # define meta rules
 # ------------------
@@ -43,9 +43,9 @@ ifeq (${ARCH_OS_NAME},WinDos)
   override SHLIBS := $(JWRAP_DLL) $(TCL_LIB) $(SHLIBS)
 endif
 
-# define some extra option for TK
+# Map malloc on Tcl_Alloc
 # --------------------------------
-  MK_DEFINES  = 
+  MK_DEFINES  = -DJWRAP_MALLOC
   MK_INCLUDES =
 
 # set proto if any .i changed
@@ -76,4 +76,4 @@ ${BINDIR}/DemoStructSh${EXE_SFX}: $(BIN_OBJS) \
 # test rule
 # ---------
 test:: ${BINDIR}/DemoStructSh${EXE_SFX}
-	${BINDIR}/DemoStructSh${EXE_SFX} scriptDemoStruct.jTcl
+	${BINDIR}/DemoStructSh${EXE_SFX} scriptDemoStruct.tcl

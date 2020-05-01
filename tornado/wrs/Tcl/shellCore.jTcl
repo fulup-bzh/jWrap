@@ -1,16 +1,16 @@
 
 # Copyright(c) 1999 FRIDU a Free Software Company
-# 
+#
 # Projet       : jWrap
 # SubModule    : WTX VxWorks Tornado Interface
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
-# 
-# Last: 
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+#
+# Last:
 #  Author      : $Author: Fulup $ Date        :
 #  Date        : $Date: 1999/03/19 08:09:28 $
 #  Revision    : $Revision: 1.4 $
 #  Source      : $Source: /Master/jWrap/tornado/wrs/Tcl/shellCore.jTcl,v $
-# 
+#
 # Modification History
 # --------------------
 # 05mar99,Fulup written from WRS shellCore.tcl
@@ -28,7 +28,7 @@ set classNameList {qJob class qPriListFromTail symTbl memPart \
 # initClassNames - initialize the global className associative array
 #
 # For each class name listed in the global variable classNameList, a symbol
-# is sought on the target named "<classname>ClassId".  If such is found, 
+# is sought on the target named "<classname>ClassId".  If such is found,
 # an entry is made in the global associative array className as follows:
 #   $className(<class-id-in-hex>) == <class-name>
 # This can be used to map the objCore field of an object to the class name
@@ -74,7 +74,7 @@ proc initClassNames {} {
 # RETURNS:
 #   0 if objId is not a member of the named class
 #  !0 if objId is a member of the named class
-#   
+#
 ## ----------------------------------------------------------------------
 
 proc checkClassId {objId class} {
@@ -150,7 +150,7 @@ proc Shell.CoreInit {} {
 
     # intialize eeMemBlock with 0xee.
     set TORNADO(eeMemBlock) [Tornado.MemBlock TORNADO_MEM_HEXA 0xee]
- 
+
     # create the association of class ID to class name.
     initClassNames
 
@@ -246,11 +246,11 @@ proc Shell.CoreActiveQueue {priority} {
 
     set aqHead [Tornado.ExecFindSymbol $TORNADO(id) "activeQHead"]
     if {$priority} {
-       Tornado.DirectGopher $TORNADO(id) aq "$aqHead * 
+       Tornado.DirectGopher $TORNADO(id) aq "$aqHead *
 	                       { <-$offset(WIND_TCB,activeNode) !
 	                           <+$offset(WIND_TCB,priority) @>> * }"
     } {
-	Tornado.DirectGopher aq $TORNADO(id) "$aqHead * 
+	Tornado.DirectGopher aq $TORNADO(id) "$aqHead *
 	                       { <-$offset(WIND_TCB,activeNode) !> * }"
     }
     return $aq
@@ -290,7 +290,7 @@ proc Shell.CoreTaskInfoGetAll {} {
     set aqHead  [Tornado.ExecSymFind $TORNADO(id) activeQHead]
     set vxTicks [Tornado.ExecSymFind $TORNADO(id) vxTicks]
     Tornado.DirectGopher  $TORNADO(id) RESULT "$vxTicks @
-			   $aqHead * { < -$offset(WIND_TCB,activeNode) ! 
+			   $aqHead * { < -$offset(WIND_TCB,activeNode) !
 			       $TORNADO(iCommandGopher)
 			       >*}"
     return RESULT
@@ -300,7 +300,7 @@ proc Shell.CoreTaskInfoGetAll {} {
 ##--------------------------------------------------------------------------
 # taskInfoGet - get information about a particular task
 #
-# taskInfoGet gets enough information for one row of the "i" command, 
+# taskInfoGet gets enough information for one row of the "i" command,
 # but also performs the service of validating that the given object
 # is in fact still a task, by checking the objCore pointer.
 #
@@ -323,7 +323,7 @@ proc Shell.CoreTaskInfoGet {taskId} {
     global TORNADO
 
 
-    # Fulup I supose this information is static 
+    # Fulup I supose this information is static
     if {![info exist TORNADO(sym-vxTicks)]} {
       set TORNADO(sym-vxTicks) [Tornado.ExecFindSymbol $TORNADO(id) vxTicks]
     }
@@ -368,14 +368,14 @@ proc Shell.CoreTaskInfoGet {taskId} {
 #
 # RETURNS:
 #   The traditional name of the state given by the "i" command in VxWorks:
-#   one of {READY,SUSPEND,PEND,DELAY,DEAD}, possibly followed by one or 
-#   more of "+S", "+T", or "+I".  An unknown status code is represented as 
+#   one of {READY,SUSPEND,PEND,DELAY,DEAD}, possibly followed by one or
+#   more of "+S", "+T", or "+I".  An unknown status code is represented as
 #   a hex number followed by "?".
 #
 # ERRORS:
 #   NONE
 ##--------------------------------------------------------------------------
-proc Shell.CoreTaskStatus {stat inherit} { 
+proc Shell.CoreTaskStatus {stat inherit} {
     case [expr $stat] {
         0	{set s READY}
         1	{set s SUSPEND}

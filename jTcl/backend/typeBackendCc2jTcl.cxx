@@ -5,7 +5,7 @@
  * File      :   typeBackendCc2jTcl.cc manage type in C++ 2 jTcl backend wrapper
  * Projet    :   Rubicon/jWrap
  * Module    :   jWrap C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -15,7 +15,7 @@
  *
  * Modification History
  * --------------------
- * 01c,16oct98,Fulup,add pointer on union in knowed type 
+ * 01c,16oct98,Fulup,add pointer on union in knowed type
  * 01b,18apr98,Fulup,extracted from global class file for new tree
  * 01a,06feb98,Fulup,written
  */
@@ -49,16 +49,23 @@ char* BackendCc2jTcl::jWrapType (McString * oldType) {
 
  // va list is a very special type
  if (!strcmp (oldTypeName, "...")) return ("va_list_Ptr");
- 
+
  // if string is enum or struct or const prefixed we remove it
  if (!strncmp (oldTypeName, "enum "    ,5)) oldTypeName = &oldTypeName[5];
- if (!strncmp (oldTypeName, "const "   ,6)) oldTypeName = &oldTypeName[6];
  if (!strncmp (oldTypeName, "union "   ,6)) oldTypeName = &oldTypeName[6];
  if (!strncmp (oldTypeName, "struct "  ,7)) oldTypeName = &oldTypeName[7];
  if (!strncmp (oldTypeName, "unsigned ",9)) oldTypeName = &oldTypeName[9];
 
+ // keep const [replace space with an _]
+ if (!strncmp (oldTypeName, "const "   ,6)) {
+    oldTypeName = &oldTypeName[6];
+    strcpy (newTypeName, "const_");
+    jnd=6;
+ } else {
+    jnd=0;
+ }
+
  // remove * from type name
- jnd=0;
  for (ind=0; oldTypeName [ind] != '\0'; ind++) {
    if (oldTypeName [ind] == '*') {
      // replace with Ptr string
@@ -86,7 +93,7 @@ char* BackendCc2jTcl::jWrapType (McString * oldType) {
 void BackendCc2jTcl::registerType (McString * typeName,int array, STRUCTURE magic) {
 
   int  ind;
-  char checkedType[255]; 
+  char checkedType[255];
 
   // If type is a null array we add a pointer reference
   if (array == 0) {*typeName += "*";}
@@ -94,12 +101,12 @@ void BackendCc2jTcl::registerType (McString * typeName,int array, STRUCTURE magi
   // check this type is real new one
   strcpy (checkedType, jWrapType (typeName));
 
-  // if void ignore 
+  // if void ignore
   if ((checkedType[0] == '\0') || (!(strcmp (checkedType,"void")))) return;
 
   for (ind=0; ind <cTypes.size(); ind++) {
      if (!strcmp (checkedType, jWrapType(cTypes[ind]->name))) {
-      // Slot can have been registrated as a standard type but in in fact a struct 
+      // Slot can have been registrated as a standard type but in in fact a struct
       if ((cTypes[ind]->magic == TYPE_NATIVE) && (magic != TYPE_NATIVE)) {
         cTypes[ind]->magic = magic;
       }
@@ -124,12 +131,12 @@ void BackendCc2jTcl::output (Structs *structure) {
     fprintf (outFile,"struct %s {\n", (char*) structure->name);
     for (ind=0; ind < structure->elements.size(); ind ++) {
       fprintf (outFile,"  %s %s;\n"
-              ,(char*)structure->elements[ind]->type 
+              ,(char*)structure->elements[ind]->type
               ,(char*)structure->elements[ind]->name
       );
     }
     fprintf (outFile,"};\n");
-  } 
+  }
 
   fprintf (outFile,"\n// Alloc %s slot structure for Put/Get functions\n",(char*)structure->name);
   fprintf (outFile,"static char *%s_slotNames[] =  {\n",(char*)structure->name);
@@ -147,7 +154,7 @@ void BackendCc2jTcl::output (Structs *structure) {
 
   fprintf (outFile,"static int %s_slotArrays[] = {\n",(char*)structure->name);
   for (ind = 0; ind < structure->elements.size(); ind ++) {
-    fprintf (outFile,"    %d, // %s\n" 
+    fprintf (outFile,"    %d, // %s\n"
        , abs (structure->elements[ind]->array),(char*)structure->elements[ind]->name);
   }
   fprintf (outFile,"    0\n};\n");
@@ -179,29 +186,29 @@ void BackendCc2jTcl::output (Structs *structure) {
   fprintf (outFile,"  return (jWrapTypeUpdate (interp, &%s_struct, srcObj, destObj));\n"
                   ,(char*)structure->name);
   fprintf (outFile,"}\n");
-  
+
   fprintf (outFile,"LOCAL char* Get_%s (Tcl_Obj *tclObj) {\n", (char*)structure->name);
   fprintf (outFile,"  return jWrapTypeCc2Tcl (&%s_struct, tclObj);\n",(char*)structure->name);
   fprintf (outFile,"}\n");
 
   fprintf (outFile,"// Build %s structure as a Tcl type\n",(char*)structure->name);
-  fprintf (outFile,"static Tcl_ObjType %s_type = {\n",(char*)structure->name); 
+  fprintf (outFile,"static Tcl_ObjType %s_type = {\n",(char*)structure->name);
   fprintf (outFile,"  \"%s\",\n", jWrapType (&structure->name));
-  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeClean,\n"); 
-  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n"); 
+  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeClean,\n");
+  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n");
   fprintf (outFile,"  (Tcl_UpdateStringProc*)    Get_%s,\n",(char*)structure->name);
   fprintf (outFile,"  (Tcl_SetFromAnyProc*)      Put_%s\n",(char*)structure->name);
   fprintf (outFile,"  };\n");
 
   fprintf (outFile,"// Build %s structure as a Tcl type\n",(char*)structure->name);
-  fprintf (outFile,"static Tcl_ObjType %s_ptr = {\n",(char*)structure->name); 
+  fprintf (outFile,"static Tcl_ObjType %s_ptr = {\n",(char*)structure->name);
   fprintf (outFile,"  \"%s_Ptr\",\n",jWrapType (&structure->name));
-  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeFree,\n"); 
-  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n"); 
+  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeFree,\n");
+  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n");
   fprintf (outFile,"  (Tcl_UpdateStringProc*)    Get_%s,\n",(char*)structure->name);
   fprintf (outFile,"  (Tcl_SetFromAnyProc*)      Create_%s\n",(char*)structure->name);
   fprintf (outFile,"  };\n");
-   
+
 } // end outputStruct
 
 /**--------------------------------------------------------------------------
@@ -216,13 +223,13 @@ void BackendCc2jTcl::output (Unions *jointure) {
     fprintf (outFile,"union %s {\n", (char*) jointure->name);
     for (ind=0; ind < jointure->elements.size(); ind ++) {
       fprintf (outFile,"  %s %s;\n"
-              ,(char*)jointure->elements[ind]->type 
+              ,(char*)jointure->elements[ind]->type
               ,(char*)jointure->elements[ind]->name
       );
     }
     fprintf (outFile,"};\n");
     fprintf (outFile,"typedef union %s %s;\n",(char*) jointure->name,(char*) jointure->name);
-  } 
+  }
 
   fprintf (outFile,"\n// Alloc %s slot jointure for Put/Get functions\n",(char*)jointure->name);
   fprintf (outFile,"static char *%s_slotNames[] =  {\n",(char*)jointure->name);
@@ -273,25 +280,25 @@ void BackendCc2jTcl::output (Unions *jointure) {
   fprintf (outFile,"  return (jWrapTypeUpdate (interp, &%s_union, srcObj, destObj));\n"
                   ,(char*)jointure->name);
   fprintf (outFile,"}\n");
-  
+
   fprintf (outFile,"LOCAL char* Get_%s (Tcl_Obj *tclObj) {\n", (char*)jointure->name);
   fprintf (outFile,"  return jWrapTypeCc2Tcl (&%s_union, tclObj);\n",(char*)jointure->name);
   fprintf (outFile,"}\n");
 
   fprintf (outFile,"// Build %s jointure as a Tcl type\n",(char*)jointure->name);
-  fprintf (outFile,"static Tcl_ObjType %s_type = {\n",(char*)jointure->name); 
+  fprintf (outFile,"static Tcl_ObjType %s_type = {\n",(char*)jointure->name);
   fprintf (outFile,"  \"%s\",\n", jWrapType (&jointure->name));
-  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeClean,\n"); 
-  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n"); 
+  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeClean,\n");
+  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n");
   fprintf (outFile,"  (Tcl_UpdateStringProc*)    Get_%s,\n",(char*)jointure->name);
   fprintf (outFile,"  (Tcl_SetFromAnyProc*)      Put_%s\n",(char*)jointure->name);
   fprintf (outFile,"  };\n");
 
   fprintf (outFile,"// Build %s jointure as a Tcl type\n",(char*)jointure->name);
-  fprintf (outFile,"static Tcl_ObjType %s_ptr = {\n",(char*)jointure->name); 
+  fprintf (outFile,"static Tcl_ObjType %s_ptr = {\n",(char*)jointure->name);
   fprintf (outFile,"  \"%s_Ptr\",\n", jWrapType (&jointure->name));
-  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeFree,\n"); 
-  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n"); 
+  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)jWrapTypeFree,\n");
+  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n");
   fprintf (outFile,"  (Tcl_UpdateStringProc*)    Get_%s,\n",(char*)jointure->name);
   fprintf (outFile,"  (Tcl_SetFromAnyProc*)      Create_%s\n",(char*)jointure->name);
   fprintf (outFile,"  };\n");
@@ -308,7 +315,7 @@ void BackendCc2jTcl::registrate (Structs *structure) {
   for (ind=0; ind <structure->elements.size(); ind++) {
    fprintf (outFile,"  %s_slotOffsets [%d] = (char*)&dummy4offset.%s - (char*)&dummy4offset;\n"
      ,(char*)structure->name, ind, (char*)structure->elements[ind]->name);
-  } 
+  }
   fprintf (outFile,"  jWrapTypeRegister (&module,&%s_struct,&%s_type,&%s_ptr );\n"
     , (char*) structure->name,(char*) structure->name,(char*) structure->name);
   fprintf (outFile," };\n");
@@ -326,7 +333,7 @@ void BackendCc2jTcl::registrate (Unions *jointure) {
   for (ind=0; ind <jointure->elements.size(); ind++) {
    fprintf (outFile,"  %s_slotOffsets [%d] = (char*)&dummy4offset.%s - (char*)&dummy4offset;\n"
      ,(char*)jointure->name, ind, (char*)jointure->elements[ind]->name);
-  } 
+  }
   fprintf (outFile,"  jWrapTypeRegister (&module,&%s_union,&%s_type,&%s_ptr );\n"
     , (char*) jointure->name,(char*) jointure->name, (char*) jointure->name);
   fprintf (outFile," };\n");
@@ -340,9 +347,9 @@ void BackendCc2jTcl::registrate (Unions *jointure) {
 void BackendCc2jTcl::registrate (Typedefs *alias) {
 
     fprintf (outFile
-    ," jWrapTypeAlias (&module,\"%s\"", jWrapType (&alias->source)); 
+    ," jWrapTypeAlias (&module,\"%s\"", jWrapType (&alias->source));
 
     fprintf (outFile
-    ," ,\"%s\");\n", jWrapType (&alias->name)); 
+    ," ,\"%s\");\n", jWrapType (&alias->name));
 
 } // end register Typedefs alias

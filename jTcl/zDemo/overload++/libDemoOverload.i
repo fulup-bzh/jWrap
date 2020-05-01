@@ -2,7 +2,7 @@
 : Ansi prototypes generated automaticaly 
 : file /home/fulup/Workspace/Fridu/Exe/linux86/include/libDemoOverload.i 
 : from funcDemoOverload_jWrap.i funcDemoOverload.i 
-: by fulup on fulup-desktop the 28-Apr-20[11h59] 
+: by fulup on fulup-desktop the 01-May-20[10h01] 
 : ------------------------------------ */
 #ifndef JWRAP_JTCL 
 #ifdef __cplusplus 
@@ -13,20 +13,6 @@ IMPORT char *vStamp_libDemoOverload ;
 } 
 #endif 
 #endif 
-#ifdef __cplusplus
- extern "C" {
-#endif
 RESTRICTED int Demooverload_Init (Tcl_Interp *interp) ;
-#ifdef __cplusplus
-}
-#endif
-
-#ifdef __cplusplus
- extern "C" {
-#endif
 extern  char *Overload_help;
-#ifdef __cplusplus
-}
-#endif
-
 

@@ -3,10 +3,10 @@
  *   This file was automatically generated with
  *   jWrap (C)FRIDU a Free Software Company 97-98
  *   File: cmdRuntimeReadline_jWrap.c GNU Readline interface to tclsh
- *   Date: Mon Mar 22 10:32:37 1999
+ *   Date: Fri May  1 18:46:16 2020
 
 
- *   jWrap --cc2jTcl /home/fridu/Fulup/Vues/Fridu/Exe/linux86/etc/headerReadline.h.cpp
+ *   jWrap --cc2jTcl headerReadline.h
  *
  *   WARNING: Except if you really know what you are doing
  *   you should not edit this file by hand.
@@ -38,18 +38,15 @@
  static JWRAP_modules module;
  static int initDone=0;
  static char *errTypeFmt="param:%d type [%s] not equivalent to [%s]\n";
- static JWRAP_types usedType [2];
+ static JWRAP_types usedType [1];
 
  // Build used type enumeration
  enum enumType {
-   JTYPE_Define_Readline           = 0,
-   JTYPE_char_Ptr                  = 1
+   JTYPE_Define_Readline           = 0
  }; // end of usedType enumeration
 
  // Build used commands help array
  static char *helpCmd[] = {
-   "void = ReadlineHistory ();",
-   "void = ReadlineStart ();",
  NULL
  }; // end of helpCmd array
 
@@ -94,58 +91,6 @@ static Tcl_ObjType Define_Readline_type = {
 
 /* *** Functions Section *** */
 
- // Interface jTcl to C++ for public ReadlineHistory C/C++ function/method
- static int jTcl_ReadlineHistory_0 (
-     ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
- {
-
- // prepare emergency panic return
- if (setjmp (jWrapCheckPoint)) {
-   if (jWrapStaticMessage[0] != '\0') {
-     Tcl_SetResult (interp,jWrapStaticMessage,TCL_STATIC);
-   }
-   return TCL_ERROR;
- }
-
- // Check param number
- if (objc != 1) goto  errorNumArg;
-
- // effectively call C++ function/method
- ReadlineHistory ();
-
- return TCL_OK;
-
- errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[0]);
-  return TCL_ERROR;
- } // end method jWrap_ReadlineHistory0
-
- // Interface jTcl to C++ for public ReadlineStart C/C++ function/method
- static int jTcl_ReadlineStart_1 (
-     ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
- {
-
- // prepare emergency panic return
- if (setjmp (jWrapCheckPoint)) {
-   if (jWrapStaticMessage[0] != '\0') {
-     Tcl_SetResult (interp,jWrapStaticMessage,TCL_STATIC);
-   }
-   return TCL_ERROR;
- }
-
- // Check param number
- if (objc != 1) goto  errorNumArg;
-
- // effectively call C++ function/method
- ReadlineStart ();
-
- return TCL_OK;
-
- errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[1]);
-  return TCL_ERROR;
- } // end method jWrap_ReadlineStart1
-
 
 /* ***  Tcl Register Section *** */
 #ifdef __cplusplus
@@ -162,7 +107,7 @@ RESTRICTED int Readline_Init (Tcl_Interp *interp) {
  module.name        ="Readline";
  module.help        ="GNU Readline interface to tclsh";
  module.helpCmd     = helpCmd;
- module.nbCmd       = 2;
+ module.nbCmd       = 0;
  module.hashTable   = NULL;
  module.version     = Readline_CUSTOM_STAMP;
  module.structures  = NULL;
@@ -186,24 +131,8 @@ RESTRICTED int Readline_Init (Tcl_Interp *interp) {
  /* --- Used Type Section --- */
 
  jWrapTypeCheck (&usedType [0],"Define_Readline",sizeof(Define_Readline));
- jWrapTypeCheck (&usedType [1],"char_Ptr",sizeof(char *));
-
- /* --- Static Variable registration --- */
-
- jWrapVarRegister (interp, NULL, "ReadlinePrompt1", (long*)&ReadlinePrompt1, 15 
-                  , &usedType[JTYPE_char_Ptr]);
- jWrapVarRegister (interp, NULL, "ReadlinePrompt2", (long*)&ReadlinePrompt2, 15 
-                  , &usedType[JTYPE_char_Ptr]);
- jWrapVarRegister (interp, NULL, "ReadlineName", (long*)&ReadlineName, 12 
-                  , &usedType[JTYPE_char_Ptr]);
 
  /* --- Functions sub-section --- */
-
- // register ReadlineHistory C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"Readline.History", jTcl_ReadlineHistory_0  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
-
- // register ReadlineStart C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"Readline.Start", jTcl_ReadlineStart_1  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
  return TCL_OK;
 } // end function Readline_Init
 #ifdef __cplusplus

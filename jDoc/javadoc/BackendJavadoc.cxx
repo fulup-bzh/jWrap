@@ -5,7 +5,7 @@
  * File      :   BackendJavadoc.cc C++ to pseudo Java code generation for JWAVADOC
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -22,7 +22,7 @@
 
 #include <stdio.h>
 #include <time.h>
-#include <unistd.h>     
+#include <unistd.h>
 
 #include "libBackendJavadoc.h"
 
@@ -54,13 +54,13 @@ int BackendJavadoc::openOutFile (char  *className, char *postfix, McString *doc)
   fprintf (outFile,"\n/*  ----------------------------------------------------------");
   fprintf (outFile,"\n *   This file was automatically generated with");
   fprintf (outFile,"\n *   jWrap (C)FRIDU a Free Software Company 97-98");
-  fprintf (outFile,"\n *   File: %s", (char*)outName); 
-  fprintf (outFile,"\n *   Date: %s",getDate()); 
+  fprintf (outFile,"\n *   File: %s", (char*)outName);
+  fprintf (outFile,"\n *   Date: %s",getDate());
   fprintf (outFile,"\n *   jWrap --javadoc %s\n", name);
-  fprintf (outFile,"\n *   Except if you really know what you are doing you should"); 
+  fprintf (outFile,"\n *   Except if you really know what you are doing you should");
   fprintf (outFile,"\n *   not edit this file by hand.");
   fprintf (outFile,"\n *");
-  fprintf (outFile,"\n *   In order rebuilding it use jWrap");   
+  fprintf (outFile,"\n *   In order rebuilding it use jWrap");
   fprintf (outFile,"\n + ------------------------------------------------------------ */\n");
 
   // attach all module to module
@@ -82,7 +82,7 @@ int BackendJavadoc::openOutFile (char  *className, char *postfix, McString *doc)
  errOpen:
    fprintf (stderr, "ERROR: BackendJavadoc can't open file |%s|\n", name);
    status = ERROR;
-   return ERROR; 
+   return ERROR;
 } // end outFile
 
 /*****************************************************************
@@ -98,7 +98,7 @@ void BackendJavadoc::output (McString* doc) {
    fprintf (outFile,"\n/** ");
    fputs (*doc, outFile);
    fprintf (outFile,"/\n");
- } 
+ }
 }
 
 void BackendJavadoc::output (Enums* enumeration) {
@@ -107,16 +107,16 @@ void BackendJavadoc::output (Enums* enumeration) {
    // each enum is define a public java class
    if (openOutFile ( enumeration->name,NULL,enumeration->doc)) return;
 
-   fprintf (outFile," extends global {\n"); 
+   fprintf (outFile," extends global {\n");
 
    for (ind=0; ind < enumeration->values.size(); ind++) {
         output (enumeration->values[ind]->doc);
         fprintf (outFile, "  public int %-15s"
-           ,(char*)enumeration->values[ind]->name 
+           ,(char*)enumeration->values[ind]->name
         );
         if (enumeration->values[ind]->value.size() > 1) {
           fprintf (outFile, " = %s"
-            ,(char*)enumeration->values[ind]->value 
+            ,(char*)enumeration->values[ind]->value
           );
         }
         fprintf (outFile, ";\n");
@@ -131,14 +131,14 @@ void BackendJavadoc::output (Structs* structure) {
    // each structure or union is define a public java class
    if (openOutFile ( structure->name,NULL,structure->doc)) return;
 
-   fprintf (outFile," extends global {\n"); 
- 
+   fprintf (outFile," extends global {\n");
+
    for (ind=0; ind < structure->elements.size(); ind++) {
         element = structure->elements [ind];
         output (element->doc);
         fprintf (outFile, "  public %s %s"
-           ,jWrapType (&element->type) 
-           ,(char*)element->name 
+           ,jWrapType (&element->type)
+           ,(char*)element->name
         );
         if (element->array >= 0) {
         fprintf (outFile, " []");
@@ -158,36 +158,36 @@ void BackendJavadoc::output (Typedefs* alias) {
    for (ind=0; (origin [ind] != ' ') && (origin[ind] != '\0'); ind++) {};
    origin[ind] = '\0';
 
-   if (!strcmp ("unsigned", origin)) return; 
-   if (!strcmp ("bool"    , origin)) return; 
-   if (!strcmp ("int"     , origin)) return; 
-   if (!strcmp ("float"   , origin)) return; 
-   if (!strcmp ("double"  , origin)) return; 
-   if (!strcmp ("long"    , origin)) return; 
-   if (!strcmp ("short"   , origin)) return; 
-   if (!strcmp ("char"    , origin)) return; 
-   if (!strcmp ("boolean" , origin)) return; 
+   if (!strcmp ("unsigned", origin)) return;
+   if (!strcmp ("bool"    , origin)) return;
+   if (!strcmp ("int"     , origin)) return;
+   if (!strcmp ("float"   , origin)) return;
+   if (!strcmp ("double"  , origin)) return;
+   if (!strcmp ("long"    , origin)) return;
+   if (!strcmp ("short"   , origin)) return;
+   if (!strcmp ("char"    , origin)) return;
+   if (!strcmp ("boolean" , origin)) return;
 
    // each enum is define a public java class
    if (openOutFile ( alias->name,NULL,alias->doc)) return;
 
-   if (!strcmp ("unsigned", (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("bool"    , (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("int"     , (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("float"   , (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("double"  , (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("long"    , (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("short"   , (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("char"    , (char*)alias->name)) goto noExtend; 
-   if (!strcmp ("boolean" , (char*)alias->name)) goto noExtend; 
+   if (!strcmp ("unsigned", (char*)alias->name)) goto noExtend;
+   if (!strcmp ("bool"    , (char*)alias->name)) goto noExtend;
+   if (!strcmp ("int"     , (char*)alias->name)) goto noExtend;
+   if (!strcmp ("float"   , (char*)alias->name)) goto noExtend;
+   if (!strcmp ("double"  , (char*)alias->name)) goto noExtend;
+   if (!strcmp ("long"    , (char*)alias->name)) goto noExtend;
+   if (!strcmp ("short"   , (char*)alias->name)) goto noExtend;
+   if (!strcmp ("char"    , (char*)alias->name)) goto noExtend;
+   if (!strcmp ("boolean" , (char*)alias->name)) goto noExtend;
 
 
-   fprintf (outFile," extends %s {\n",(char*)alias->source); 
+   fprintf (outFile," extends %s {\n",(char*)alias->source);
    return;
 
 // IF C++ is a basic type we dont extend class
 noExtend:
-   fprintf (outFile," {\n"); 
+   fprintf (outFile," {\n");
    return;
 
 } // end output typedef
@@ -200,7 +200,7 @@ void BackendJavadoc::output (Vars* var) {
       case PROT_PRIVATE:
 	fprintf (outFile," private ");
 	break;
-	
+
       case PROT_PUBLIC:
 	fprintf (outFile," public ");
 	break;
@@ -234,7 +234,7 @@ void BackendJavadoc::output (Functions* function) {
       case PROT_PRIVATE:
 	fprintf (outFile," private ");
 	break;
-	
+
       case PROT_PUBLIC:
 	fprintf (outFile," public ");
 	break;
@@ -299,13 +299,13 @@ void BackendJavadoc::output (Classes* classe)
      for (ind=0; ind < classe->vars.size(); ind++) {
        if (ind ==0)  fprintf (outFile, "\n  // Vars sub-section\n");
        if (classe->vars[ind]->visibility == visibility) {
-         output (classe->vars  [ind]);     
+         output (classe->vars  [ind]);
        }
      }
      for (ind=0; ind < classe->methods.size(); ind++) {
        if (ind == 0) fprintf (outFile,"\n  // Methods sub-section\n");
        if (classe->methods[ind]->visibility == visibility) {
-         output (classe->methods [ind]);     
+         output (classe->methods [ind]);
        }
      }
    }   // end for each visibility
@@ -318,15 +318,15 @@ void BackendJavadoc::output (Programs *program) {
 
   // create outfile for global function
   if (openOutFile ("global",NULL,program->doc)) return;
-  fprintf (outFile," {\n"); 
+  fprintf (outFile," {\n");
 
   for (ind=0; ind < program->vars.size(); ind ++) {
-     if (ind == 0)  fprintf (outFile,"\n\n// Variables Section\n");  
+     if (ind == 0)  fprintf (outFile,"\n\n// Variables Section\n");
      // do not output private vars
      if (program->vars[ind]->visibility == PROT_PUBLIC) {
        output (program->vars[ind]);
      }
-  }  
+  }
 
   for (ind=0; ind < program->functions.size(); ind ++) {
     if (ind == 0) fprintf (outFile,"\n// Interface/Functions Section\n");
@@ -340,9 +340,9 @@ void BackendJavadoc::output (Programs *program) {
   if (program->defines.size() >0 ) {
 
     if (openOutFile ("define",NULL,NULL)) return;
-    fprintf (outFile," extends global {\n"); 
+    fprintf (outFile," extends global {\n");
     for (ind=0; ind < program->defines.size(); ind ++) {
-       output  (program->defines[ind]->doc); 
+       output  (program->defines[ind]->doc);
        fprintf (outFile,"  int %s;\n",  (char*)program->defines[ind]->name);
     }
   }
@@ -367,7 +367,7 @@ void BackendJavadoc::output (Programs *program) {
      output (program->typedefs [ind]);
   }
 
-  // finally map C++ class on java class  
+  // finally map C++ class on java class
   for (ind=0; ind < program->classes.size(); ind ++) {
      output (program->classes [ind]);
   }
@@ -415,7 +415,7 @@ void BackendJavadoc::init (Programs* program, char *outDir, char* usrName) {
   fprintf (stderr, "ERROR: javadoc backend output not supported use outdir [%s]\n",usrName);
   status = ERROR;
   return;
- 
+
  notValidDir:
   fprintf (stderr, "ERROR: javadoc backend outdir not a valid directory [%s]\n",outDir);
   status = ERROR;

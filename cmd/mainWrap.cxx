@@ -5,7 +5,7 @@
  * File      :   mainWrap.cc
  * Project   :   jWrap
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -88,9 +88,7 @@ static struct option const long_options[] =
 // Compta with tcl8.0
 extern "C" {
   IMPORT char* vStampBin_jWrap;
-  static char tclEmptyString='\0';
-  char * tclEmptyStringRep = &tclEmptyString;
- }
+}
 
 
 /*----------------------------------------------------------

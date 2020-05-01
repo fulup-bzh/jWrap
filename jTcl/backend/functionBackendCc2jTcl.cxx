@@ -4,7 +4,7 @@
  * File      :   functionBackendCc2jTcl.cc manage methods output in C++ 2 jTcl backend wrapper
  * Projet    :   Jos/jWrap
  * Module    :   backend/cc2jTcl
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -44,7 +44,7 @@ void BackendCc2jTcl::registrate (Functions* function) {
         prefix = modName.size()-1;
       } else {
         prefix = 0;
-      }      
+      }
       fprintf (outFile
         ," Tcl_CreateObjCommand (interp,\"%s.%s\", jTcl_%s_%d"
         , (char*)modName, &funcname [prefix]
@@ -58,12 +58,12 @@ void BackendCc2jTcl::registrate (Functions* function) {
       fprintf (outFile
        ," tclClassIndex= Tcl_NewStringObj (\"%s\",%d);Tcl_IncrRefCount(tclClassIndex);\n"
        , (char*) function->name, function->name.size()-1);
-        
+
       fprintf (outFile
        ," tclClassValue= Tcl_NewStringObj (\"%s.%s\",%d);Tcl_IncrRefCount(tclClassValue);\n"
        , (char*)function->owner->name, (char*) function->name
        , function->owner->name.size()+function->name.size()-1);
-        
+
       fprintf (outFile
        ," Tcl_ObjSetVar2 (interp,tclClassArray,tclClassIndex,tclClassValue,TCL_GLOBAL_ONLY);\n");
 
@@ -83,7 +83,7 @@ void BackendCc2jTcl::output (Functions* function) {
 
   int ind;
   int  method;        // Method receive one more parameter
-  int  varArgument = FALSE; 
+  int  varArgument = FALSE;
   int  constructor = FALSE;
 
     // Function are prefixed with jTcl  method are not.
@@ -102,7 +102,7 @@ void BackendCc2jTcl::output (Functions* function) {
       default: return;
     }
 
-   
+
    /** -----------------------------------------------------------------------
     **  We first build jTcl->c++ binding this is done for any public methods
     ** -----------------------------------------------------------------------*/
@@ -134,7 +134,7 @@ void BackendCc2jTcl::output (Functions* function) {
       fprintf (outFile," Tcl_HashEntry *entryPtr;\n");
       fprintf (outFile," jWrap_%s *objHandle;\n", (char*)function->owner->name);
     }
-    
+
     // constructor build object and register it in hashtable
     if (constructor) {
      fprintf (outFile," // tempry data for registration of CC obj handle in hashtable\n");
@@ -155,7 +155,7 @@ void BackendCc2jTcl::output (Functions* function) {
      if (strcmp ("...", (char*) function->params[ind]->type)) {
         fprintf (outFile, " %s param_%d;\n",(char*) function->params[ind]->type, ind);
      } else {
-        // variable parameters are limitted to 10 and not typed 
+        // variable parameters are limitted to 10 and not typed
         varArgument = TRUE;
         fprintf (outFile, " va_list param_%d;  // variable arguments\n", ind);
      }
@@ -166,7 +166,7 @@ void BackendCc2jTcl::output (Functions* function) {
    fprintf (outFile," if (setjmp (jWrapCheckPoint)) {\n");
    fprintf (outFile,"   if (jWrapStaticMessage[0] != '\\0') {\n");
    fprintf (outFile,"     Tcl_SetResult (interp,jWrapStaticMessage,TCL_STATIC);\n");
-   fprintf (outFile,"   }\n   return TCL_ERROR;\n }\n"); 
+   fprintf (outFile,"   }\n   return TCL_ERROR;\n }\n");
 
     // In C++ we have to look for C++ object handle
     if ((method) && (!constructor)) {
@@ -208,7 +208,8 @@ void BackendCc2jTcl::output (Functions* function) {
     fprintf (outFile," }\n");
 
     fprintf (outFile," // convert to our wanted application type\n");
-    fprintf (outFile," if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){\n");
+    fprintf (outFile," if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_%s].obj->setFromAnyProc)){\n"
+                    ,jWrapType(&function->params [ind]->type));
     fprintf (outFile,"   status = ((Function*)usedType[JTYPE_%s].obj->setFromAnyProc)\n"
                     ,jWrapType(&function->params [ind]->type));
     fprintf (outFile,"            (interp, currentObj,NULL);\n");
@@ -218,7 +219,7 @@ void BackendCc2jTcl::output (Functions* function) {
                     , jWrapType(&function->params [ind]->type));
     fprintf (outFile," } else if (currentObj->typePtr->updateStringProc\n");
     fprintf (outFile,"  != usedType[JTYPE_%s].obj->updateStringProc) {\n"
-                     , jWrapType(&function->params [ind]->type)); 
+                     , jWrapType(&function->params [ind]->type));
     fprintf (outFile,"  jWrapPanic (interp,errTypeFmt");
     fprintf (outFile,"  ,%d,currentObj->typePtr->name,usedType[JTYPE_%s].obj->name);\n }\n"
 	    ,ind,jWrapType(&function->params [ind]->type));
@@ -249,7 +250,7 @@ void BackendCc2jTcl::output (Functions* function) {
      fprintf (outFile," // effectively call C++ function/method\n");
      if (function->result.size() != 0) {
         fprintf (outFile, " result.shared.appli = ");
-     } 
+     }
 
      // call super class or C++ global function with a cast to jWrap super class
      if (method) {
@@ -271,24 +272,25 @@ void BackendCc2jTcl::output (Functions* function) {
    // translate return status
    if (function->result.size() != 0) {
      fprintf (outFile," resultPtr = Tcl_GetObjResult (interp);\n");
-     fprintf (outFile," // copy result in Tcl internal value without checking it\n");
-     fprintf (outFile," resultPtr->internalRep.longValue = 0;\n");
+     fprintf (outFile," // Reset TclObj and memcpy value without any check as internal value\n");
+     fprintf (outFile," resultPtr->internalRep.twoPtrValue.ptr1 = 0;\n");
+     fprintf (outFile," resultPtr->internalRep.twoPtrValue.ptr2 = 0;\n");
      fprintf (outFile," *(%s*)&resultPtr->internalRep = result.shared.appli;\n"
                      , (char*)function->result);
      fprintf (outFile," resultPtr->bytes = NULL;\n");
      fprintf (outFile," resultPtr->typePtr = usedType[JTYPE_%s].obj;\n"
-                       , jWrapType (&function->result)); 
+                       , jWrapType (&function->result));
    } // end if result.size != 0
-     
+
    // in any other case our command succeeded
    fprintf (outFile," return TCL_OK;\n");
-  
+
    // Fatal error goto label
    if (constructor) {
      fprintf (outFile,"\n errorMultiInherit:\n");
      fprintf (outFile,"  Tcl_AppendResult (interp,\"jWrap cannot multi-inherit: class %s handle=\"\n", (char*)function->owner->name);
      fprintf (outFile,"                   ,TCL_STRING(objv[1]),NULL);\n");
-     fprintf (outFile,"  return TCL_ERROR;\n"); 
+     fprintf (outFile,"  return TCL_ERROR;\n");
    }
    fprintf (outFile,"\n errorNumArg:\n");
    fprintf (outFile,"  Tcl_WrongNumArgs (interp,1,objv, helpCmd[%d]);\n",function->number);
@@ -305,7 +307,7 @@ void BackendCc2jTcl::output (Functions* function) {
     fprintf (outFile," jWrap_%s::jWrap_%s (Tcl_Interp *interp, Tcl_Obj *jTclObj",(char*)function->name, (char*) function->name);
     // print all parameters types (warning last param as no comma
     for (ind=0; ind < function->params.size (); ind ++)
-    {	
+    {
       fprintf (outFile, ",%s param_%d", (char*) function->params [ind]->type, ind);
     } // end for each param
     // print super class constructor call
@@ -315,8 +317,8 @@ void BackendCc2jTcl::output (Functions* function) {
       fprintf (outFile, "param_%d",ind);
     } // end for each param
    fprintf (outFile,") {\n");
-   fprintf (outFile,"    jWrap_linkObj (interp, jTclObj);\n");  
-   fprintf (outFile," }\n\n"); 
+   fprintf (outFile,"    jWrap_linkObj (interp, jTclObj);\n");
+   fprintf (outFile," }\n\n");
    } // end if constructor
 
    // if method is virtual then we also need c++->jTcl binding
@@ -330,7 +332,7 @@ void BackendCc2jTcl::output (Functions* function) {
 
    // print all parameters types (warning last param as no comma
    for (ind=0; ind < function->params.size (); ind ++)
-   {	
+   {
      if (ind != 0) fprintf (outFile, ", ");
      fprintf (outFile, "%s param_%d", (char*) function->params [ind]->type, ind);
 
@@ -367,9 +369,9 @@ void BackendCc2jTcl::output (Functions* function) {
 
  } // end for each param
 
- fprintf (outFile,"  // call jTcl free method\n"); 
+ fprintf (outFile,"  // call jTcl free method\n");
  fprintf (outFile,"  if (!Tcl_GetCommandInfo (interp, TCL_STRING (jTclHandle), &infoCmd)) {\n");
- fprintf (outFile,"     jWrapPanic (NULL,\"Unknown jTcl %s object\",TCL_STRING (jTclHandle));\n  }\n","");  
+ fprintf (outFile,"     jWrapPanic (NULL,\"Unknown jTcl %s object\",TCL_STRING (jTclHandle));\n  }\n","");
  fprintf (outFile,"  status = (*infoCmd.objProc) (infoCmd.objClientData, interp,%d,objv);\n\n"
                  ,function->params.size()+2);
  fprintf (outFile,"  if (status != TCL_OK) jWrapPanic (NULL,\"jTcl Method %s failed\");\n\n"
@@ -403,7 +405,7 @@ void BackendCc2jTcl::output (Functions* function) {
                     , jWrapType(&function->result));
     fprintf (outFile," } else if (currentObj->typePtr->updateStringProc\n");
     fprintf (outFile,"  != usedType[JTYPE_%s].obj->updateStringProc) {\n"
-                     , jWrapType(&function->result)); 
+                     , jWrapType(&function->result));
    fprintf (outFile,"  jWrapPanic (interp,errTypeFmt");
    fprintf (outFile,"  ,%d,currentObj->typePtr->name,usedType[JTYPE_%s].obj->name);\n }\n"
 	    ,ind,jWrapType(&function->result));
@@ -413,24 +415,24 @@ void BackendCc2jTcl::output (Functions* function) {
 
     // free all tempry input parameter Tcl variables
     for (ind=0; ind < function->params.size (); ind ++) {
-      fprintf (outFile," // make sure Tcl GC won't delete internal rep\n"); 
-      fprintf (outFile," objv[%d]->typePtr = NULL;\n",ind+2); 
-      fprintf (outFile," Tcl_DecrRefCount (objv[%d]);\n",ind+2); 
+      fprintf (outFile," // make sure Tcl GC won't delete internal rep\n");
+      fprintf (outFile," objv[%d]->typePtr = NULL;\n",ind+2);
+      fprintf (outFile," Tcl_DecrRefCount (objv[%d]);\n",ind+2);
     }
     fprintf (outFile," return result;\n");
 
  } else {
     // free all tempry input parameter Tcl variables
     for (ind=0; ind < function->params.size (); ind ++) {
-      fprintf (outFile," // make sure Tcl GCwon't delete internal rep\n"); 
-      fprintf (outFile," objv[%d]->typePtr = NULL;\n",ind+2); 
-      fprintf (outFile," Tcl_DecrRefCount (objv[%d]);\n",ind+2); 
+      fprintf (outFile," // make sure Tcl GCwon't delete internal rep\n");
+      fprintf (outFile," objv[%d]->typePtr = NULL;\n",ind+2);
+      fprintf (outFile," Tcl_DecrRefCount (objv[%d]);\n",ind+2);
     }
 
     fprintf (outFile," return;\n");
  } // if result required by c++
 
- fprintf (outFile," } // end method %s\n\n", (char*)function->name);       
+ fprintf (outFile," } // end method %s\n\n", (char*)function->name);
 
 } // end output function
 
@@ -443,7 +445,7 @@ void BackendCc2jTcl::output (McDArray<Functions*>methods, char *name) {
   Functions *method;
   McDArray<Functions*> polymorph;
   McDArray<Functions*> polymorphs[PRM_MAX]; // A function can have up to 32 params
-  
+
     fprintf (outFile," // Extra wrapper for polymorph function %s\n", name);
 
     // print result type with method name
@@ -459,12 +461,12 @@ void BackendCc2jTcl::output (McDArray<Functions*>methods, char *name) {
 
     // Search for polypmorph method
     for (ind=0; ind <methods.size(); ind++) {
-      method = methods[ind]; 
+      method = methods[ind];
       if (!strcmp (name, (char*)method->name)) {
         // we are facing polymorph function
         if (method->params.size() >= PRM_MAX) {
          fprintf (stderr, "WARNING: method:%s >= %d prm ignored\n%s\n"
-                        , name,PRM_MAX,(char*)method->help); 
+                        , name,PRM_MAX,(char*)method->help);
         } else {
           // if number > 1 we have to check type in order solving polymorphism
           polymorphs [method->params.size()].append (method);
@@ -474,14 +476,14 @@ void BackendCc2jTcl::output (McDArray<Functions*>methods, char *name) {
 
     // loop on polymorph methods
     for (ind=0; ind < PRM_MAX; ind++) {
-      // if no polymorh fonction for this prmCount move to next slot  
-      if (polymorphs[ind].size () == 0) continue; 
+      // if no polymorh fonction for this prmCount move to next slot
+      if (polymorphs[ind].size () == 0) continue;
 
       // We have polyporh methods
       fprintf (outFile,"  case %d: \n",ind+2);
 
       // If more than one method with current prmSize add a type check
-      if  (polymorphs[ind].size() == 1) {       
+      if  (polymorphs[ind].size() == 1) {
           fprintf (outFile,"    return ( jWrap_%s::jTcl_%s_%d (cld, interp, objc, objv));\n"
                           ,(char*)method->owner->name, name, polymorphs[ind] [0]->number);
       } else {
@@ -513,22 +515,22 @@ void BackendCc2jTcl::output (McDArray<Functions*>methods, char *name) {
           fprintf (outFile,"    ,\"- \", helpCmd [%d],\"\\n\"\n",method->number);
         } // end for knd
         fprintf (outFile,"    ,NULL);\n");
-        fprintf (outFile,"   return TCL_ERROR; // end case %d\n",ind+2); 
+        fprintf (outFile,"   return TCL_ERROR; // end case %d\n",ind+2);
       } // end polymorh.size == 1
-    } // end for ind 
+    } // end for ind
     fprintf (outFile,"  }; // end switch\n");
 
     // any other value is a syntax error
-    fprintf (outFile,"\n // Any other case is an error\n"); 
+    fprintf (outFile,"\n // Any other case is an error\n");
     fprintf (outFile," Tcl_AppendResult (interp,\"ERROR: %s polymorph method available signatures:\\n\"\n",name);
     for (ind=0; ind <methods.size(); ind++) {
-      method = methods[ind]; 
+      method = methods[ind];
       if (!strcmp (name, (char*)method->name)) {
         fprintf (outFile,"  ,\"- \", helpCmd [%d],\"\\n\"\n",method->number);
       }
     }
     fprintf (outFile,"  ,NULL);\n");
-    fprintf (outFile," return TCL_ERROR;\n } //end polymorph %s\n\n",name); 
+    fprintf (outFile," return TCL_ERROR;\n } //end polymorph %s\n\n",name);
 } // end output polymorph extra wrapper
 
 

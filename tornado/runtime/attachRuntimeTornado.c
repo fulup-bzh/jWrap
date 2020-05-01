@@ -1,10 +1,10 @@
 /*
- *      Copyright(c) 1998-99 Fridu a Free Software Company Fulup Le Foll
+ *      Copyright(c) 1998-99 Fridu a Free Software Company Fulup Ar Foll
  *
  * File         : attachRuntimeTornado.c  Connect ctWtr to target server
  * Projet       : jWrap
  * SubModule    : Wtx VxWorks/Tornado interface
- * Auteur       : Fulup Le Foll (Fulup@fridu.bzh)
+ * Auteur       : Fulup Ar Foll (Fulup@fridu.bzh)
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -29,14 +29,14 @@
 #include <loadlib.h>
 #include <string.h>
 #include <stdlib.h>
-#include <netdb.h> 
+#include <netdb.h>
 
 // TORNADO_id are linking for emergency exit
 EXPORT TORNADO_id *tornadoIdHead = NULL;
 
 /** -----------------------------------------------------------------
  ** Provides basic interaface for target attachement thru WTX
- ** protocole. 
+ ** protocole.
  ** ----------------------------------------------------------------*/
 PUBLIC void  tornadoReconnect (TORNADO_id * tornadoId) {
   WTX_CONTEXT_DESC wtxCtx;
@@ -52,7 +52,7 @@ PUBLIC void  tornadoReconnect (TORNADO_id * tornadoId) {
   wtxToolDetach (tornadoId->wtxId);
 
   /*
-   * attach ctTornado to a target server 
+   * attach ctTornado to a target server
    */
   if (wtxToolAttach (tornadoId->wtxId, tornadoId->targetName
      , tornadoId->toolName) == WTX_ERROR) {
@@ -60,32 +60,32 @@ PUBLIC void  tornadoReconnect (TORNADO_id * tornadoId) {
   }
 
   /*
-   * get registrated for event return 
+   * get registrated for event return
    */
   if (wtxRegisterForEvent (tornadoId->wtxId, ".*") == WTX_ERROR)
     goto errRegister;
 
   /*
-   * set vio channel 
+   * set vio channel
    */
   tornadoId->vIoNum = wtxVioChanGet (tornadoId->wtxId);
   if (tornadoId->vIoNum == WTX_ERROR) goto errVioGet;
 
   /*
-   * build vio file name 
+   * build vio file name
    */
   vioStrSize = sprintf (vioDev, "/vio/%d", (int)tornadoId->vIoNum) + 1;
   jWrapLog (3, "tornadoConnect: tornadoVio [%s] tornadoId=%#p\n", vioDev,tornadoId);
 
   /*
-   * alloc space for vio name 
+   * alloc space for vio name
    */
   vioStrAdr = wtxMemAlloc (tornadoId->wtxId, vioStrSize);
   if (vioStrAdr == (TGT_ADDR_T) NULL)
     goto errWtxMalloc;
 
     /*
-     * copy vioName to tornadoMemPool area 
+     * copy vioName to tornadoMemPool area
      */
     if (WTX_ERROR == (INT32) wtxMemWrite (tornadoId->wtxId, vioDev
        , vioStrAdr, vioStrSize)) {
@@ -93,13 +93,13 @@ PUBLIC void  tornadoReconnect (TORNADO_id * tornadoId) {
     }
 
   /*
-   * fill spawn structure in order to execute open 
+   * fill spawn structure in order to execute open
    */
   memset (&wtxCtx, 0, sizeof (WTX_CONTEXT_DESC));
   wtxCtx.name  = "open";
   wtxCtx.entry = tornadoExecFindSymbol (tornadoId,"open");
   wtxCtx.args[0] = vioStrAdr;
-  wtxCtx.args[1] = 2;	
+  wtxCtx.args[1] = 2;
   wtxCtx.args[2] = 0;
 
   tornadoId->vOut = (UINT32) tornadoExecFuncCall (tornadoId, &wtxCtx);
@@ -151,7 +151,7 @@ errVioOpen:
  ** @param  tornadoId super handle to WTX connection
  ** @return a fully filled TORNADO handle, a status or error message
  ** thru jWrapPanic.
- ** @see tornadoEnd 
+ ** @see tornadoEnd
  **------------------------------------------------------------------*/
 PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
   static int       count = 0;
@@ -163,7 +163,7 @@ PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
   struct hostent   *hostenv;
 
   /*
-   * check user did no forget 
+   * check user did no forget
    */
   registry = getenv ("WIND_REGISTRY");
   if (registry == NULL) goto errRegistery;
@@ -173,7 +173,7 @@ PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
   if (hostenv == NULL) goto errHostname;
 
   /*
-   * check hostname name 
+   * check hostname name
    */
   if (tornadoId->targetName == NULL)
     goto noHostname;
@@ -184,7 +184,7 @@ PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
   }
 
   /*
-   * provide a default tool name 
+   * provide a default tool name
    */
   if (tornadoId->toolName == NULL) {
     tornadoId->toolName = Tcl_Alloc (10);
@@ -193,40 +193,40 @@ PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
     jWrapLog (2, "tornadoConnect: default name for toolName=[%s]\n", tornadoId->toolName);
   }
   /*
-   * attach ctTornado to a target server 
+   * attach ctTornado to a target server
    */
   if (wtxToolAttach (tornadoId->wtxId, tornadoId->targetName
      , tornadoId->toolName) == WTX_ERROR) {
      goto errAttach;
   }
   /*
-   * get registrated for event return 
+   * get registrated for event return
    */
   if (wtxRegisterForEvent (tornadoId->wtxId, ".*") == WTX_ERROR)
     goto errRegister;
 
   /*
-   * set vio channel 
+   * set vio channel
    */
   tornadoId->vIoNum = wtxVioChanGet (tornadoId->wtxId);
   if (tornadoId->vIoNum == WTX_ERROR)
     goto errVioGet;
 
   /*
-   * build vio file name 
+   * build vio file name
    */
   vioStrSize = sprintf (vioDev, "/vio/%d", (int)tornadoId->vIoNum) + 1;
   jWrapLog (3, "tornadoConnect: tornadoVio [%s] tornadoId=%#p\n", vioDev,tornadoId);
 
   /*
-   * alloc space for vio name 
+   * alloc space for vio name
    */
   vioStrAdr = wtxMemAlloc (tornadoId->wtxId, vioStrSize);
   if (vioStrAdr == (TGT_ADDR_T) NULL)
     goto errWtxMalloc;
 
     /*
-     * copy vioName to tornadoMemPool area 
+     * copy vioName to tornadoMemPool area
      */
     if (WTX_ERROR == (INT32) wtxMemWrite (tornadoId->wtxId, vioDev
        , vioStrAdr, vioStrSize)) {
@@ -234,13 +234,13 @@ PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
     }
 
   /*
-   * fill spawn structure in order to execute open 
+   * fill spawn structure in order to execute open
    */
   memset (&wtxCtx, 0, sizeof (WTX_CONTEXT_DESC));
   wtxCtx.name  = "open";
   wtxCtx.entry = tornadoExecFindSymbol (tornadoId,"open");
   wtxCtx.args[0] = vioStrAdr;
-  wtxCtx.args[1] = 2;	
+  wtxCtx.args[1] = 2;
   wtxCtx.args[2] = 0;
 
   tornadoId->vOut = (UINT32) tornadoExecFuncCall (tornadoId, &wtxCtx);
@@ -250,7 +250,7 @@ PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
 
   // setup endian type for gopher
   tornadoId->hostEndian = checkEndian ();
-  
+
   switch (wtxTargetEndianGet (tornadoId->wtxId)) {
   case WTX_ENDIAN_BIG:
     tornadoId->targetEndian  =  ENDIAN_IS_BIG;
@@ -275,7 +275,7 @@ PUBLIC STATUS tornadoConnect (TORNADO_id * tornadoId) {
   return TORNADO_OK;
 
   /*
-   * ------------ ERROR ------------------ 
+   * ------------ ERROR ------------------
    */
 errRegistery:
   jWrapPanic (NULL,"ERROR: tornadoConnect WIND_REGISTRY should point our registry server[%s]\n"
@@ -323,20 +323,20 @@ errVioOpen:
   return JWRAP_IMPOSSIBLE;	// for Gcc not to complain
 
 }				/*
-				 * end tornadoConnect 
+				 * end tornadoConnect
 				 */
 
 /**------------------------------------------------------
  ** close/free Tornado/Wtx connection, close vio create
  ** in tornadoConnect, and detach from target server
  ** this function is usually called automatically with
- ** Ctrl-C handler [Unix Only] or Tcl exit command 
+ ** Ctrl-C handler [Unix Only] or Tcl exit command
  ** @param  tornadoId connecttion handle
- ** @return status or error message thru jWrapPanic 
+ ** @return status or error message thru jWrapPanic
  ** @see tornadoCtrlC
  ** @see tornadoExit
  **------------------------------------------------------*/
-PUBLIC STATUS 
+PUBLIC STATUS
 tornadoEnd (TORNADO_id * tornadoId)
 {
   int status;
@@ -347,7 +347,7 @@ tornadoEnd (TORNADO_id * tornadoId)
 
   // Check in list for our ID
   for (tornadoId2 = tornadoIdHead;  tornadoId2 != NULL; tornadoId2 = (TORNADO_id*)tornadoId->next) {
-    if (tornadoId2 == tornadoId) break;       
+    if (tornadoId2 == tornadoId) break;
     tornadoId1 = tornadoId2;
   }
   if (tornadoId2 == NULL) goto errTornadoId;
@@ -360,10 +360,10 @@ tornadoEnd (TORNADO_id * tornadoId)
   }
 
   jWrapLog (2,"tornadoEnd [%s->%s tornadoId=0x%p]\n",tornadoId->targetName, tornadoId->toolName, tornadoId);
-  
+
 
   /*
-   * build vioDevName for error message 
+   * build vioDevName for error message
    */
   sprintf (vioDev, "/vio/%d", tornadoId->vIoNum);
 
@@ -374,7 +374,7 @@ tornadoEnd (TORNADO_id * tornadoId)
   wtxCtx.entry = tornadoExecFindSymbol (tornadoId,"close");
   wtxCtx.name = "close";
   wtxCtx.args[0] = tornadoId->vOut;
-  wtxCtx.args[2] = 0;	
+  wtxCtx.args[2] = 0;
 
   status = (UINT32) tornadoExecFuncCall (tornadoId, &wtxCtx);
 
@@ -383,7 +383,7 @@ tornadoEnd (TORNADO_id * tornadoId)
   jWrapLog (5,"tornadoEnd close vIO %s:%d=%d\n",vioDev, tornadoId->vOut, status);
 
   /*
-   * now vIO as been close free VIO channel 
+   * now vIO as been close free VIO channel
    */
   if (WTX_ERROR == wtxVioChanRelease (tornadoId->wtxId, tornadoId->vIoNum)) goto errVioFree;
 
@@ -425,6 +425,6 @@ tornadoEnd (TORNADO_id * tornadoId)
 
   return JWRAP_IMPOSSIBLE; // for gcc not to complain
 }				/*
-				 * end tornadoEnd 
+				 * end tornadoEnd
 				 */
 

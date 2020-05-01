@@ -4,7 +4,7 @@
 # File      :   funcScript.tcl show basic jTcl/C++ type convertion mecanism
 # Projet    :   jWrap
 # Module    :   jTcl C++ wrapper
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -24,12 +24,12 @@ if [catch {jWrap info DemoTypemap} ERR] {
   puts "ERROR: This demonstration require ModuleTypemap to loaded."
   puts "Restart stript with DemoTypemapSh Executable or load libDemoTypemap.so in tclsh."
   return -code error
-}  
+}
 puts "Wellcome to typeMap: $JWRAP(TypeMap_help)"
 
 # Check full comand arguement passing
 # -----------------------------------
-DemoTypemap.checkVarg {10 {--int 4} {--float 5.0} {--string toto}} 
+DemoTypemap.checkVarg {10 {--int 4} {--float 5.0} {--string toto}}
 DemoTypemap.checkVarg [list 10 12 13]
 DemoTypemap.checkVarg [list [list --int 4]]
 
@@ -41,7 +41,7 @@ DemoTypemap.checkOpt OPT_2
 if [catch {DemoTypemap.checkOpt OPT4} ERR] {
  puts "OK OPT4: $ERR"
 }
- 
+
 # integer int/long
 # -----------------
 for {set ind 0} {$ind <60} {set ind [DemoTypemap.addOneToInt $ind]} {
@@ -55,41 +55,49 @@ puts [DemoTypemap.stringToUpper "OK: demat deoc'h"]
 
 # array of string  char** (input && output)
 # -----------------------------------------
-puts [DemoTypemap.listToUpper [list "OK" "An" "Amzer" "a" "zo" "brav"]] 
+puts [DemoTypemap.listToUpper [list "OK" "An" "Amzer" "a" "zo" "brav"]]
 
-# give Tcl_Interp to a function (note: script interp value is ignore) 
+# give Tcl_Interp to a function (note: script interp value is ignore)
 # -------------------------------------------------------------------
-DemoTypemap.evalTclInC interp "puts \"OK: It Works this is evaluated within C\"" 
+DemoTypemap.evalTclInC interp "puts \"OK: It Works this is evaluated within C\""
 
 # send an application custom structure
 # ------------------------------------
-set  ADR  [list "Le Foll" "Fulup" "22 rue Cariel" "56860" "Sene"]
+set  ADR  [list "Ar Foll" "Fulup" "22 rue Cariel" "56860" "Sene"]
 DemoTypemap.printAdr $ADR
 puts "OK static last ADR: $JWRAP(lastAdr)"
 
 # check a cookie with an fopen
 # ----------------------------
-set FILE [DemoTypemap.fopen  "/tmp/passwd" "r"]
-if {![jWrap equal $FILE 0]} {
-  puts stderr "ERROR /tmp/passwd should not exist"
+set FILE [DemoTypemap.fopen  "/etc/passxxx" "r"]
+if {[jWrap isnull $FILE]} {
+  puts stderr "OK /etc/passxxx does not exist"
 } else {
-  puts stderr "OK /tmp/passwd does not exist"
+  puts stderr "ERROR /etc/passxxx should not exist"
 }
 
 set FILE [DemoTypemap.fopen  "/etc/passwd" r]
-if [jWrap equal $FILE 0] {
+if [jWrap isnull $FILE] {
   puts "ERROR /etc/passwd should exist"
 
 } else {
 
+  puts "Dumping /etc/passwd"
   set BUFFER [jWrap.Tcl_Alloc 255]
+  puts "BUFFER Handle= $BUFFER"
+
+  # Make sure LINE is never free
+  set LINE ""
+
   while 1 {
     # read until end of line
-    set   LINE  [DemoTypemap.fgets $BUFFER 255 $FILE]
-    if   {$LINE == ""} break;
-    puts -nonewline "$LINE"
+    set LINE [DemoTypemap.fgets $BUFFER 255 $FILE]
+    if [jWrap isnull $LINE] break
+    puts -nonewline "$BUFFER: $LINE"
   }
+
   # clean up cookies
+  puts "Closing /etc/passwd"
   jWrap.Tcl_Free  $BUFFER
   DemoTypemap.fclose $FILE
 

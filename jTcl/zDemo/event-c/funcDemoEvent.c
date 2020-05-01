@@ -1,21 +1,21 @@
 /*
  * Copyright(c) 1998 FRIDU a Free Software Company
- * 
+ *
  * Projet       : Test
  * SubModule    : Tcl Event Loop
  * Object   	: Small interface to Tcl custom event in main loop
- * Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+ *
+ * Last:
  *  Author      : $Author: Fulup $ Date        :
  *  Date        : $Date: 1999/03/11 12:49:30 $
  *  Revision    : $Revision: 1.3.0.1 $
  *  Source      : $Source: /Master/jWrap/jTcl/zDemo/event-c/funcDemoEvent.c,v $
- * 
+ *
  * Modification History
  * -------------------
  * 1.1  01sep98, Fulup Written
- * 
+ *
  */
 
 #include <signal.h>
@@ -23,13 +23,13 @@
 
 #include <libDemoEvent.h>
 
-#include <unistd.h>  
+#include <unistd.h>
 #include <sys/types.h>
-#include <sys/socket.h>       
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <string.h>      
+#include <string.h>
 
 /** ------------------------------------------------------------------------------
  *   This example shows how adding a new event in TCL default main loop. It has
@@ -42,7 +42,7 @@
  *      get    : read a buffer on socket
  *      close  : free connection
  *
- *   Warning: this example is not thread compliant and will probabelly not work
+ *   Warning: this example is not thread compliant and will probably not work
  *            under WIN32 Fridu reference plateform is Linux, secondary is Solaris
  *  -----------------------------------------------------------------------------*/
 
@@ -62,7 +62,7 @@ typedef struct sock_Id {
 } SOCK_id;
 
 // We store all open socket in a fix array, a linked list would complexify example
-LOCAL SOCK_id *sockId [1024];
+LOCAL SOCK_id *sockId [4069];
 
 /** ------------------------------------------------------------------------------
  *   This routine is call by  Tcl_ServiceEvent when a signal as been raised
@@ -103,7 +103,7 @@ PUBLIC void initModule (Tcl_Interp *interp) {
 
 /** ---------------------------------------------------------------
  *  Connect onto a Tcp client and store everything will need
- *  to call TCL callback from event handler, 
+ *  to call TCL callback from event handler,
  * ----------------------------------------------------------------*/
 PUBLIC int start (Tcl_Interp *interp, Tcl_Obj *host, int port, Tcl_Obj *callback) {
 
@@ -114,13 +114,13 @@ PUBLIC int start (Tcl_Interp *interp, Tcl_Obj *host, int port, Tcl_Obj *callback
   int    status;
 
   // check socket validity
-  if ((port <=0) || (port > 1024)) goto errSockNum;
+  if ((port <=1024) || (port > 4096)) goto errSockNum;
 
-  // check socket is not already trapped 
+  // check socket is not already trapped
   if (sockId [port] != NULL) goto bsySockNum;
 
   // Create a client socket
-  sock= socket (AF_INET, SOCK_STREAM, 0); 
+  sock= socket (AF_INET, SOCK_STREAM, 0);
   if (sock <= 0) goto errSockCreate;
 
   // fill up server structure
@@ -138,14 +138,14 @@ PUBLIC int start (Tcl_Interp *interp, Tcl_Obj *host, int port, Tcl_Obj *callback
   // try to connect onto client
   status = connect (sock, &servAddr, sizeof (struct sockaddr_in));
   if (status != 0) goto errSockConnect;
-  
-  // we sucessfully connect on client store socket 
+
+  // we sucessfully connect on client store socket
   // store everything to be able to call a TCL callback.
   sockId [port] = (SOCK_id*) Tcl_Alloc (sizeof (SOCK_id));
   sockId [port]->interp   = interp;
   sockId [port]->sock = sock;
 
-  // store callbackname and host as force Tcl not to free it 
+  // store callbackname and host as force Tcl not to free it
   Tcl_IncrRefCount (callback);
   sockId [port]->callback = callback;
   Tcl_IncrRefCount (host);
@@ -154,7 +154,7 @@ PUBLIC int start (Tcl_Interp *interp, Tcl_Obj *host, int port, Tcl_Obj *callback
   // ask Tcl to call our call back when a buufer will be ready
   Tcl_CreateFileHandler (sock, TCL_READABLE, sockCallback, (ClientData) port);
 
-  jWrapLog (1,"Connect Tcl Client %s:%d done\n", host,port);  
+  jWrapLog (1,"Connect Tcl Client %s:%d done\n", host,port);
 
   return port; // ------- OK --------
 
@@ -191,11 +191,11 @@ PUBLIC void stop (int port) {
   // Free up client
   close (sockId [port]->sock);
 
-  jWrapLog (1,"close Tcl Client %s:%d done\n",TCL_STRING (sockId [port]->host), port);  
+  jWrapLog (1,"close Tcl Client %s:%d done\n",TCL_STRING (sockId [port]->host), port);
 
   // free Tcl ressources
-  Tcl_DecrRefCount (sockId [port]->callback); 
-  Tcl_DecrRefCount (sockId [port]->host); 
+  Tcl_DecrRefCount (sockId [port]->callback);
+  Tcl_DecrRefCount (sockId [port]->host);
   Tcl_Free ((void*)sockId [port]);
   sockId [port] = NULL;
 
@@ -219,9 +219,9 @@ PUBLIC void put (int port, Tcl_Obj *msg) {
   if (sockId [port] == NULL) goto unkSockNum;
 
   status = send (sockId [port]->sock, TCL_STRING (msg), msg->length, 0);
-  if (status != msg->length) goto errSend;  
+  if (status != msg->length) goto errSend;
 
-  jWrapLog (1,"send %s:%d done\n",TCL_STRING (sockId [port]->host), port);  
+  jWrapLog (1,"send %s:%d done\n",TCL_STRING (sockId [port]->host), port);
 
   return; // ------ OK --------
 
@@ -238,18 +238,18 @@ unkSockNum:
 PUBLIC Tcl_Obj* get (int port) {
 
   char msg [1024];
-  Tcl_Obj *result;  
+  Tcl_Obj *result;
   int len;
-  
+
   // check this socket was previouselly trapped
   if (sockId [port] == NULL) goto unkSockNum;
 
   len = recv (sockId [port]->sock, msg, sizeof (msg), 0);
-  if (len  <= 0) goto errRecv;  
+  if (len  <= 0) goto errRecv;
 
   result  = Tcl_NewStringObj (msg,len);
 
-  jWrapLog (1,"got %s:%d done\n",TCL_STRING (sockId [port]->host), port);  
+  jWrapLog (1,"got %s:%d done\n",TCL_STRING (sockId [port]->host), port);
 
   return result; // ------ OK --------
 

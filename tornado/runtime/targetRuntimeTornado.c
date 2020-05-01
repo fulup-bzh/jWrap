@@ -5,7 +5,7 @@
  * File      :   targetRuntimeTornado.c interface some usefull routine on target
  * Projet    :   jWrap
  * Module    :   WTX VxWorks Tornado interface
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -33,7 +33,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-  
+
   static   WTX_CONTEXT_DESC mallocWtxCtx;
   static   WTX_CONTEXT_DESC freeWtxCtx;
 
@@ -97,7 +97,7 @@ RESTRICTED int tornadoTargetTypeTcl2Cc (TORNADO_infos *info, Tcl_Interp *interp
   // Invalidate external rep
   destObj->bytes = NULL;
 
-  return status; // ------ OK ---------  
+  return status; // ------ OK ---------
 
 errWtxMalloc: // ---------------------- ERROR -------------------
   jWrapPanic (interp,"tornadoTargetTypeTcl2Cc can't alloc tornadoMemPool:%s WTX_ErrMsg=[%s]\n"
@@ -184,7 +184,7 @@ RESTRICTED void tornadoTargetTypeFree (TORNADO_infos *info,Tcl_Obj *tclObj) {
 
   // now free source internal list rep
   if (tclObj->internalRep.twoPtrValue.ptr2 != NULL) {
-     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2); 
+     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2);
   }
 }
 

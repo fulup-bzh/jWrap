@@ -1,23 +1,23 @@
 /** ------------------------------------------------------------
  *
  * Copyright(c) 1997-99 FRIDU a Free Software Company
- * 
+ *
  * File   	: headerTornado.h hold every include for WPR.h to compile
  * Projet       : jWrap
  * SubModule    : Wtx VxWorks/Tornado WTX interface
- * Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+ *
+ * Last:
  *  Author      : $Author: Fulup $
  *  Date        : $Date: 1999/03/22 10:11:46 $
  *  Revision    : $Revision: 1.4 $
  *  Source      : $Source: /Master/jWrap/tornado/runtime/headerTornado.h,v $
- * 
+ *
  * Modification History
  * -------------------
  * 01b,15feb99, Fulup moved to new tree and removed WTX C API
  * 01a,05may98, Fulup Written
- * 
+ *
  * -----------------------------------------------------------------------*/
 
 /* -----------------------------------------------------------------------
@@ -47,7 +47,7 @@
 
 // Force init of Internal jWrap submodule
 LOCAL int customInit (Tcl_Interp *interp)
-{ 
+{
   // Check jWrap as been correctelly inited
   if (Wtx_Init (interp) != TCL_OK) {
      jWrapPanic (interp,"TORNADO jWrap Custom Init failled\n");
@@ -60,7 +60,7 @@ LOCAL int customInit (Tcl_Interp *interp)
   tornadoTypeInit   (interp);
   tornadoTargetInit (interp);
 
-  jWrapTypeAlias (NULL,"int" ,"size_t");    
+  jWrapTypeAlias (NULL,"int" ,"size_t");
 
   return TCL_OK;
 } // end localInit

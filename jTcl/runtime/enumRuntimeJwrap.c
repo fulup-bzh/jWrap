@@ -4,7 +4,7 @@
  * File      :   enumCcWrap.cc wrap C/C++ enum as cookies like
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -31,17 +31,17 @@
 PUBLIC void jWrapEnumCc2Tcl  (JWRAP_enums *enumeration, Tcl_Obj *tclObj) {
  int idxSlot;
 
-  // Check if value is not valid slot 
+  // Check if value is not valid slot
   if (tclObj->internalRep.longValue < enumeration->count) {
     if (enumeration->slotValues [tclObj->internalRep.longValue] == tclObj->internalRep.longValue) {
       jWrapStrDup (tclObj, enumeration->slotNames [tclObj->internalRep.longValue]);
       return; // ----------- RETURN OK -----
     }
   }
- 
+
   // if not found scan all values
   for (idxSlot=0; idxSlot <enumeration->count; idxSlot ++) {
-    if (enumeration->slotValues [idxSlot] == tclObj->internalRep.longValue) {
+    if ((int) enumeration->slotValues [idxSlot] == (int) tclObj->internalRep.longValue) {
       jWrapStrDup (tclObj, enumeration->slotNames [idxSlot]);
       return; // ------------- RETURN OK ------
     }
@@ -56,7 +56,7 @@ PUBLIC void jWrapEnumCc2Tcl  (JWRAP_enums *enumeration, Tcl_Obj *tclObj) {
     // error message as to be a malloc structure for Tcl to free it
     jWrapStrDup (tclObj,reponse);
   }
-} 
+}
 
 /**----------------------------------------------------------------
  * Create an internal representation from external representation
@@ -78,7 +78,7 @@ PUBLIC int jWrapEnumTcl2Cc (Tcl_Interp *interp,JWRAP_enums *enumeration,Tcl_Obj 
   }
 
   // Else update internal rep
-  tclObj->internalRep.longValue = enumeration->slotValues [idxSlot];
+  tclObj->internalRep.longValue = (long) enumeration->slotValues [idxSlot];
   tclObj->typePtr = enumeration->type->obj;
 
   return TCL_OK; // -------------------- OK -------------------
@@ -87,7 +87,7 @@ errSlot:
   Tcl_AppendResult (interp,"jWrapUpdateEnum [",enumeration->type->obj->name
                    ,"] Unknown Value [",TCL_STRING(tclObj),"]\n",NULL);
   return TCL_ERROR;
-} 
+}
 
 /**-----------------------------------------------------------------------
  * Duplicate a enum only copy long value internal rep
@@ -102,7 +102,7 @@ PUBLIC void jWrapEnumDup (JWRAP_enums *enumeration, Tcl_Obj *objSrc, Tcl_Obj *ob
 
 /**-----------------------------------------------------------------
  * Print available slot of a given enumeration on stdout.
- * Do not return any result. 
+ * Do not return any result.
  **-----------------------------------------------------------------*/
 PUBLIC void jWrapEnumInfo (JWRAP_enums *enumeration,int listAsked,char**result) {
   int  ind;
@@ -116,7 +116,7 @@ PUBLIC void jWrapEnumInfo (JWRAP_enums *enumeration,int listAsked,char**result) 
 
     // for each slot print type and var name
     for (ind=0; ind < enumeration->count; ind ++) {
-  
+
       fprintf (stdout, "#   %s %ld;\n"
                    , enumeration->slotNames[ind]
                    , enumeration->slotValues[ind]);
@@ -140,7 +140,7 @@ PUBLIC void jWrapEnumInfo (JWRAP_enums *enumeration,int listAsked,char**result) 
     }
     // free tmp RAM
     Tcl_Free ((char*)elements);
-  }  
+  }
 }
 
 /**-----------------------------------------------------------------
@@ -155,13 +155,13 @@ PUBLIC void jWrapEnumHelp (JWRAP_modules *module, int listAsked, char** line) {
  if (module->enumerations == NULL) {
   *line = strdup ("");
   return;
- } 
+ }
 
  if (!listAsked) {
    fprintf (stdout,"#\n## --- Enumeration For Module=%s\n", module->name);
  }
  // First we count enumeration number
- for (nbEnum=0;module->enumerations[nbEnum] != NULL; nbEnum++);  
+ for (nbEnum=0;module->enumerations[nbEnum] != NULL; nbEnum++);
  { // open block
    slot = (char**)Tcl_Realloc ((void*)slot, sizeof (char*) * (nbEnum+1));
    slot [0] = module->name;
@@ -187,7 +187,7 @@ PUBLIC void jWrapEnumHelp (JWRAP_modules *module, int listAsked, char** line) {
  * enumeration in tcl interpretor for each new enumeration.
  **----------------------------------------------------------------*/
 PUBLIC void jWrapEnumRegister (JWRAP_modules *module, JWRAP_enums* enumeration
-                              ,Tcl_ObjType *tclType) 
+                              ,Tcl_ObjType *tclType)
 {
  char name [JWRAP_MAX_NAME];
   Tcl_HashEntry *entryPtr;
@@ -195,7 +195,7 @@ PUBLIC void jWrapEnumRegister (JWRAP_modules *module, JWRAP_enums* enumeration
 
   // Build label name from enumeration name
   sprintf (name,"OBJ_%s", tclType->name);
- 
+
   // Store in hashtable
   entryPtr = Tcl_CreateHashEntry (module->hashTable, name, &new);
   if (!new) goto alreadyRegister;
@@ -209,7 +209,7 @@ PUBLIC void jWrapEnumRegister (JWRAP_modules *module, JWRAP_enums* enumeration
 
 alreadyRegister:
   jWrapPanic (NULL, "jWrapRegisterEnum Enumeration [%s] is already register in module [%s]\n"
-                  , name, module->name); 
-     
-  
+                  , name, module->name);
+
+
 } // end jWrapRegisterEnum

@@ -1,21 +1,21 @@
 /*
  * Copyright(c) 1997-99 FRIDU a Free Software Company
- * 
+ *
  * File   	: libWtxHost.h Interface for VxWorks/Tornado test lib
  * Projet       : jWrap
  * SubModule    : VxWorks/Tornado Target interface
- * Author       : Fulup Le Foll (Fulup@frud.com)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@frud.com)
+ *
+ * Last:
  *  Author      : $Author: Fulup $
  *  Date        : $Date: 1999/03/22 10:11:49 $
  *  Revision    : $Revision: 1.4 $
  *  Source      : $Source: /Master/jWrap/tornado/vxWorks/headerVxWorksTornado.h,v $
- * 
+ *
  * Modification History
  * -------------------
  * 01a,15feb99,Fulup,written
- * 
+ *
  * -----------------------------------------------------------------------*/
 
 /* -------------------------------------------------------------
@@ -30,7 +30,7 @@
  * ---------------------------------------------*/
 #ifndef JWRAP_CC2TORNADO
 #  include <target/h/types/vxParams.h>
-#  define PATH_MAX        _PARM_PATH_MAX  /* max pathname length excluding EOS */ 
+#  define PATH_MAX        _PARM_PATH_MAX  /* max pathname length excluding EOS */
 #  define NAME_MAX        _PARM_NAME_MAX  /* max filename length excluding EOS */
 #else
 #  include <../../target/h/types/vxParams.h>
@@ -68,7 +68,7 @@ typedef struct {
 /* -----------------------------
  * aio.h
  * ----------------------------*/
-// type to map onto cookies 
+// type to map onto cookies
 typedef void* vx_off_t;
 typedef void* vx_SigVect;
 typedef void* vx_AIO_SYS;
@@ -79,7 +79,7 @@ struct aiocb
     int			aio_fildes;		/* file descriptor */
     vx_off_t		aio_offset;		/* file offset */
     void *	        aio_buf;		/* location of buffer */
-    size_t		aio_nbytes;		/* length of transfer */ 
+    size_t		aio_nbytes;		/* length of transfer */
     int			aio_reqprio;		/* request priority offset */
     vx_SigVect      	aio_sigevent;		/* signal number and value */
     int			aio_lio_opcode;		/* operation to be performed */
@@ -158,7 +158,7 @@ struct itimerspec
 #define	_POSIX_DELAYTIMER_MAX	32	/* max. expired timers */
 
 
-// type to map onto cookies 
+// type to map onto cookies
 
 /* -----------------------------
  * signal.h
@@ -532,7 +532,7 @@ IMPORT BOOL		cacheMmuAvailable;
 /* -----------------------------
  * dbgLib.h
  * ----------------------------*/
-typedef unsigned short event_t; 
+typedef unsigned short event_t;
 typedef void * INSTR;
 
 /* -----------------------------
@@ -945,7 +945,7 @@ typedef struct		/* DOS_DATE_TIME */
  * ----------------------------*/
 struct buffers
     {
-    char * bufferIndexInUse;		/* 0x0 index into buffer 
+    char * bufferIndexInUse;		/* 0x0 index into buffer
 					 * MUST BE FIRST IN STRUCTURE */
     char * bufferInUse;			/* 0x4 pointer to buffer */
     char * bufferInReserve;		/* 0x8 pointer to reserve buffer */
@@ -1335,13 +1335,13 @@ typedef struct			/* MSG_Q_INFO */
 /* -----------------------------
  * msgQSmLib.h
  * ----------------------------*/
-typedef void* SM_MSG_Q_ID;	
+typedef void* SM_MSG_Q_ID;
 
 /* -----------------------------
  * nfsdLib.h
  * ----------------------------*/
 
-typedef struct 
+typedef struct
     {
     int    volumeId;            /* Volume identifier for the file system */
     ULONG  fsId;                /* Inode of the exported directory */
@@ -1460,7 +1460,7 @@ typedef struct
 
 #define	S_pingLib_NOT_INITIALIZED		(M_pingLib | 1)
 #define	S_pingLib_TIMEOUT			(M_pingLib | 2)
- 
+
 /* flags */
 
 #define	PING_OPT_SILENT		0x1	/* work silently */
@@ -1585,7 +1585,7 @@ typedef void* SM_PART_ID;
 #define SYM_MASK_EXACT	0x1ff		/* match symbol pointer exactly */
 #define SYM_SDA_MASK    0xc0            /* for SDA and SDA2 symbols */
 
-typedef signed char SYM_TYPE;	
+typedef signed char SYM_TYPE;
 typedef void* SYMBOL;
 
 /* -----------------------------
@@ -1753,7 +1753,7 @@ typedef void*  WDOG_ID;		/* watchdog id */
  * wvLib.h
  * ----------------------------*/
 /* The following defines are used to idicate which category of instrumentation
- * to turn on via wvEvtLogEnable (). 
+ * to turn on via wvEvtLogEnable ().
  */
 #define CONTEXT_SWITCH  1	/* context switch category */
 #define TASK_STATE	2	/* Task state transition category */
@@ -1768,7 +1768,7 @@ typedef void*  WDOG_ID;		/* watchdog id */
 #define OBJ_WD          4	/* watch-dog timer objects */
 
 /* The following defines are used to idicate if created objects
- * should be instrumented or not. 
+ * should be instrumented or not.
  */
 #define INSTRUMENT_ON   1	/* object instrumentation on */
 #define INSTRUMENT_OFF  2	/* object instrumentation off */
@@ -1840,12 +1840,12 @@ extern int 	nanosleep ( struct timespec *rqtp, struct timespec *rmtp);
  * ----------------------------*/
 extern int   	aio_read (struct aiocb *);
 extern int 	aio_write (struct aiocb *);
-extern int 	lio_listio (int, struct aiocb **, int, 
+extern int 	lio_listio (int, struct aiocb **, int,
 		    	    struct sigevent *);
 extern int 	aio_error (struct aiocb *);
 extern size_t	aio_return (struct agiocb *);
 extern int 	aio_cancel (int, struct aiocb *);
-extern int 	aio_suspend (struct aiocb **, int , 
+extern int 	aio_suspend (struct aiocb **, int ,
 		             struct timespec *);
 extern STATUS   aioPxLibInit (int lioMax);
 extern STATUS   aioShow (int drvNum);
@@ -1902,7 +1902,7 @@ extern int	fileno (FILE *);
 
 
 /* ----------------------------------------------------------------
- *  stdlib.h 
+ *  stdlib.h
  * ---------------------------------------------------------------*/
 extern void	abort (void);
 extern int	abs (int __i);
@@ -1938,7 +1938,7 @@ extern void *	malloc (size_t __size);
 extern void *	realloc (void *__ptr, size_t __size);
 
 /* -----------------------------------------------------------------------
- *  string.h 
+ *  string.h
  * ----------------------------------------------------------------------*/
 extern void *	memchr ( void *__s, int __c, size_t __n);
 extern int 	memcmp ( void *__s1,  void *__s2, size_t __n);
@@ -2138,7 +2138,7 @@ extern STATUS		dosFsMkfsOptionsSet (UINT options);
 extern void 		dosFsModeChange (DOS_VOL_DESC *vdptr, int newMode);
 extern void 		dosFsReadyChange (DOS_VOL_DESC *vdptr);
 extern STATUS 		dosFsTimeSet (int hour, int minute, int second);
-extern STATUS 		dosFsVolOptionsGet (DOS_VOL_DESC *vdptr, 
+extern STATUS 		dosFsVolOptionsGet (DOS_VOL_DESC *vdptr,
 					    UINT *pOptions);
 extern STATUS 		dosFsVolOptionsSet (DOS_VOL_DESC *vdptr, UINT options);
 extern STATUS 		dosFsVolUnmount (DOS_VOL_DESC *vdptr);
@@ -2626,7 +2626,7 @@ extern STATUS 	nfsMountAll (char *host, char *clientName, BOOL quiet);
 extern void 	nfsDevShow (void);
 extern STATUS 	nfsUnmount (char *localName);
 extern int      nfsDevListGet (unsigned long *nfsDevList, int listSize);
-extern STATUS   nfsDevInfoGet (unsigned long nfsDevHandle, 
+extern STATUS   nfsDevInfoGet (unsigned long nfsDevHandle,
 			       NFS_DEV_INFO  * pnfsInfo);
 /* -----------------------------
  * pingLib.h
@@ -2744,7 +2744,7 @@ extern void       smMemShow (int type);
 extern    STATUS       smNameAdd (char * name, void * value, int type);
 extern    STATUS       smNameFind (char * name, void ** pValue,
                                    int * pType, int waitType);
-extern    STATUS       smNameFindByValue (void * value, char * name, 
+extern    STATUS       smNameFindByValue (void * value, char * name,
                                           int * pType, int waitType);
 extern    STATUS       smNameRemove (char * name);
 extern    void         smNameShowInit (void);
@@ -3067,17 +3067,17 @@ extern STATUS wvHostInfoInit (char * ipAddress, unsigned int port);
 extern STATUS wvServerInit (int serverStackSize, int serverPriority);
 
 
-#endif // ===================== wrapping mode 
+#endif // ===================== wrapping mode
 
 // define library time stamp
-#ifndef VxWorks_CUSTOM_STAMP    
+#ifndef VxWorks_CUSTOM_STAMP
 # define VxWorks_CUSTOM_STAMP &vStamp_libRuntimeVxWorks[15]
 #endif
 
 #define VxWorks_CUSTOM_INIT  customInit(interp)
 // Force init of Internal jWrap submodule
 LOCAL int customInit (Tcl_Interp *interp)
-{ 
+{
   // Check jWrap as been correctelly inited
   if (Tornado_Init (interp) != TCL_OK) {
      jWrapPanic (interp,"VxWorks jWrap Custom Init failled\n");

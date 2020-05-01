@@ -1,0 +1,1 @@
+Build.mk compatDemoEvent.c Fulup funcDemoEvent.c libDemoEvent.h libDemoEvent.i libDemoEvent_jWrap.c mainDemoEvent.c Makefile README.DemoEvent scriptDemoEvent.jTcl /home/fulup/Workspace/Fridu/Exe/linux86/include/libDemoEvent.i /home/fulup/Workspace/Fridu/Exe/linux86/etc/funcDemoEvent.i /home/fulup/Workspace/Fridu/Exe/linux86/etc/libDemoEvent_jWrap.i 

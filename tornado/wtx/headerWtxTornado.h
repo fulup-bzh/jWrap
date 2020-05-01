@@ -1,23 +1,23 @@
 /** ------------------------------------------------------------
  *
  * Copyright(c) 1997-99 FRIDU a Free Software Company
- * 
+ *
  * File   	: libWtxHost.h Interface for VxWorks/Tornado test lib
  * Projet       : jWrap
  * SubModule    : jWrap/Wtx WTX interface
- * Author       : Fulup Le Foll (Fulup@fridu.bzh)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@fridu.bzh)
+ *
+ * Last:
  *  Author      : $Author: Fulup $
  *  Date        : $Date: 1999/03/22 10:11:49 $
  *  Revision    : $Revision: 1.4 $
  *  Source      : $Source: /Master/jWrap/tornado/wtx/headerWtxTornado.h,v $
- * 
+ *
  * Modification History
  * -------------------
  * 01b,15feb99, Fulup addapted to new tree
  * 01a,05may98, Fulup Written
- * 
+ *
  * -----------------------------------------------------------------------*/
 
 /* -------------------------------------------------------------
@@ -41,14 +41,14 @@
 #define Wtx_CUSTOM_INIT  customInit(interp)
 // Force init of Internal jWrap submodule
 LOCAL int customInit (Tcl_Interp *interp)
-{  
-  char* registry;       
-  
+{
+  char* registry;
+
   // Check jWrap as been correctelly inited
   if (Jwrap_Init (interp) != TCL_OK) {
      jWrapPanic (interp,"Wtx jWrap Custom Init failled\n");
   }
-  
+
   return TCL_OK;
 } // end localInit
 

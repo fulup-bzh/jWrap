@@ -4,7 +4,7 @@
  * File      :   varWrap.c provide access to instance and static var
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -31,11 +31,11 @@ EXPORT  Tcl_Obj       *jWrapGlobalVar;
  * update TCL variable internal rep depending on effective C value.
  * @note TCL C/Tcl variable mapping is not very efficient and
  * each time it is possible user should prefer changing C variable
- * state thru a procedure. 
+ * state thru a procedure.
  * @note external representation is update only when internal rep
  * change, check is done with a memcmp call and result will be
  * incoherent when mapped variable is a pointer address and only
- * pointer contend change. 
+ * pointer contend change.
  ******************************************************************/
 LOCAL char *traceCallback (JWRAP_vars *clientData, Tcl_Interp *interp
                           , char *name1, char *name2, int flag) {
@@ -47,7 +47,7 @@ LOCAL char *traceCallback (JWRAP_vars *clientData, Tcl_Interp *interp
     return jWrapStaticMessage;
   }
 
-  if (flag & TCL_TRACE_READS) { 
+  if (flag & TCL_TRACE_READS) {
        // if not already done if is time to allocate cache area
        if (clientData->previous == NULL) {
           // for small data we use a static buffer for big one we allocate one if needed
@@ -88,7 +88,7 @@ LOCAL char *traceCallback (JWRAP_vars *clientData, Tcl_Interp *interp
        if (clientData->jwType->magic == JWRAP_COOKIE) goto cannotWriteCookie;
 
        // convert to our wanted application type
-       if ((valueObj->typePtr == 0) || (valueObj->typePtr == jWrapTypeList)) { 
+       if ((valueObj->typePtr == 0) || (valueObj->typePtr == jWrapTypeList)) {
           status = ((Function*)clientData->jwType->obj->setFromAnyProc)
                    (interp, valueObj,NULL);
           if (status != TCL_OK) return (clientData->tclObj->bytes);
@@ -151,7 +151,7 @@ PUBLIC JWRAP_vars* jWrapVarRegister (Tcl_Interp *interp,Tcl_Obj *jTclObj
   int        status;
 
 
-  // build on structure for each var 
+  // build on structure for each var
   variable = (JWRAP_vars*)Tcl_Alloc (sizeof (JWRAP_vars));
   if (variable == NULL) goto errorMalloc;
 
@@ -160,7 +160,7 @@ PUBLIC JWRAP_vars* jWrapVarRegister (Tcl_Interp *interp,Tcl_Obj *jTclObj
 
   // Check if this is an object or an ordinary C procedure
   if (jTclObj != NULL) {
-    variable->array   = jTclObj; 
+    variable->array   = jTclObj;
     // set tcl object inside jTcl array
     variable->tclObj  = Tcl_ObjSetVar2 (interp, jTclObj, jTclIndex, Tcl_NewObj(), TCL_GLOBAL_ONLY);
 
@@ -170,7 +170,7 @@ PUBLIC JWRAP_vars* jWrapVarRegister (Tcl_Interp *interp,Tcl_Obj *jTclObj
                 ,(Tcl_VarTraceProc*)traceCallback, (ClientData)variable);
 
   } else {
-    // get tcl object as global 
+    // get tcl object as global
     variable->array   = jWrapGlobalVar;
     variable->tclObj  = Tcl_ObjSetVar2 (interp,jWrapGlobalVar,jTclIndex
                       ,Tcl_NewObj(),TCL_GLOBAL_ONLY);
@@ -204,7 +204,7 @@ errorMalloc:
 
 errorRegistering:
  jWrapLog (1,"WARNING jWrapRegistervar: cannot registering twice |%s|\n", varName);
- return NULL;  // Impossible only for gcc not to complain 
+ return NULL;  // Impossible only for gcc not to complain
 } // end jWrapRegistervar
 
 

@@ -1,16 +1,16 @@
 #
 # Copyright(c) 1999 FRIDU a Free Software Company
-# 
+#
 # Projet       : jWrap
 # SubModule    : WTX VxWorks Tornado Interface
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
-# 
-# Last: 
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+#
+# Last:
 #  Author      : $Author: Fulup $ Date        :
 #  Date        : $Date: 1999/03/11 12:49:31 $
 #  Revision    : $Revision: 1.3.0.1 $
 #  Source      : $Source: /Master/jWrap/tornado/wrs/Tcl/wtxCore.jTcl,v $
-# 
+#
 # Modification History
 # --------------------
 # 05mar99,Fulup extracted from WTS wtxcore.tcl
@@ -59,7 +59,7 @@
 # 01a,22jan95,c_s  extracted from shelcore.tcl.
 #*/
 
-# WARNING: The three tables: cpuType, cpuFamily, and vxCpuFamily must 
+# WARNING: The three tables: cpuType, cpuFamily, and vxCpuFamily must
 # be updated when a new CPU is supported.
 
 # cpuType(): a mapping of the numeric CPU type to the VxWorks architecture
@@ -125,7 +125,7 @@ set cpuType(125)	ARM7TDMI_T
 
 # cpuFamily(): a mapping of the numeric CPU family to the VxWorks architecture
 # family name.  This name is used as a key to load the proper architecture-
-# specific module for shell support (sh-<family>.tcl). 
+# specific module for shell support (sh-<family>.tcl).
 
 set cpuFamily(1)	m68k
 set cpuFamily(2)	m68k

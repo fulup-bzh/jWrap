@@ -5,7 +5,7 @@
  * File      :   libBackendJavadoc.h Generated javadoc
  * Projet    :   Rubicon/jTcl
  * Module    :   Javadoc backend
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -39,7 +39,7 @@ class BackendJavadoc : public BackendCc2jTcl {
   virtual void output (Programs  *);         // print out program header
   virtual void init   (Programs* program, char *outDir, char* usrName);
   BackendJavadoc  (void);                       // Dummy C++ Constructor
-  
+
 };
 
 #include <libBackendJavadoc.i>

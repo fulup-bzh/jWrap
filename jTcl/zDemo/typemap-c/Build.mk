@@ -1,9 +1,9 @@
-#       Copyright(c) 97-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 97-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # Module    :   Test jTcl module
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -14,23 +14,27 @@
 #
 #Modification History
 #--------------------
-#011,20feb98,Fulup written from jIc 
+#011,20feb98,Fulup written from jIc
 #
 
 # We do not install binaries
 # --------------------------
   NOT_INSTALL=1
 
+# Map malloc on Tcl_Alloc
+# --------------------------------
+  MK_DEFINES  = -DJWRAP_MALLOC
+  MK_INCLUDES =
 # Define modules
 # ------------------------
   WRAPPERS = funcDemoTypemap_jWrap.c
   LIB_SRCS = funcDemoTypemap.c translateDemoTypemap.c $(WRAPPERS)
   LIB_OBJS  = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
-  BIN_SRCS = mainDemoTypemap.c 
+  BIN_SRCS = mainDemoTypemap.c
   BIN_OBJS  = $(BIN_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
-  SRCS= $(BIN_SRCS) $(LIB_SRCS) 
+  SRCS= $(BIN_SRCS) $(LIB_SRCS)
 
 # define meta rules
 # ------------------
@@ -44,11 +48,6 @@ endif
 ifeq (${ARCH_OS_NAME},WinDos)
   override SHLIBS := $(JWRAP_DLL) $(TCL_LIB) $(SHLIBS)
 endif
-
-# define some extra option for TK
-# --------------------------------
-  MK_DEFINES  = 
-  MK_INCLUDES =
 
 # set proto if any .i changed
 # ----------------------------------------
@@ -78,4 +77,4 @@ ${BINDIR}/DemoTypemapSh${EXE_SFX}: $(BIN_OBJS) \
 # test rule
 # ---------
 test:: ${BINDIR}/DemoTypemapSh${EXE_SFX}
-	${BINDIR}/DemoTypemapSh${EXE_SFX} scriptDemoTypemap.jTcl
+	${BINDIR}/DemoTypemapSh${EXE_SFX} scriptDemoTypemap.tcl

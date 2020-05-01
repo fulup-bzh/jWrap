@@ -1,9 +1,9 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # Module    :   Wtx VxWorks Tornado interface
-# Auteur    :   Fulup Le Foll (Fulup@fridu.bzh)
+# Auteur    :   Fulup Ar Foll (Fulup@fridu.bzh)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -18,12 +18,12 @@
 
 # Only compile this directory if tornado is defined
 # -------------------------------------------------
-ifdef TORNADO_BASE 
+ifdef TORNADO_BASE
 
 # Define modules
 # --------------
   WRAPPERS   = cmdVxWorksTornado_wpr.c
-  SOURCES    = 
+  SOURCES    =
   LIB_SRCS   = $(SOURCES) $(WRAPPERS)
   LIB_OBJS   = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
@@ -31,18 +31,18 @@ ifdef TORNADO_BASE
 
 # define meta rules
 # ------------------
-  LIBS   :=  libRuntimeVxWorks 
+  LIBS   :=  libRuntimeVxWorks
   JDOC   :=  libRuntimeVxWorks
   SHARED :=  libRuntimeVxWorks
-  override SHLIBS := $(TORNADO_DLL) $(WTX_DLL) $(JWRAP_DLL) $(TORNADO_LIB) $(TCL_LIB) $(SHLIBS) 
-  EXE    :=  
+  override SHLIBS := $(TORNADO_DLL) $(WTX_DLL) $(JWRAP_DLL) $(TORNADO_LIB) $(TCL_LIB) $(SHLIBS)
+  EXE    :=
 
 # define some extra option for TK
 # --------------------------------
   MK_DEFINES  = $(TORNADO_DEF) $(VXWORKS_DEF)
   MK_INCLUDES = $(TORNADO_INCL)
   override JWRAP_TARGET   := --cc2tornado
-  override JWRAP_CPP_INCL = -I$(TORNADO_BASE) 
+  override JWRAP_CPP_INCL = -I$(TORNADO_BASE)
 
 # rule for jWrap generation from .c
 # ---------------------------------
@@ -52,7 +52,7 @@ cmdVxWorksTornado_wpr.c: headerVxWorksTornado.h $(TOP_JWRAP)
 # set proto if any .i changed
 # ----------------------------------------
 ${INCDIR}/libRuntimeVxWorks.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i)
-	${protoRule}           
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

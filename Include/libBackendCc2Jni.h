@@ -5,7 +5,7 @@
  * File      :   libBackendCc2Jni.h generate C/C++ to Jni Wrapper
  * Projet    :   Rubicon/Jni
  * Module    :   Jni C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -39,7 +39,7 @@ class registeredType {
 };
 
 /** ----------------------------------------------------------------------
- ** 
+ **
  ** ----------------------------------------------------------------------*/
 typedef enum JNItypes {
  JNI_short,
@@ -77,7 +77,7 @@ class BackendCc2Jni : public BackendCcProto {
 
   /** We build an enumeration of all used type, in order allowing compiler to sold
       statically type ammping when input/ouput paramters */
-  virtual char     *jWrapType (McString *); 
+  virtual char     *jWrapType (McString *);
 
   virtual void setOutName      (Programs*);  // Compute outfilename from infilename
   virtual void registerType    (McString*,int,STRUCTURE); // prepare to build JWRAP_TYPE information
@@ -90,13 +90,13 @@ class BackendCc2Jni : public BackendCcProto {
   virtual void output (Functions *);         // Print out all function and methods
   virtual void output (Classes   *);         // print out class header
   virtual void output (Enums     *);         // print out enumeration
-  virtual void output (Programs  *);         // print out header program 
+  virtual void output (Programs  *);         // print out header program
 
   virtual void registrate (Typedefs *alias); // Registrate typedef Alias
   virtual void registrate (Vars      *);     // Register in TCL interp variables
   virtual void unregistrate (Vars    *);     // Register in TCL interp variables
-  virtual void registrate (Unions   *);      
-  virtual void registrate (Structs   *);     
+  virtual void registrate (Unions   *);
+  virtual void registrate (Structs   *);
   virtual void registrate (Functions *);     // Register in TCL interp functions and methods
   virtual void registrate (Classes   *);     // Register in TCL interp classes
 

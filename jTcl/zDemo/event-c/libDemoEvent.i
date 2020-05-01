@@ -2,7 +2,7 @@
 : Ansi prototypes generated automaticaly 
 : file /home/fulup/Workspace/Fridu/Exe/linux86/include/libDemoEvent.i 
 : from funcDemoEvent.i libDemoEvent_jWrap.i 
-: by fulup on fulup-desktop the 28-Apr-20[11h59] 
+: by fulup on fulup-desktop the 01-May-20[19h34] 
 : ------------------------------------ */
 #ifndef JWRAP_JTCL 
 #ifdef __cplusplus 

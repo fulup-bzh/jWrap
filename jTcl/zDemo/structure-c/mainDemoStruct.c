@@ -3,7 +3,7 @@
  *
  * Projet	:   Jos/jWrap
  * SubModule    :   Test/jWrap
- * Auteur       :   Fulup Le Foll FRIDU a Free Software company
+ * Auteur       :   Fulup Ar Foll FRIDU a Free Software company
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -21,16 +21,16 @@
 #include "libRuntimeJwrap.h"
 
 // We don't have a valid proto
-extern void Demostruct_Init  (Tcl_Interp *interp); 
+extern void Demostruct_Init  (Tcl_Interp *interp);
 
-// Hook from TCL init provide a vliad Interp 
+// Hook from TCL init provide a valid Interp
 LOCAL int  modulesInit (Tcl_Interp *interp)
 {
    Tcl_Init     (interp);
    Demostruct_Init  (interp);
    return TCL_OK;
 }
-    
+
 int main (int argc, char** argv)
 {
     Tcl_Main(argc, argv, (Tcl_AppInitProc *) modulesInit);

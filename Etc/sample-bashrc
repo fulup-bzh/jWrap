@@ -1,0 +1,26 @@
+# -----------------------------------------------
+# Sample Fridu Shell profile for /etc/profile.d
+# -----------------------------------------------
+
+
+# Where your Fridu source code project are located
+# -----------------------------------------------
+export TOP=$HOME/Workspace
+
+# Except if you still use Solaris :)
+# ----------------------------------
+export ARCH_OS=linux86
+
+# Where you install your projets
+# -------------------------------
+export FRIDU_HOME=$HOME/pMaster
+export JTCL_HOME=$HOME/pMaster
+
+# typically all project are link into $FRIDU_HOME/shadow
+# ------------------------------------------------------
+LD_LIBRARY_PATH=$FRIDU_HOME/Shadow/lib:$LD_LIBRARY_PATH
+PATH=$FRIDU_HOME/Shadow/bin:$PATH
+
+# Except if you need standard build command
+# -----------------------------------------
+alias build=build.tcl

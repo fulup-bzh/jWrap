@@ -1,22 +1,22 @@
 /*
  * Copyright(c) 1997-98 FRIDU a Free Software Company
- * 
+ *
  * Projet       : Jos/jWrap
  * SubModule    : Test/jWrap
  * Implement    : DemoMikhail
  * Object   	: A very simple starting example from "Mikhail Teterin"
- * Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
- * 
- * Last: 
+ * Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+ *
+ * Last:
  *  Author      : $Author: Fulup $ Date        :
  *  Date        : $Date: 1999/03/11 12:49:29 $
  *  Revision    : $Revision: 1.3.0.1 $
  *  Source      : $Source: /Master/jWrap/jTcl/zDemo/Mikhail++/funcDemoMikhail.cxx,v $
- * 
+ *
  * Modification History
  * -------------------
  * 1.1 06may98, Fulup Written from Mikhail Teterin questions
- * 
+ *
  */
 
 #include "funcDemoMikhail.h"

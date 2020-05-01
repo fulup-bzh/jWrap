@@ -1,10 +1,10 @@
 #
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # Module    :   Readline interface
-# Auteur    :   Fulup Le Foll (Fulup@fridu.bzh)
+# Auteur    :   Fulup Ar Foll (Fulup@fridu.bzh)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -17,7 +17,7 @@
 #011,02mar99 written
 #
 
-# don't try to compile in WinBug 
+# don't try to compile in WinBug
 # ----------------------------------
 ifndef READLINE_LIB
 exe:
@@ -32,7 +32,7 @@ else
   LIB_OBJS   = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
   BIN_SRCS  = mainShellReadline.c
-  BIN_OBJS  = $(BIN_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})        
+  BIN_OBJS  = $(BIN_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
   SRCS       = $(SOURCES)
 
@@ -47,18 +47,18 @@ else
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
+  MK_DEFINES  =
   MK_INCLUDES = $(READLINE_INCL)
 
 # rule for jWrap generation from .c
 # ---------------------------------
 cmdRuntimeReadline_jWrap.c: headerReadline.h ../../Include/libRuntimeReadline.h $(TOP_JWRAP)
-	${jWrapRule}           
+	${jWrapRule}
 
 # set proto if any .i changed
 # ----------------------------------------
 ${INCDIR}/libRuntimeReadline.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i)
-	${protoRule}           
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

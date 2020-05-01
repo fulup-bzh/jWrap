@@ -4,7 +4,7 @@
  * File      :   typeWrap.c handle complex C/C++ type mapping with external TCL rep
  * Projet    :   jWrap
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -29,7 +29,7 @@
 /** Duplication public entry point for windows linker [hug!!!] */
 EXPORT Tcl_ObjType *jWrapTypeInt;
 /** Duplication public entry point for windows linker [hug!!!] */
-EXPORT Tcl_ObjType *jWrapTypeList; 
+EXPORT Tcl_ObjType *jWrapTypeList;
 
 /**-----------------------------------------------------------
  * When extracting an object from an other one if taken
@@ -63,9 +63,9 @@ LOCAL void getCgetFromC (Tcl_Obj *tclObj)
 {
  JWRAP_cgets *cget;
 
-  // Get external rep from our owner object 
+  // Get external rep from our owner object
   cget = (JWRAP_cgets*)tclObj->internalRep.twoPtrValue.ptr1;
-  
+
   // make or cget object look like father object
   tclObj->internalRep.twoPtrValue.ptr1 = cget->valueAdr;
   cget->type->updateStringProc (tclObj);
@@ -86,8 +86,8 @@ LOCAL int putCgetIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
 {
  JWRAP_cgets *cget;
  int         status;
-  
-  // Call Translation routine with original object   
+
+  // Call Translation routine with original object
   cget = (JWRAP_cgets*)tclObj->internalRep.twoPtrValue.ptr1;
   cget->owner->bytes  = tclObj->bytes;
   cget->owner->length = tclObj->length;
@@ -98,7 +98,7 @@ LOCAL int putCgetIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
 
   // owner object external rep obsolete
   cget->owner->bytes = NULL;
-    
+
   return status;
 }
 
@@ -107,7 +107,7 @@ LOCAL int putCgetIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
  * Free internal cget buffer. This routine does not free original
  * object but only the cget handler, in order allowing garbage
  * collector to free later on the original object, because more
- * then one cget reference can point on owner object. 
+ * then one cget reference can point on owner object.
  **----------------------------------------------------------------*/
 LOCAL void freeCgetInternal(Tcl_Obj *tclObj) {
  JWRAP_cgets *cget;
@@ -134,7 +134,7 @@ LOCAL void dupCgetInternal(Tcl_Obj *srcPtr, Tcl_Obj *destPtr)
     Tcl_IncrRefCount(cget->owner);
 }
 
- 
+
 /**-----------------------------------------------------------------
  * Translate type from internal to external rep, result is a valid
  * value for jWrapUpdateType function. It loops on all structure slot
@@ -142,7 +142,7 @@ LOCAL void dupCgetInternal(Tcl_Obj *srcPtr, Tcl_Obj *destPtr)
  * All elements are store in a list and used for producing final list.
  * Depending on slot type we can malloc an area for holding internal
  * rep of slot value. Result is a valid Tcl list Object than can be
- * browsed with lindex functions. Nevertheless as this function does 
+ * browsed with lindex functions. Nevertheless as this function does
  * not change internal representation, almost any function using result
  * will have to re-process result obj in order producing a valid list
  * internal rep.
@@ -181,20 +181,20 @@ PUBLIC char* jWrapTypeCc2Tcl (JWRAP_structs *structure, Tcl_Obj *tclObj) {
      switch (structure->slotTypes[ind]->magic) {
       case JWRAP_STRUCT:
         // Use mother internal rep for producing internal rep
-        tmpObj[jnd]->internalRep.longValue = 
+        tmpObj[jnd]->internalRep.longValue =
 	(long)(tclObj->internalRep.twoPtrValue.ptr1)
-        + structure->slotOffsets[ind] + (jnd*structure->slotTypes[ind]->size); 
+        + structure->slotOffsets[ind] + (jnd*structure->slotTypes[ind]->size);
         break;
 
       case JWRAP_POINTER:
-      case JWRAP_COOKIE: 
-      case JWRAP_BASIC: 
+      case JWRAP_COOKIE:
+      case JWRAP_BASIC:
         // Place a copy of internal rep directelly inside tmp object
         tmpObj[jnd]->internalRep.twoPtrValue.ptr1=0;
         memcpy (&tmpObj[jnd]->internalRep
 	 , (char*)(tclObj->internalRep.twoPtrValue.ptr1)
          + structure->slotOffsets[ind] + (jnd * structure->slotTypes[ind]->size)
-         , structure->slotTypes[ind]->size); 
+         , structure->slotTypes[ind]->size);
         break;
 
       default: goto errMagic;
@@ -212,7 +212,7 @@ PUBLIC char* jWrapTypeCc2Tcl (JWRAP_structs *structure, Tcl_Obj *tclObj) {
    } // end for jnd
 
    // group tuple object in one list {slot value}
-   elements[ind] = Tcl_Merge (structure->slotArrays[ind]+1,tuple);   
+   elements[ind] = Tcl_Merge (structure->slotArrays[ind]+1,tuple);
 
    // free all tmp object
    for (jnd=0; jnd < structure->slotArrays[ind]; jnd ++) {
@@ -235,7 +235,7 @@ PUBLIC char* jWrapTypeCc2Tcl (JWRAP_structs *structure, Tcl_Obj *tclObj) {
  Tcl_Free ((void*)elements);
  Tcl_Free ((void*)tmpObj);
  Tcl_Free ((void*)tuple);
-  
+
 
  return NULL; // ----------- OK -----------------
 
@@ -299,7 +299,7 @@ PUBLIC int jWrapTypeUpdate (Tcl_Interp *interp,JWRAP_structs *structure
      if (len2 != (1 + structure->slotArrays[idxSlot])) {
        // check last parameter is ...
        (void) Tcl_ListObjIndex (interp, element, len2-1, &value);
-        if (strcmp ("...", value->bytes)) { 
+        if (strcmp ("...", value->bytes)) {
           goto errElement;
         } else {
           completeMode = TRUE;
@@ -310,11 +310,11 @@ PUBLIC int jWrapTypeUpdate (Tcl_Interp *interp,JWRAP_structs *structure
      for (jnd=0; jnd < structure->slotArrays[idxSlot]; jnd ++) {
 
        // In complete mode we repeat last valid value
-       if ((!completeMode) || (jnd < len2-2)) {  
+       if ((!completeMode) || (jnd < len2-2)) {
          // process input we have a valid slot call attached Tcl2Cc routine
          (void) Tcl_ListObjIndex (interp, element, jnd+1, &value);
        }
-        
+
        // Update object internal representation if not present
        if ((value->typePtr == 0) || (value->typePtr == jWrapTypeList)) {
          // For jWrapStruct place result directelly in struct without malloc
@@ -337,14 +337,14 @@ PUBLIC int jWrapTypeUpdate (Tcl_Interp *interp,JWRAP_structs *structure
              goto errType;
        }
        if (status != TCL_OK) goto errValue;
- 
+
        // For any type other than JWRAP_struct we have to copy result in or result buffer
        if (structure->slotTypes[idxSlot]->magic != JWRAP_STRUCT) {
           memcpy ((char*)destObj->internalRep.twoPtrValue.ptr1
-             + structure->slotOffsets[idxSlot] 
+             + structure->slotOffsets[idxSlot]
              + (structure->slotTypes[idxSlot]->size *jnd)
              , &value->internalRep
-             , structure->slotTypes[idxSlot]->size); 
+             , structure->slotTypes[idxSlot]->size);
        }
      }
    } // end for all elements
@@ -386,7 +386,7 @@ PUBLIC int jWrapTypeUpdate (Tcl_Interp *interp,JWRAP_structs *structure
     Tcl_AppendResult (interp,name,NULL);
   }
   Tcl_AppendResult (interp,"]\n",NULL);
-  } 
+  }
   return TCL_ERROR;
 
  errValue:
@@ -428,7 +428,7 @@ PUBLIC void jWrapTypeCget (Tcl_Interp *interp,JWRAP_structs *structure
      cget   = tclObj->internalRep.twoPtrValue.ptr1;
      origine= (char*)cget->valueAdr;
    } else {
-     origine= (char*)tclObj->internalRep.twoPtrValue.ptr1; 
+     origine= (char*)tclObj->internalRep.twoPtrValue.ptr1;
    }
 
    // create a new TclObj that we be returned to user
@@ -441,14 +441,14 @@ PUBLIC void jWrapTypeCget (Tcl_Interp *interp,JWRAP_structs *structure
       memcpy (&value->internalRep
         , origine
         + structure->slotOffsets[idxSlot]
-        , structure->slotTypes[idxSlot]->size); 
+        , structure->slotTypes[idxSlot]->size);
       value->typePtr = structure->slotTypes[idxSlot]->obj;
    } else {
       JWRAP_cgets* resultAdr;
       // Place result in a Cget private structure
       resultAdr  = (JWRAP_cgets*) Tcl_Alloc (sizeof (JWRAP_cgets));
       if (resultAdr == NULL) goto errMalloc;
- 
+
       // Copy Object type and value in Cget structure and increment original count usage
       if (structure->slotTypes[idxSlot]->magic == JWRAP_STRUCT) {
 	 // For scructure we take object adresse
@@ -481,7 +481,7 @@ errMalloc:
 
 /**-----------------------------------------------------------------
  * Allocate and set to zero a new instance of Structure. Call update
- * routine to effectivelly fill up structure, and use destination ptr2
+ * routine to effectively fill up structure, and use destination ptr2
  * to hold a backward link on source object in oder decrementing usage
  * count at free time.
  * @param interp current tcl interpretor
@@ -532,9 +532,9 @@ PUBLIC int jWrapTypeTcl2Cc(Tcl_Interp *interp,JWRAP_structs *structure
   // Invalidate external rep if any
   destObj->bytes = NULL;
 
-  return status; // ------ OK ---------  
+  return status; // ------ OK ---------
 
- errMalloc: 
+ errMalloc:
    Tcl_AppendResult (interp, "jWrapTypeNew struct=["
                     ,structure->type->obj->name,"] can't malloc\n"
                     ,NULL);
@@ -549,11 +549,12 @@ PUBLIC void jWrapTypeFree (Tcl_Obj * tclObj) {
   jWrapLog (5,"jWrapTypeFree:0x%x\n", tclObj->internalRep.twoPtrValue.ptr1);
 
   // Free our attached complex structure
-  Tcl_Free (tclObj->internalRep.twoPtrValue.ptr1);
+  if (tclObj->internalRep.twoPtrValue.ptr1)
+    Tcl_Free (tclObj->internalRep.twoPtrValue.ptr1);
 
   // now free source internal list rep
   if (tclObj->internalRep.twoPtrValue.ptr2 != NULL) {
-     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2); 
+     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2);
   }
 }
 
@@ -564,7 +565,7 @@ PUBLIC void jWrapTypeClean (Tcl_Obj * tclObj) {
 
   // now free source internal list rep
   if (tclObj->internalRep.twoPtrValue.ptr2 != NULL) {
-     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2); 
+     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2);
   }
 }
 
@@ -587,7 +588,7 @@ PUBLIC void jWrapTypeInfo (JWRAP_structs *structure,int listAsked,char**result,i
 
     // for each slot print type and var name
     for (ind=0; ind < structure->count; ind ++) {
-  
+
       fprintf (stdout, "#   %s %s"
                    , structure->slotTypes[ind]->obj->name
                    , structure->slotNames[ind]);
@@ -602,7 +603,7 @@ PUBLIC void jWrapTypeInfo (JWRAP_structs *structure,int listAsked,char**result,i
     // return all structure as a list in slot
     elements = (char**) Tcl_Alloc (sizeof (char*) * (structure->count+1));
     elements [0] = structure->type->obj->name;
-  
+
     for (ind=0; ind < structure->count; ind ++) {
       tuple = (char**) Tcl_Realloc ((void*)tuple,sizeof (char*) * (1+structure->slotArrays[ind]));
       tuple [0] = structure->slotTypes[ind]->obj->name;
@@ -619,7 +620,7 @@ PUBLIC void jWrapTypeInfo (JWRAP_structs *structure,int listAsked,char**result,i
 
   // free all tempry structures
   Tcl_Free ((void*)elements);
-  Tcl_Free ((void*)tuple);  
+  Tcl_Free ((void*)tuple);
   }
 }
 
@@ -635,13 +636,13 @@ PUBLIC void jWrapTypeHelp (JWRAP_modules *module, int listAsked, char** line) {
  if (module->structures == NULL) {
   *line = strdup (module->name);
   return;
- } 
+ }
 
  if (!listAsked) {
    fprintf (stdout,"#\n## --- Complex Types For Module=%s\n", module->name);
  }
  // First we count structure number
- for (nbStruct=0;module->structures[nbStruct] != NULL; nbStruct++);  
+ for (nbStruct=0;module->structures[nbStruct] != NULL; nbStruct++);
  slot = (char**)Tcl_Realloc ((void*)slot, sizeof (char*) * (nbStruct+1));
  slot [0] = module->name;
 
@@ -678,12 +679,12 @@ PUBLIC void jWrapTypeAlias (JWRAP_modules *module, char *source, char *dest) {
   JWRAP_structs *structure;
 
 
-  // When module is valid we check for complex type aliasing 
+  // When module is valid we check for complex type aliasing
   if (module != NULL) {
 
     // Build label name from structure name
     sprintf (name,"OBJ_%s", source);
- 
+
     // search for source structure if not found check for Tcl Basic Type
     entryPtr = Tcl_FindHashEntry (module->hashTable,name);
 
@@ -716,7 +717,7 @@ PUBLIC void jWrapTypeAlias (JWRAP_modules *module, char *source, char *dest) {
 
   // If destination alias is already register return now
   if (Tcl_GetObjType (dest)) {
-      jWrapLog (5,"WARNING jWrapTypeAlias: type [%s] already registered\n", dest);    
+      jWrapLog (5,"WARNING jWrapTypeAlias: type [%s] already registered\n", dest);
   } else {
 
      // In order making alias source should be a valid Tcl type
@@ -726,7 +727,7 @@ PUBLIC void jWrapTypeAlias (JWRAP_modules *module, char *source, char *dest) {
      // Create a new type and register it with same translation routines as source type
      tclAliasType = (Tcl_ObjType*) Tcl_Alloc (sizeof (Tcl_ObjType));
      memcpy (tclAliasType, tclType, sizeof (Tcl_ObjType));
-     
+
 
      // Register new type in Tcl interp with alias name
      tclAliasType->name = dest;
@@ -743,7 +744,7 @@ PUBLIC void jWrapTypeAlias (JWRAP_modules *module, char *source, char *dest) {
      // Register new Ptr type in Tcl interp with alias name
      sprintf (name,"%s_Ptr", dest);
      if (Tcl_GetObjType (name)) {
-      jWrapLog (5,"WARNING jWrapTypeAlias: type [%s] already registered\n", name);    
+      jWrapLog (5,"WARNING jWrapTypeAlias: type [%s] already registered\n", name);
      } else {
       tclAliasType->name = strdup (name);
       Tcl_RegisterObjType (tclAliasType);
@@ -753,7 +754,7 @@ PUBLIC void jWrapTypeAlias (JWRAP_modules *module, char *source, char *dest) {
   return; // --------------- OK -----------------
 
 alreadyRegister:
-  jWrapLog (3, "jWrapTypeAlias: Warning Type [%s] is already register\n", dest); 
+  jWrapLog (3, "jWrapTypeAlias: Warning Type [%s] is already register\n", dest);
   return;
 
 noTclType:
@@ -774,7 +775,7 @@ PUBLIC void jWrapTypeRegister(JWRAP_modules *module, JWRAP_structs *structure
   if ((tclType != NULL) && (Tcl_GetObjType (tclType->name) == NULL)) {
     // Build label name from structure name
     sprintf (name,"OBJ_%s", tclType->name);
- 
+
     // Store in hashtable
     entryPtr = Tcl_CreateHashEntry (module->hashTable, name, &new);
     if (!new) goto alreadyRegister;
@@ -788,7 +789,7 @@ PUBLIC void jWrapTypeRegister(JWRAP_modules *module, JWRAP_structs *structure
   if ((tclPtr != NULL) && (Tcl_GetObjType (tclPtr->name) == NULL)) {
     // register _Ptr equivalent struct pointer
     sprintf (name,"OBJ_%s_Ptr", tclType->name);
- 
+
     // Store in hashtable
     entryPtr = Tcl_CreateHashEntry (module->hashTable, name, &new);
     if (!new) goto alreadyRegister;
@@ -801,8 +802,8 @@ PUBLIC void jWrapTypeRegister(JWRAP_modules *module, JWRAP_structs *structure
 
 alreadyRegister:
   jWrapLog (1, "jWrapTypeRegister Structure [%s] already register in module [%s]\n"
-                  , name, module->name); 
-     
+                  , name, module->name);
+
 }
 
 /**-----------------------------------------------------------------
@@ -812,7 +813,7 @@ PUBLIC void jWrapTypeCheck (JWRAP_types *usedType, char* typeName, unsigned int 
 
  // check this is not a standard TCL type
  usedType->obj = Tcl_GetObjType (typeName);
- 
+
  // if unknown we register a new jWrap cookie type
  if (usedType->obj == NULL) {
    jWrapCookieRegisterType (usedType, typeName);
@@ -831,14 +832,14 @@ PUBLIC void jWrapTypeCheck (JWRAP_types *usedType, char* typeName, unsigned int 
    }
  }
  usedType->size = typeSize;
-  
+
 } // end initialiseType
 
 /** -----------------------------------------------------------------
  * Init module register some Tcl to basic type equivalence
  **-----------------------------------------------------------------*/
 PUBLIC void jWrapTypeInit (Tcl_Interp *interp) {
- 
+
   char *strInt  = "int";
   char *strBool = "bool";
 

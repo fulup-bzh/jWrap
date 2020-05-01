@@ -4,7 +4,7 @@
  * File   	:   Main entry point for default Tornado Shell
  * Projet	:   jWrap
  * SubModule    :   WTX VxWorks Tornado inteface
- * Auteur       :   Fulup Le Foll FRIDU a Free Software company
+ * Auteur       :   Fulup Ar Foll FRIDU a Free Software company
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -27,7 +27,7 @@
 
 #include <stdlib.h>
 
-// Hook from TCL init provide a vliad Interp 
+// Hook from TCL init provide a vliad Interp
 LOCAL int modulesInit (Tcl_Interp *interp)
 {
    // WARNING: componant init order should be respected
@@ -37,7 +37,7 @@ LOCAL int modulesInit (Tcl_Interp *interp)
 
    return TCL_OK;
 }
-    
+
 int main (int argc, char** argv)
 {
     Tcl_Main(argc, argv, (Tcl_AppInitProc *) modulesInit);

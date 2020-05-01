@@ -1,9 +1,9 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # SubModule :   jTcl runtime
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -11,7 +11,7 @@
 #      Revision    : $Revision: 1.3.0.1 $
 #      Source      : $Source: /Master/jWrap/jTcl/runtime/Build.mk,v $
 #
-#Modification History 
+#Modification History
 #--------------------
 #01b,21feb98,Fulup adapted to new tree
 #01a,06feb98,Fulup written
@@ -23,7 +23,7 @@
   SOURCES  = typeRuntimeJwrap.c miscRuntimeJwrap.c \
              varRuntimeJwrap.c \
              cookieRuntimeJwrap.c enumRuntimeJwrap.c \
-	     stringRuntimeJwrap.c interpRuntimeJwrap.c 
+	     stringRuntimeJwrap.c interpRuntimeJwrap.c
   LIB_SRCS = $(SOURCES) $(WRAPPERS)
   LIB_OBJS = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
@@ -41,8 +41,8 @@ endif
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
-  MK_INCLUDES =  
+  MK_DEFINES  =
+  MK_INCLUDES =
 
 # rule for jWrap generation from .c
 # ---------------------------------
@@ -51,8 +51,8 @@ cmdRuntimeJwrap_jWrap.c: cmdRuntimeJwrap.c
 
 # set proto if any .i changed
 # ----------------------------------------
-${INCDIR}/libRuntimeJwrap.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i) 
-	${protoRule} 
+${INCDIR}/libRuntimeJwrap.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i)
+	${protoRule}
 
 # Produce doc with javadoc for this lib
 # -------------------------------------

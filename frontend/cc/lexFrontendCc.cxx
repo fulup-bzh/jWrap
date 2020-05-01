@@ -1147,7 +1147,7 @@ char *yytext;
  * File      :   yaccCcWrap.y define wrapper grammar
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -1763,9 +1763,9 @@ YY_RULE_SETUP
 {
    // TYPE Handle complex type
    yyless (sizeof ("const")-1);
-   debugMsg (8,"COMPLEX_TYPE");
+   debugMsg (8,"CONST_TYPE");
    yycc_lval.dString = new McString (yycc_text);
-   return COMPLEX_TYPE;
+   return CONST_TYPE;
 }
 	YY_BREAK
 case 27:

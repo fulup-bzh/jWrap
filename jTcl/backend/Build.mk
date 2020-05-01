@@ -1,11 +1,11 @@
 #  $Header: /Master/jWrap/jTcl/backend/Build.mk,v 1.3.0.1 1999/03/11 12:49:29 Fulup Exp $
 #
-#       Copyright(c) 96-97 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-97 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   Rubicon
 # SubModule :   wrap
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -14,7 +14,7 @@
 #      Source      : $Source: /Master/jWrap/jTcl/backend/Build.mk,v $
 #      State       : $State: Exp $
 #
-#Modification History 
+#Modification History
 #--------------------
 #01b,18apr98,Fulup moved to new tree
 #01a,06feb98,Fulup written
@@ -40,13 +40,13 @@
 
 # define some extra option for TK
 # --------------------------------
-  MK_DEFINES  = 
-  MK_INCLUDES =  
+  MK_DEFINES  =
+  MK_INCLUDES =
 
 # set proto if any .i changed
 # ----------------------------------------
-${INCDIR}/libBackendCc2jTcl.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i) 
-	${protoRule} 
+${INCDIR}/libBackendCc2jTcl.i: $(LIB_SRCXXS:%.cxx=${DEPDIR}/%.i)
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

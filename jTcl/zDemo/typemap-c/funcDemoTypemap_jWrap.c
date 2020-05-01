@@ -3,10 +3,10 @@
  *   This file was automatically generated with
  *   jWrap (C)FRIDU a Free Software Company 97-98
  *   File: funcDemoTypemap_jWrap.c jTcl C wrapping DemoTypemap
- *   Date: Sat Mar  6 14:01:35 1999
+ *   Date: Fri May  1 19:27:47 2020
 
 
- *   jWrap --cc2jTcl /home/fridu/Fulup/Vues/Fridu/Exe/linux86/etc/funcDemoTypemap.h.cpp
+ *   jWrap --cc2jTcl funcDemoTypemap.h
  *
  *   WARNING: Except if you really know what you are doing
  *   you should not edit this file by hand.
@@ -38,7 +38,7 @@
  static JWRAP_modules module;
  static int initDone=0;
  static char *errTypeFmt="param:%d type [%s] not equivalent to [%s]\n";
- static JWRAP_types usedType [11];
+ static JWRAP_types usedType [14];
 
  // Build used type enumeration
  enum enumType {
@@ -48,15 +48,21 @@
    JTYPE_MapAdrs                   = 3,
    JTYPE_int                       = 4,
    JTYPE_Some_Options              = 5,
-   JTYPE_SomeOptions               = 6,
-   JTYPE_char_Ptr_Ptr              = 7,
-   JTYPE_Tcl_Interp_Ptr            = 8,
-   JTYPE_Tcl_Obj_Ptr               = 9,
-   JTYPE_JWRAP_varg_Ptr            = 10
+   JTYPE_FILE_Ptr                  = 6,
+   JTYPE_const_char_Ptr            = 7,
+   JTYPE_void_Ptr                  = 8,
+   JTYPE_SomeOptions               = 9,
+   JTYPE_char_Ptr_Ptr              = 10,
+   JTYPE_Tcl_Interp_Ptr            = 11,
+   JTYPE_Tcl_Obj_Ptr               = 12,
+   JTYPE_JWRAP_varg_Ptr            = 13
  }; // end of usedType enumeration
 
  // Build used commands help array
  static char *helpCmd[] = {
+   "FILE* = fopen (char * NoName, char * NoName);",
+   "const char* = fgets (void * NoName, int NoName, FILE * NoName);",
+   "void = fclose (FILE * NoName);",
    "int = checkOpt (SomeOptions NoName);",
    "int = addOneToInt (int NoName);",
    "char* = stringToUpper (char * NoName);",
@@ -219,8 +225,275 @@ static Tcl_ObjType MapAdrs_ptr = {
 
 /* *** Functions Section *** */
 
+ // Interface jTcl to C++ for public fopen C/C++ function/method
+ static int jTcl_fopen_0 (
+     ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
+ {
+ Tcl_Obj     tmpCgetObj;
+ Tcl_Obj     *currentObj;
+ int status;
+ Tcl_Obj *resultPtr;
+ struct { union {
+   FILE*   appli;
+   void *ptr;
+ } shared; }result;
+ char * param_0;
+ char * param_1;
+
+ // prepare emergency panic return
+ if (setjmp (jWrapCheckPoint)) {
+   if (jWrapStaticMessage[0] != '\0') {
+     Tcl_SetResult (interp,jWrapStaticMessage,TCL_STATIC);
+   }
+   return TCL_ERROR;
+ }
+
+ // Check param number
+ if (objc != 3) goto  errorNumArg;
+
+ // Check for user application object
+ if (objv[1]->typePtr == &jWrapTypeTclObj) {
+   JWRAP_cgets* cget;
+   cget = (JWRAP_cgets*)objv[1]->internalRep.twoPtrValue.ptr1;
+   // create a tempry object with cget slot
+   tmpCgetObj.bytes   = objv[1]->bytes;
+   tmpCgetObj.length  = objv[1]->length;
+   tmpCgetObj.typePtr = cget->type;
+   tmpCgetObj.internalRep.otherValuePtr = cget->valueAdr;
+   currentObj    = &tmpCgetObj;
+ } else {
+   currentObj  = objv[1];
+ }
+ // convert to our wanted application type
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_char_Ptr].obj->setFromAnyProc)){
+   status = ((Function*)usedType[JTYPE_char_Ptr].obj->setFromAnyProc)
+            (interp, currentObj,NULL);
+   if (status != TCL_OK) return status;
+   currentObj->typePtr = usedType[JTYPE_char_Ptr].obj;
+ } else if (currentObj->typePtr->updateStringProc
+  != usedType[JTYPE_char_Ptr].obj->updateStringProc) {
+  jWrapPanic (interp,errTypeFmt  ,0,currentObj->typePtr->name,usedType[JTYPE_char_Ptr].obj->name);
+ }
+  param_0 = *(char **)&currentObj->internalRep;
+
+ // Check for user application object
+ if (objv[2]->typePtr == &jWrapTypeTclObj) {
+   JWRAP_cgets* cget;
+   cget = (JWRAP_cgets*)objv[2]->internalRep.twoPtrValue.ptr1;
+   // create a tempry object with cget slot
+   tmpCgetObj.bytes   = objv[2]->bytes;
+   tmpCgetObj.length  = objv[2]->length;
+   tmpCgetObj.typePtr = cget->type;
+   tmpCgetObj.internalRep.otherValuePtr = cget->valueAdr;
+   currentObj    = &tmpCgetObj;
+ } else {
+   currentObj  = objv[2];
+ }
+ // convert to our wanted application type
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_char_Ptr].obj->setFromAnyProc)){
+   status = ((Function*)usedType[JTYPE_char_Ptr].obj->setFromAnyProc)
+            (interp, currentObj,NULL);
+   if (status != TCL_OK) return status;
+   currentObj->typePtr = usedType[JTYPE_char_Ptr].obj;
+ } else if (currentObj->typePtr->updateStringProc
+  != usedType[JTYPE_char_Ptr].obj->updateStringProc) {
+  jWrapPanic (interp,errTypeFmt  ,1,currentObj->typePtr->name,usedType[JTYPE_char_Ptr].obj->name);
+ }
+  param_1 = *(char **)&currentObj->internalRep;
+
+ // effectively call C++ function/method
+ result.shared.appli =  fopen (param_0, param_1);
+
+ resultPtr = Tcl_GetObjResult (interp);
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
+ *(FILE**)&resultPtr->internalRep = result.shared.appli;
+ resultPtr->bytes = NULL;
+ resultPtr->typePtr = usedType[JTYPE_FILE_Ptr].obj;
+ return TCL_OK;
+
+ errorNumArg:
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[0]);
+  return TCL_ERROR;
+ } // end method jWrap_fopen0
+
+ // Interface jTcl to C++ for public fgets C/C++ function/method
+ static int jTcl_fgets_1 (
+     ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
+ {
+ Tcl_Obj     tmpCgetObj;
+ Tcl_Obj     *currentObj;
+ int status;
+ Tcl_Obj *resultPtr;
+ struct { union {
+   const char*   appli;
+   void *ptr;
+ } shared; }result;
+ void * param_0;
+ int param_1;
+ FILE * param_2;
+
+ // prepare emergency panic return
+ if (setjmp (jWrapCheckPoint)) {
+   if (jWrapStaticMessage[0] != '\0') {
+     Tcl_SetResult (interp,jWrapStaticMessage,TCL_STATIC);
+   }
+   return TCL_ERROR;
+ }
+
+ // Check param number
+ if (objc != 4) goto  errorNumArg;
+
+ // Check for user application object
+ if (objv[1]->typePtr == &jWrapTypeTclObj) {
+   JWRAP_cgets* cget;
+   cget = (JWRAP_cgets*)objv[1]->internalRep.twoPtrValue.ptr1;
+   // create a tempry object with cget slot
+   tmpCgetObj.bytes   = objv[1]->bytes;
+   tmpCgetObj.length  = objv[1]->length;
+   tmpCgetObj.typePtr = cget->type;
+   tmpCgetObj.internalRep.otherValuePtr = cget->valueAdr;
+   currentObj    = &tmpCgetObj;
+ } else {
+   currentObj  = objv[1];
+ }
+ // convert to our wanted application type
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_void_Ptr].obj->setFromAnyProc)){
+   status = ((Function*)usedType[JTYPE_void_Ptr].obj->setFromAnyProc)
+            (interp, currentObj,NULL);
+   if (status != TCL_OK) return status;
+   currentObj->typePtr = usedType[JTYPE_void_Ptr].obj;
+ } else if (currentObj->typePtr->updateStringProc
+  != usedType[JTYPE_void_Ptr].obj->updateStringProc) {
+  jWrapPanic (interp,errTypeFmt  ,0,currentObj->typePtr->name,usedType[JTYPE_void_Ptr].obj->name);
+ }
+  param_0 = *(void **)&currentObj->internalRep;
+
+ // Check for user application object
+ if (objv[2]->typePtr == &jWrapTypeTclObj) {
+   JWRAP_cgets* cget;
+   cget = (JWRAP_cgets*)objv[2]->internalRep.twoPtrValue.ptr1;
+   // create a tempry object with cget slot
+   tmpCgetObj.bytes   = objv[2]->bytes;
+   tmpCgetObj.length  = objv[2]->length;
+   tmpCgetObj.typePtr = cget->type;
+   tmpCgetObj.internalRep.otherValuePtr = cget->valueAdr;
+   currentObj    = &tmpCgetObj;
+ } else {
+   currentObj  = objv[2];
+ }
+ // convert to our wanted application type
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_int].obj->setFromAnyProc)){
+   status = ((Function*)usedType[JTYPE_int].obj->setFromAnyProc)
+            (interp, currentObj,NULL);
+   if (status != TCL_OK) return status;
+   currentObj->typePtr = usedType[JTYPE_int].obj;
+ } else if (currentObj->typePtr->updateStringProc
+  != usedType[JTYPE_int].obj->updateStringProc) {
+  jWrapPanic (interp,errTypeFmt  ,1,currentObj->typePtr->name,usedType[JTYPE_int].obj->name);
+ }
+  param_1 = *(int*)&currentObj->internalRep;
+
+ // Check for user application object
+ if (objv[3]->typePtr == &jWrapTypeTclObj) {
+   JWRAP_cgets* cget;
+   cget = (JWRAP_cgets*)objv[3]->internalRep.twoPtrValue.ptr1;
+   // create a tempry object with cget slot
+   tmpCgetObj.bytes   = objv[3]->bytes;
+   tmpCgetObj.length  = objv[3]->length;
+   tmpCgetObj.typePtr = cget->type;
+   tmpCgetObj.internalRep.otherValuePtr = cget->valueAdr;
+   currentObj    = &tmpCgetObj;
+ } else {
+   currentObj  = objv[3];
+ }
+ // convert to our wanted application type
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_FILE_Ptr].obj->setFromAnyProc)){
+   status = ((Function*)usedType[JTYPE_FILE_Ptr].obj->setFromAnyProc)
+            (interp, currentObj,NULL);
+   if (status != TCL_OK) return status;
+   currentObj->typePtr = usedType[JTYPE_FILE_Ptr].obj;
+ } else if (currentObj->typePtr->updateStringProc
+  != usedType[JTYPE_FILE_Ptr].obj->updateStringProc) {
+  jWrapPanic (interp,errTypeFmt  ,2,currentObj->typePtr->name,usedType[JTYPE_FILE_Ptr].obj->name);
+ }
+  param_2 = *(FILE **)&currentObj->internalRep;
+
+ // effectively call C++ function/method
+ result.shared.appli =  fgets (param_0, param_1, param_2);
+
+ resultPtr = Tcl_GetObjResult (interp);
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
+ *(const char**)&resultPtr->internalRep = result.shared.appli;
+ resultPtr->bytes = NULL;
+ resultPtr->typePtr = usedType[JTYPE_const_char_Ptr].obj;
+ return TCL_OK;
+
+ errorNumArg:
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[1]);
+  return TCL_ERROR;
+ } // end method jWrap_fgets1
+
+ // Interface jTcl to C++ for public fclose C/C++ function/method
+ static int jTcl_fclose_2 (
+     ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
+ {
+ Tcl_Obj     tmpCgetObj;
+ Tcl_Obj     *currentObj;
+ int status;
+ FILE * param_0;
+
+ // prepare emergency panic return
+ if (setjmp (jWrapCheckPoint)) {
+   if (jWrapStaticMessage[0] != '\0') {
+     Tcl_SetResult (interp,jWrapStaticMessage,TCL_STATIC);
+   }
+   return TCL_ERROR;
+ }
+
+ // Check param number
+ if (objc != 2) goto  errorNumArg;
+
+ // Check for user application object
+ if (objv[1]->typePtr == &jWrapTypeTclObj) {
+   JWRAP_cgets* cget;
+   cget = (JWRAP_cgets*)objv[1]->internalRep.twoPtrValue.ptr1;
+   // create a tempry object with cget slot
+   tmpCgetObj.bytes   = objv[1]->bytes;
+   tmpCgetObj.length  = objv[1]->length;
+   tmpCgetObj.typePtr = cget->type;
+   tmpCgetObj.internalRep.otherValuePtr = cget->valueAdr;
+   currentObj    = &tmpCgetObj;
+ } else {
+   currentObj  = objv[1];
+ }
+ // convert to our wanted application type
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_FILE_Ptr].obj->setFromAnyProc)){
+   status = ((Function*)usedType[JTYPE_FILE_Ptr].obj->setFromAnyProc)
+            (interp, currentObj,NULL);
+   if (status != TCL_OK) return status;
+   currentObj->typePtr = usedType[JTYPE_FILE_Ptr].obj;
+ } else if (currentObj->typePtr->updateStringProc
+  != usedType[JTYPE_FILE_Ptr].obj->updateStringProc) {
+  jWrapPanic (interp,errTypeFmt  ,0,currentObj->typePtr->name,usedType[JTYPE_FILE_Ptr].obj->name);
+ }
+  param_0 = *(FILE **)&currentObj->internalRep;
+
+ // effectively call C++ function/method
+ fclose (param_0);
+
+ return TCL_OK;
+
+ errorNumArg:
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[2]);
+  return TCL_ERROR;
+ } // end method jWrap_fclose2
+
  // Interface jTcl to C++ for public checkOpt C/C++ function/method
- static int jTcl_checkOpt_0 (
+ static int jTcl_checkOpt_3 (
      ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
  {
  Tcl_Obj     tmpCgetObj;
@@ -258,7 +531,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_SomeOptions].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_SomeOptions].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -273,20 +546,21 @@ static Tcl_ObjType MapAdrs_ptr = {
  result.shared.appli =  checkOpt (param_0);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(int*)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_int].obj;
  return TCL_OK;
 
  errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[0]);
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[3]);
   return TCL_ERROR;
- } // end method jWrap_checkOpt0
+ } // end method jWrap_checkOpt3
 
  // Interface jTcl to C++ for public addOneToInt C/C++ function/method
- static int jTcl_addOneToInt_1 (
+ static int jTcl_addOneToInt_4 (
      ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
  {
  Tcl_Obj     tmpCgetObj;
@@ -324,7 +598,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_int].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_int].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -339,20 +613,21 @@ static Tcl_ObjType MapAdrs_ptr = {
  result.shared.appli =  addOneToInt (param_0);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(int*)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_int].obj;
  return TCL_OK;
 
  errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[1]);
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[4]);
   return TCL_ERROR;
- } // end method jWrap_addOneToInt1
+ } // end method jWrap_addOneToInt4
 
  // Interface jTcl to C++ for public stringToUpper C/C++ function/method
- static int jTcl_stringToUpper_2 (
+ static int jTcl_stringToUpper_5 (
      ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
  {
  Tcl_Obj     tmpCgetObj;
@@ -390,7 +665,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_char_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_char_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -405,20 +680,21 @@ static Tcl_ObjType MapAdrs_ptr = {
  result.shared.appli =  stringToUpper (param_0);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(char**)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_char_Ptr].obj;
  return TCL_OK;
 
  errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[2]);
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[5]);
   return TCL_ERROR;
- } // end method jWrap_stringToUpper2
+ } // end method jWrap_stringToUpper5
 
  // Interface jTcl to C++ for public listToUpper C/C++ function/method
- static int jTcl_listToUpper_3 (
+ static int jTcl_listToUpper_6 (
      ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
  {
  Tcl_Obj     tmpCgetObj;
@@ -456,7 +732,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_char_Ptr_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_char_Ptr_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -471,20 +747,21 @@ static Tcl_ObjType MapAdrs_ptr = {
  result.shared.appli =  listToUpper (param_0);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(char***)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_char_Ptr_Ptr].obj;
  return TCL_OK;
 
  errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[3]);
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[6]);
   return TCL_ERROR;
- } // end method jWrap_listToUpper3
+ } // end method jWrap_listToUpper6
 
  // Interface jTcl to C++ for public evalTclInC C/C++ function/method
- static int jTcl_evalTclInC_4 (
+ static int jTcl_evalTclInC_7 (
      ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
  {
  Tcl_Obj     tmpCgetObj;
@@ -523,7 +800,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_Tcl_Interp_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_Tcl_Interp_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -548,7 +825,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[2];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_Tcl_Obj_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_Tcl_Obj_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -563,20 +840,21 @@ static Tcl_ObjType MapAdrs_ptr = {
  result.shared.appli =  evalTclInC (param_0, param_1);
 
  resultPtr = Tcl_GetObjResult (interp);
- // copy result in Tcl internal value without checking it
- resultPtr->internalRep.longValue = 0;
+ // Reset TclObj and memcpy value without any check as internal value
+ resultPtr->internalRep.twoPtrValue.ptr1 = 0;
+ resultPtr->internalRep.twoPtrValue.ptr2 = 0;
  *(int*)&resultPtr->internalRep = result.shared.appli;
  resultPtr->bytes = NULL;
  resultPtr->typePtr = usedType[JTYPE_int].obj;
  return TCL_OK;
 
  errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[4]);
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[7]);
   return TCL_ERROR;
- } // end method jWrap_evalTclInC4
+ } // end method jWrap_evalTclInC7
 
  // Interface jTcl to C++ for public printAdr C/C++ function/method
- static int jTcl_printAdr_5 (
+ static int jTcl_printAdr_8 (
      ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
  {
  Tcl_Obj     tmpCgetObj;
@@ -609,7 +887,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_typeMapAdrs_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_typeMapAdrs_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -626,12 +904,12 @@ static Tcl_ObjType MapAdrs_ptr = {
  return TCL_OK;
 
  errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[5]);
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[8]);
   return TCL_ERROR;
- } // end method jWrap_printAdr5
+ } // end method jWrap_printAdr8
 
  // Interface jTcl to C++ for public checkVarg C/C++ function/method
- static int jTcl_checkVarg_6 (
+ static int jTcl_checkVarg_9 (
      ClientData cld, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
  {
  Tcl_Obj     tmpCgetObj;
@@ -664,7 +942,7 @@ static Tcl_ObjType MapAdrs_ptr = {
    currentObj  = objv[1];
  }
  // convert to our wanted application type
- if ((currentObj->typePtr==0)||(currentObj->typePtr==jWrapTypeList)){
+ if (!currentObj->typePtr || (currentObj->typePtr->setFromAnyProc!= usedType[JTYPE_JWRAP_varg_Ptr].obj->setFromAnyProc)){
    status = ((Function*)usedType[JTYPE_JWRAP_varg_Ptr].obj->setFromAnyProc)
             (interp, currentObj,NULL);
    if (status != TCL_OK) return status;
@@ -681,9 +959,9 @@ static Tcl_ObjType MapAdrs_ptr = {
  return TCL_OK;
 
  errorNumArg:
-  Tcl_WrongNumArgs (interp,1,objv, helpCmd[6]);
+  Tcl_WrongNumArgs (interp,1,objv, helpCmd[9]);
   return TCL_ERROR;
- } // end method jWrap_checkVarg6
+ } // end method jWrap_checkVarg9
 
 
 /* ***  Tcl Register Section *** */
@@ -701,7 +979,7 @@ RESTRICTED int Demotypemap_Init (Tcl_Interp *interp) {
  module.name        ="DemoTypemap";
  module.help        ="jTcl C wrapping DemoTypemap";
  module.helpCmd     = helpCmd;
- module.nbCmd       = 7;
+ module.nbCmd       = 10;
  module.hashTable   = NULL;
  module.version     = DemoTypemap_CUSTOM_STAMP;
  module.structures  = structures;
@@ -749,11 +1027,14 @@ RESTRICTED int Demotypemap_Init (Tcl_Interp *interp) {
  jWrapTypeCheck (&usedType [3],"MapAdrs",sizeof(struct MapAdrs));
  jWrapTypeCheck (&usedType [4],"int",sizeof(int));
  jWrapTypeCheck (&usedType [5],"Some_Options",sizeof(enum Some_Options));
- jWrapTypeCheck (&usedType [6],"SomeOptions",sizeof(SomeOptions));
- jWrapTypeCheck (&usedType [7],"char_Ptr_Ptr",sizeof(char**));
- jWrapTypeCheck (&usedType [8],"Tcl_Interp_Ptr",sizeof(Tcl_Interp *));
- jWrapTypeCheck (&usedType [9],"Tcl_Obj_Ptr",sizeof(Tcl_Obj *));
- jWrapTypeCheck (&usedType [10],"JWRAP_varg_Ptr",sizeof(JWRAP_varg *));
+ jWrapTypeCheck (&usedType [6],"FILE_Ptr",sizeof(FILE*));
+ jWrapTypeCheck (&usedType [7],"const_char_Ptr",sizeof(const char*));
+ jWrapTypeCheck (&usedType [8],"void_Ptr",sizeof(void *));
+ jWrapTypeCheck (&usedType [9],"SomeOptions",sizeof(SomeOptions));
+ jWrapTypeCheck (&usedType [10],"char_Ptr_Ptr",sizeof(char**));
+ jWrapTypeCheck (&usedType [11],"Tcl_Interp_Ptr",sizeof(Tcl_Interp *));
+ jWrapTypeCheck (&usedType [12],"Tcl_Obj_Ptr",sizeof(Tcl_Obj *));
+ jWrapTypeCheck (&usedType [13],"JWRAP_varg_Ptr",sizeof(JWRAP_varg *));
 
  /* --- Static Variable registration --- */
 
@@ -764,26 +1045,35 @@ RESTRICTED int Demotypemap_Init (Tcl_Interp *interp) {
 
  /* --- Functions sub-section --- */
 
+ // register fopen C/C++ entry point as  Tcl command
+ Tcl_CreateObjCommand (interp,"DemoTypemap.fopen", jTcl_fopen_0  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+
+ // register fgets C/C++ entry point as  Tcl command
+ Tcl_CreateObjCommand (interp,"DemoTypemap.fgets", jTcl_fgets_1  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+
+ // register fclose C/C++ entry point as  Tcl command
+ Tcl_CreateObjCommand (interp,"DemoTypemap.fclose", jTcl_fclose_2  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+
  // register checkOpt C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"DemoTypemap.checkOpt", jTcl_checkOpt_0  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+ Tcl_CreateObjCommand (interp,"DemoTypemap.checkOpt", jTcl_checkOpt_3  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
 
  // register addOneToInt C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"DemoTypemap.addOneToInt", jTcl_addOneToInt_1  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+ Tcl_CreateObjCommand (interp,"DemoTypemap.addOneToInt", jTcl_addOneToInt_4  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
 
  // register stringToUpper C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"DemoTypemap.stringToUpper", jTcl_stringToUpper_2  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+ Tcl_CreateObjCommand (interp,"DemoTypemap.stringToUpper", jTcl_stringToUpper_5  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
 
  // register listToUpper C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"DemoTypemap.listToUpper", jTcl_listToUpper_3  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+ Tcl_CreateObjCommand (interp,"DemoTypemap.listToUpper", jTcl_listToUpper_6  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
 
  // register evalTclInC C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"DemoTypemap.evalTclInC", jTcl_evalTclInC_4  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+ Tcl_CreateObjCommand (interp,"DemoTypemap.evalTclInC", jTcl_evalTclInC_7  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
 
  // register printAdr C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"DemoTypemap.printAdr", jTcl_printAdr_5  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+ Tcl_CreateObjCommand (interp,"DemoTypemap.printAdr", jTcl_printAdr_8  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
 
  // register checkVarg C/C++ entry point as  Tcl command
- Tcl_CreateObjCommand (interp,"DemoTypemap.checkVarg", jTcl_checkVarg_6  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
+ Tcl_CreateObjCommand (interp,"DemoTypemap.checkVarg", jTcl_checkVarg_9  , (ClientData)NULL, (Tcl_CmdDeleteProc*) NULL);
  return TCL_OK;
 } // end function DemoTypemap_Init
 #ifdef __cplusplus

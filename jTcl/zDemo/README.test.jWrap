@@ -4,21 +4,21 @@ jWrap parse your application C header files and generate automatically
 a dynamic loadable component for TCL8. It supportes C complex structures
 C++ polymorphism, ...
 
-Ex: 
+Ex:
 
 C Header file:
  MSG_Q_ID    msgQCreate  (int maxMsg, int maxMsgLenght, MSG_options option);
  int         msgQReceive (MSG_Q_ID msgId, void *buffer, UINT maxNBytes, int timeout);
 
 Tcl new native commands
- set Msg_ID [DemoMsg.msgQCreate 10 1024 MSG_Q_FIFO] 
+ set Msg_ID [DemoMsg.msgQCreate 10 1024 MSG_Q_FIFO]
  set STATUS [DemoMsg.msgQSend $Msg_ID $INBUF $LEN $TIMEOUT MSG_PRI_NORMAL]
 
 
 - jWrap supports almost any C complex type, including structure, structure of structure,
   pointer, union, enumeration, etc.
 
-- jWrap support C++, it presents C++ classes as standard jTcl [Java like TCL] class 
+- jWrap support C++, it presents C++ classes as standard jTcl [Java like TCL] class
   allowing user to overload a C++ methods with a TCL routine.
 
 - jWrap uses TCL8 dual object representation, making wrapped code 4 to 20 faster than

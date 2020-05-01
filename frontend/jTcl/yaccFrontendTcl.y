@@ -6,7 +6,7 @@
  * File      :   yaccFrontendTcl.y define wrapper grammar
  * Projet    :   Rubicon
  * Module    :   jDoc jTcl->java doc converter
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $

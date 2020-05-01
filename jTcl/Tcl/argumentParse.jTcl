@@ -1,16 +1,16 @@
 #
 # Copyright(c) 1999 FRIDU a Free Software Company
-# 
+#
 # Projet       : jWrap
 # SubModule    : jTcl C/Tcl componant interface
-# Author       : Fulup Le Foll (Fulup@iu-vannes.fr)
-# 
-# Last: 
+# Author       : Fulup Ar Foll (Fulup@iu-vannes.fr)
+#
+# Last:
 #  Author      : $Author: Fulup $ Date        :
 #  Date        : $Date: 1999/03/11 12:49:29 $
 #  Revision    : $Revision: 1.3.0.1 $
 #  Source      : $Source: /Master/jWrap/jTcl/Tcl/argumentParse.jTcl,v $
-# 
+#
 # Modification History
 # --------------------
 # 05mar99,Fulup written
@@ -31,22 +31,22 @@ proc jWrapArgumentHelp {SET_OPT_NAME MSG} {
 
   # Loop on, each option
   foreach {NAME VALUES} [array get OPTIONS *] {
-    set FLAG    [lindex $VALUES 0] 
-    set DEFAULT [lindex $VALUES 1] 
+    set FLAG    [lindex $VALUES 0]
+    set DEFAULT [lindex $VALUES 1]
     set HELP    [lindex $VALUES 2]
 
     if {$FLAG > 1} {
       set OPTIONAL "*"
     } else {
       set OPTIONAL ""
-    }  
+    }
 
     if {[lindex $VALUES 0] == 0} {
 	puts [format $FMT $OPTIONAL $NAME $HELP $DEFAULT]
     } else {
 	puts [format $FMT $OPTIONAL ${NAME}=xxxx $HELP $DEFAULT]
     }
-  }  
+  }
   puts "--------------------------------------------------------------------------"
 }
 
@@ -55,7 +55,7 @@ proc jWrapArgumentHelp {SET_OPT_NAME MSG} {
 #   ARG_PATERN should be an array name containing one slot
 #   for each argument, that contain a list of two elements
 #   first one is a flag where 0 means no arguement, 1 argument facultative
-#   2 arguement mandatory 
+#   2 arguement mandatory
 #   set OPT_ARRAY(target) 1 "defaultValue" "help text"
 ## -------------------------------------------------------------------------------
 proc jWrapCheckArgument {SET_OPT_NAME GET_OPT_NAME ARG_LIST_VALUES} {
@@ -103,9 +103,9 @@ proc jWrapCheckArgument {SET_OPT_NAME GET_OPT_NAME ARG_LIST_VALUES} {
           # set option value in result array
           set RESULT($NAME) $VALUE
         }
-     } ;# end if match --* 
+     } ;# end if match --*
   } ;# end for each argument
-  
+
   # check all mandatory arguement have been set and fill up default
   foreach {NAME VALUES} [array get OPTIONS *] {
 
@@ -115,7 +115,7 @@ proc jWrapCheckArgument {SET_OPT_NAME GET_OPT_NAME ARG_LIST_VALUES} {
       set OPTIONAL [lindex $VALUES 0]
       # if arguement is mandatory exit now
       if {$OPTIONAL > 1} {
-         return -code error  [jWrapArgumentHelp OPTIONS "--$NAME is mandatory"] 
+         return -code error  [jWrapArgumentHelp OPTIONS "--$NAME is mandatory"]
       }
       # if arguement as a default fill it now
       if {$DEFAULT != "none"} {

@@ -5,7 +5,7 @@
  * File      :   enumBackendCc2jTcl.cc manage enumeration in CC 2 jTcl backend
  * Projet    :   Rubicon/jWrap
  * Module    :   jWrap C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -29,7 +29,7 @@
  ** ---------------------------------------------------------------------------*/
 void BackendCc2jTcl::outputEnumProc (McString * name, int count) {
 
-  fprintf (outFile," static JWRAP_enums %s_enum  = {\n",(char*)*name);    
+  fprintf (outFile," static JWRAP_enums %s_enum  = {\n",(char*)*name);
   fprintf (outFile,"  JWRAP_ENUM,");
   fprintf (outFile,"  &usedType [JTYPE_%s],\n",jWrapType(name));
   fprintf (outFile,"  %d,\n",count);
@@ -40,16 +40,16 @@ void BackendCc2jTcl::outputEnumProc (McString * name, int count) {
   fprintf (outFile,"LOCAL int Put_%s (Tcl_Interp *interp, Tcl_Obj *tclObj) {\n", (char*)*name);
   fprintf (outFile,"  return (jWrapEnumTcl2Cc (interp, &%s_enum, tclObj));\n", (char*)*name);
   fprintf (outFile,"}\n");
-  
+
   fprintf (outFile,"LOCAL void Get_%s (Tcl_Obj *tclObj) {\n", (char*)*name);
   fprintf (outFile,"  jWrapEnumCc2Tcl (&%s_enum, tclObj);\n",(char*)*name);
   fprintf (outFile,"}\n");
 
   fprintf (outFile,"// Build %s jointure as a Tcl type\n",(char*)*name);
-  fprintf (outFile,"static Tcl_ObjType %s_type = {\n",(char*)*name); 
+  fprintf (outFile,"static Tcl_ObjType %s_type = {\n",(char*)*name);
   fprintf (outFile,"  \"%s\",\n", (char*)*name);
-  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)NULL,\n"); 
-  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n"); 
+  fprintf (outFile,"  (Tcl_FreeInternalRepProc *)NULL,\n");
+  fprintf (outFile,"  (Tcl_DupInternalRepProc *) NULL,\n");
   fprintf (outFile,"  (Tcl_UpdateStringProc*)    Get_%s,\n",(char*)*name);
   fprintf (outFile,"  (Tcl_SetFromAnyProc*)      Put_%s\n",(char*)*name);
   fprintf (outFile,"  };\n");
@@ -75,7 +75,7 @@ void BackendCc2jTcl::output (Enums* enumeration) {
       };
     }
     fprintf (outFile,"\n };\n");
-   } 
+   }
    // save compteur for next run
    compteur++;
 
@@ -86,7 +86,7 @@ void BackendCc2jTcl::output (Enums* enumeration) {
    }
    fprintf (outFile,"   NULL\n };\n");
 
-   fprintf (outFile," static enum %s %s_slotValues [] = {\n" 
+   fprintf (outFile," static enum %s %s_slotValues [] = {\n"
            ,(char*)enumeration->name, (char*)enumeration->name);
    for (ind=0; ind < enumeration->values.size(); ind++) {
         fprintf (outFile, "   %s,\n"
@@ -113,7 +113,7 @@ void BackendCc2jTcl::output (McString * name, McDArray<Defines*> defines) {
        ind --;
      }
    }
- 
+
    fprintf (outFile,"\n // build define enumeration\n");
    fprintf (outFile," typedef long %s;\n",(char*)*name);
    fprintf (outFile," static char *%s_slotNames [] = {\n",(char*)*name);

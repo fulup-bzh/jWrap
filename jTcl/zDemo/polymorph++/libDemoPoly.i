@@ -2,7 +2,7 @@
 : Ansi prototypes generated automaticaly 
 : file /home/fulup/Workspace/Fridu/Exe/linux86/include/libDemoPoly.i 
 : from funcDemoPoly_jWrap.i funcDemoPoly.i 
-: by fulup on fulup-desktop the 28-Apr-20[11h59] 
+: by fulup on fulup-desktop the 01-May-20[10h01] 
 : ------------------------------------ */
 #ifndef JWRAP_JTCL 
 #ifdef __cplusplus 
@@ -13,19 +13,5 @@ IMPORT char *vStamp_libDemoPoly ;
 } 
 #endif 
 #endif 
-#ifdef __cplusplus
- extern "C" {
-#endif
 RESTRICTED int Demopoly_Init (Tcl_Interp *interp) ;
-#ifdef __cplusplus
-}
-#endif
-
-#ifdef __cplusplus
- extern "C" {
-#endif
-#ifdef __cplusplus
-}
-#endif
-
 

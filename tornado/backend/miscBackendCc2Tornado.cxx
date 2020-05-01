@@ -4,7 +4,7 @@
  * File      :   micsBackendCc2Tornado.cc misceleanous method in C++ 2 jTcl backend wrapper
  * Projet    :   /jWrap
  * Module    :   WTX VxWorks Troando C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -38,5 +38,5 @@ void BackendCc2Tornado::setOutName (Programs *program) {
 
 // Dummy empty constructor for stupid c++
 BackendCc2Tornado::BackendCc2Tornado () {
-  
-} // end constructor    
+
+} // end constructor

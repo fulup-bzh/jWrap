@@ -4,7 +4,7 @@
  * File      :   stringRuntimeTornado.c map string on vxWorks
  * Projet    :   jWrap
  * Module    :   TORNADO VxWorks Tornado interface
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -25,7 +25,7 @@
  ** to be allocated remotely on target, tornado strings are remapped for each
  ** tornadoModule under ModuleName_char_Ptr, when user only use one target
  ** server he can remap them using <typedef char* targetString;> in his
- ** wrapper interface. 
+ ** wrapper interface.
  ** -------------------------------------------------------------------*/
 
 #include "libRuntimeTornado.h"
@@ -60,18 +60,18 @@ RESTRICTED void tornadoStringFree (TORNADO_infos *info,Tcl_Obj *tclObj)
  ** @param info backward link on Tornado module
  ** @param tclObj a tcl boject with a valid internal rep
  ** @error never return an error because this would break external reprentation
- ** building in union, when a numeric is map on a string pointer adress. 
+ ** building in union, when a numeric is map on a string pointer adress.
  **************************************************************************/
 RESTRICTED void tornadoStringCc2Tcl (TORNADO_infos *info, Tcl_Obj *tclObj)
 {
   char inputString [50];
   WTX_GOPHER_TAPE  *tape;
- 
+
     jWrapLog (4,"tornadoStringCc2Tcl: strAdr=0x%x\n"
     ,tclObj->internalRep.twoPtrValue.ptr1);
 
     if (tclObj->internalRep.twoPtrValue.ptr1 == NULL) {
-        // if C value is NULL 
+        // if C value is NULL
 	jWrapStrDup (tclObj,jWrapStringNull);
     } else {
 #ifdef WTX_SIMULATION
@@ -79,7 +79,7 @@ RESTRICTED void tornadoStringCc2Tcl (TORNADO_infos *info, Tcl_Obj *tclObj)
 #else
 
         // get string from target with gopher
-        sprintf (inputString,"0x%lx $",(unsigned long)tclObj->internalRep.twoPtrValue.ptr1); 
+        sprintf (inputString,"0x%lx $",(unsigned long)tclObj->internalRep.twoPtrValue.ptr1);
         tape = wtxGopherEval (info->tornadoId->wtxId,inputString);
         if (tape == NULL) goto warningMmu;
 

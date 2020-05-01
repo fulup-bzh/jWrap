@@ -5,7 +5,7 @@
  * File      :   programBackendCc2jTcl.cc managed program object in C++ 2 jTcl backend wrapper
  * Projet    :   Rubicon/jWrap
  * Module    :   jWrap C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -23,11 +23,11 @@
  */
 
 #include <stdio.h>
-#include <ctype.h> 
+#include <ctype.h>
 #include "libBackendCc2jTcl.h"
 
 /**----------------------------------------------------------------------------
- *** Effectively build C++ jTcl wrapper 
+ *** Effectively build C++ jTcl wrapper
  **----------------------------------------------------------------------------*/
 
 void BackendCc2jTcl::output (Programs *program) {
@@ -35,19 +35,19 @@ void BackendCc2jTcl::output (Programs *program) {
   McString enumDefine;
   int usedType=0;  // number of different type in module
   char initName [55];
-  
+
 
   // start printing an information header
   fprintf (outFile,"\n/*  ----------------------------------------------------------");
   fprintf (outFile,"\n *   This file was automatically generated with");
   fprintf (outFile,"\n *   jWrap (C)FRIDU a Free Software Company 97-98");
   fprintf (outFile,"\n *   File: %s %s",(char*)outName,(char*)program->help);
-  fprintf (outFile,"\n *   Date: %s\n",getDate()); 
+  fprintf (outFile,"\n *   Date: %s\n",getDate());
   fprintf (outFile,"\n *   jWrap --cc2jTcl %s\n *", (char*)program->name);
-  fprintf (outFile,"\n *   WARNING: Except if you really know what you are doing"); 
+  fprintf (outFile,"\n *   WARNING: Except if you really know what you are doing");
   fprintf (outFile,"\n *   you should not edit this file by hand.");
   fprintf (outFile,"\n *");
-  fprintf (outFile,"\n *   In order finding jWrap check: http://www.fridu.bzh");   
+  fprintf (outFile,"\n *   In order finding jWrap check: http://www.fridu.bzh");
   fprintf (outFile,"\n + ------------------------------------------------------------ */\n\n");
 
   // printout assert for jWrap proto extraction
@@ -55,7 +55,7 @@ void BackendCc2jTcl::output (Programs *program) {
   fprintf (outFile,"#define EASYC_PROTO_ONLY\n");
   fprintf (outFile,"#endif\n");
 
-  // include mandatory jWrap header 
+  // include mandatory jWrap header
   fprintf (outFile,"#define JWRAP_CC2JTCL\n\n");
   fprintf (outFile, "#include \"libRuntimeJwrap.h\"\n");
   // program original header c or c++
@@ -95,14 +95,14 @@ void BackendCc2jTcl::output (Programs *program) {
     for (knd =0; knd < program->structs[ind]->elements.size(); knd ++) {
       registerType (&program->structs[ind]->elements[knd]->type
                    ,program->structs[ind]->elements[knd]->array, TYPE_NATIVE);
-    } 
+    }
   }
   for (ind=0; ind < program->unions.size(); ind ++) {
     registerType (&program->unions[ind]->name,-1,TYPE_UNION);
     for (knd =0; knd < program->unions[ind]->elements.size(); knd ++) {
       registerType (&program->unions[ind]->elements[knd]->type
                    ,-1,TYPE_NATIVE);
-    } 
+    }
   }
   for (ind=0; ind < program->enums.size(); ind ++) {
     registerType (&program->enums[ind]->name,-1,TYPE_ENUM);
@@ -114,7 +114,7 @@ void BackendCc2jTcl::output (Programs *program) {
     if (function->visibility != PROT_PUBLIC) continue;
     usedCmd.append (function);
     registerType (&function->result,-1,TYPE_NATIVE);
-   
+
     for (jnd=0; jnd < function->params.size(); jnd++) {
      registerType (&function->params[jnd]->type,-1,TYPE_NATIVE);
     }
@@ -127,7 +127,7 @@ void BackendCc2jTcl::output (Programs *program) {
     }
     for (jnd=0; jnd < classe->methods.size(); jnd++) {
       Functions* method;
-      method = classe->methods[jnd]; 
+      method = classe->methods[jnd];
       // only take public methods
       if (method->visibility != PROT_PUBLIC) continue;
       if (method->name [0] == '~')  {
@@ -139,19 +139,19 @@ void BackendCc2jTcl::output (Programs *program) {
       registerType (&method->result,-1,TYPE_NATIVE);
       for (knd=0; knd < method->params.size(); knd++) {
         registerType (&method->params[knd]->type,-1,TYPE_NATIVE);
-      } // end for knd 
+      } // end for knd
     } // end for jnd
   } // end for ind
 
 
   // we now know used type array size
-  fprintf (outFile," static JWRAP_types usedType [%d];\n",cTypes.size());  
+  fprintf (outFile," static JWRAP_types usedType [%d];\n",cTypes.size());
 
   // We print an enumeration in order program to used symbolic name for type
   fprintf (outFile,"\n // Build used type enumeration\n");
   fprintf (outFile," enum enumType {\n");
   for (ind=0; ind < cTypes.size(); ind++) {
-    if (ind != 0) fprintf (outFile,",\n"); 
+    if (ind != 0) fprintf (outFile,",\n");
     fprintf (outFile,"   JTYPE_%-25s = %d", jWrapType (cTypes [ind]->name), ind);
   }
 
@@ -171,7 +171,7 @@ void BackendCc2jTcl::output (Programs *program) {
      fprintf (outFile,"\n\n/* *** Define Section *** */\n\n");
      output (&enumDefine, program->defines);
   }
- 
+
   for (ind=0; ind < program->enums.size(); ind ++) {
      if(ind ==0)  fprintf (outFile,"\n\n/* *** Enumeration Section *** */\n\n");
      output (program->enums[ind]);
@@ -179,7 +179,7 @@ void BackendCc2jTcl::output (Programs *program) {
 
   // prepare an array to old enumeration references for jWrap cmd
   if ((program->defines.size() + program->enums.size())> 0) {
-    fprintf (outFile,"\n // Hold Defines & Enum reference for jWrap struct help cmd\n"); 
+    fprintf (outFile,"\n // Hold Defines & Enum reference for jWrap struct help cmd\n");
     fprintf (outFile," static JWRAP_enums *enumerations[]={\n");
     if (program->defines.size() > 0) {
       fprintf (outFile,"  &%s_enum,\n",(char*)enumDefine);
@@ -203,7 +203,7 @@ void BackendCc2jTcl::output (Programs *program) {
 
   // prepare an array to hold module structures
   if ((program->structs.size()+program->unions.size())>0) {
-    fprintf (outFile,"\n // Hold structure & unions reference for jWrap struct help cmd\n"); 
+    fprintf (outFile,"\n // Hold structure & unions reference for jWrap struct help cmd\n");
     fprintf (outFile," static JWRAP_structs *structures[]={\n");
     for (ind=0; ind < program->structs.size (); ind ++) {
       fprintf (outFile,"  &%s_struct,\n", (char*)program->structs [ind]->name);
@@ -243,8 +243,8 @@ void BackendCc2jTcl::output (Programs *program) {
   fprintf (outFile,"\n /* --- Build module handle & register it in jWrap --- */\n\n");
   fprintf (outFile," module.magic       =JWRAP_MODULE;\n");
   fprintf (outFile," module.name        =\"%s\";\n", (char*)modName);
-  fprintf (outFile," module.help        =\"%s\";\n", (char*)program->help); 
-  fprintf (outFile," module.helpCmd     = helpCmd;\n"); 
+  fprintf (outFile," module.help        =\"%s\";\n", (char*)program->help);
+  fprintf (outFile," module.helpCmd     = helpCmd;\n");
   fprintf (outFile," module.nbCmd       = %d;\n", usedCmd.size());
   fprintf (outFile," module.hashTable   = NULL;\n");
   fprintf (outFile," module.version     = %s_CUSTOM_STAMP;\n",(char*)modName);
@@ -260,7 +260,7 @@ void BackendCc2jTcl::output (Programs *program) {
   }
   fprintf (outFile," module.info        = NULL;\n");
 
-  fprintf (outFile,"\n // prepare emergency panic return\n"); 
+  fprintf (outFile,"\n // prepare emergency panic return\n");
   fprintf (outFile," if (setjmp (jWrapCheckPoint)) {\n");
   fprintf (outFile,"   return TCL_ERROR;\n }\n");
 
@@ -316,10 +316,10 @@ void BackendCc2jTcl::output (Programs *program) {
        if (strncmp ((char*)*cTypes[ind]->name, "union ",6)) fprintf (outFile,"union ");
        break;
       case TYPE_ENUM:
-       if (strncmp ((char*)*cTypes[ind]->name, "enum ",5)) fprintf (outFile,"enum "); 
+       if (strncmp ((char*)*cTypes[ind]->name, "enum ",5)) fprintf (outFile,"enum ");
        break;
     }
-    if (strcmp ("...",(char*)*cTypes[ind]->name)) { 
+    if (strcmp ("...",(char*)*cTypes[ind]->name)) {
       fprintf (outFile,"%s));\n", (char*)*cTypes[ind]->name);
     } else {
       fprintf (outFile,"va_list));\n");
@@ -342,7 +342,7 @@ void BackendCc2jTcl::output (Programs *program) {
      if (ind == 0)   fprintf (outFile,"\n /* --- Class sub-section --- */\n");
      registrate (program->classes [ind]);
   }
-  
+
   fprintf (outFile," return TCL_OK;\n} // end function %s_Init\n", (char*)modName);
   fprintf (outFile,"#ifdef __cplusplus\n}\n#endif\n");
   fprintf (outFile,"\n// ------------------ end %s ----------------------\n"

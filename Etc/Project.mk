@@ -1,9 +1,9 @@
-#	Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#	Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   project.mk, project global definition
 # Projet    : 	rtWeb
 # SubModule :   Makefile configuration
-# Auteur    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Auteur    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -36,6 +36,7 @@
   PRJ_VERSION   := jWrap-1.30
   INSTALL_DIR   := $(FRIDU_HOME)/$(PRJ_VERSION)
 
+  CCDEBUG = 1
 
   JWRAP_CPP_INCL   = -I$(TOP)/$(PROJECT)/Include
   JWRAP_DLL        = $(L_FLG)RuntimeJwrap$(DLL_SFX)
@@ -47,7 +48,9 @@
   PRJ_LIBRARIES    =  $(DL_LIB)
   LIBINCL          =  $(TOP)/$(PROJECT)/Include
   PRJ_INCLUDES     =  $(TCL_INCL)
-  PRJ_CCOPTIONS    =  -Wno-write-strings -Wno-deprecated-declarations -Wno-int-to-pointer-cast
+  PRJ_CCOPTIONS    =  -Wno-write-strings -Wno-deprecated-declarations -Wno-int-to-pointer-cast \
+                      -Wno-incompatible-pointer-types  \
+                      -Wno-maybe-uninitialized -Wno-discarded-qualifiers -Wno-clobbered -Wno-pointer-to-int-cast
   PRJ_CCPLUSOPTIONS=  -fpermissive -Wno-write-strings -Wno-deprecated-declarations -Wno-int-to-pointer-cast
 
 # For demo purpose Java class are kept in dev tree

@@ -4,7 +4,7 @@
  * File      :   ccHatWrap.cc C++ prototype generation
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -47,7 +47,7 @@ void BackendCcHat::output (Vars* var) {
         fprintf (outFile,"%s::", (char*)var->owner->name);
       }
       fprintf (outFile," %s",(char*)var->name);
-  
+
       if (var->array == 0) fprintf (outFile,"[]");
       if (var->array >  0) fprintf (outFile,"[%d]",var->array);
       fprintf (outFile,";\n");
@@ -98,13 +98,13 @@ void BackendCcHat::output (Functions* function) {
         fprintf (outFile," memset (&result,0,sizeof(result));\n");
       }
 
-      // provide a dummy trace mecanism for debug 
+      // provide a dummy trace mecanism for debug
       fprintf (outFile, " jWrapLog (5, \"trace: %s ", (char*)function->result);
       if (methode) {
         fprintf (outFile,"%s::", (char*)function->owner->name);
       }
       fprintf (outFile, "%s (",  (char*)function->name);
- 
+
       // print all parameters types (warning last param as no comma
       for (ind=0; ind < function->params.size (); ind ++)
       {
@@ -126,17 +126,17 @@ void BackendCcHat::output (Functions* function) {
 void BackendCcHat::output (Classes* classe)
 {
  int        ind;
-   
-   // Var section 
+
+   // Var section
    fprintf (outFile, "    // Vars sub-section\n");
    for (ind=0; ind < classe->vars.size(); ind++) {
-       output (classe->vars  [ind]);     
+       output (classe->vars  [ind]);
    }
 
    // methode section
    fprintf (outFile,"\n    // Methods sub-section\n");
    for (ind=0; ind < classe->methods.size(); ind++) {
-       output (classe->methods [ind]);     
+       output (classe->methods [ind]);
    }
 
 } // end output classe
@@ -149,16 +149,16 @@ void BackendCcHat::output (Programs *program) {
   fprintf (outFile,"\n/*  ----------------------------------------------------------");
   fprintf (outFile,"\n *   This file was automatically generated with");
   fprintf (outFile,"\n *   jWrap (C)FRIDU a Free Software Company 97-98");
-  fprintf (outFile,"\n *   File: %s %s", (char*)outName,(char*)program->help); 
-  fprintf (outFile,"\n *   Date: %s",getDate()); 
+  fprintf (outFile,"\n *   File: %s %s", (char*)outName,(char*)program->help);
+  fprintf (outFile,"\n *   Date: %s",getDate());
   fprintf (outFile,"\n *   jWrap --ccHat %s\n", (char*)program->name);
-  fprintf (outFile,"\n *   Except if you really know what you are doing you should"); 
+  fprintf (outFile,"\n *   Except if you really know what you are doing you should");
   fprintf (outFile,"\n *   not edit this file by hand.");
   fprintf (outFile,"\n *");
-  fprintf (outFile,"\n *   In order rebuilding it use jWrap");   
+  fprintf (outFile,"\n *   In order rebuilding it use jWrap");
   fprintf (outFile,"\n + ------------------------------------------------------------ */\n");
 
- 
+
   fprintf (outFile,"#include <stdio.h>\n");
   fprintf (outFile,"#include <string.h>\n");
   fprintf (outFile,"\n#define JWRAP_HAT\n");

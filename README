@@ -1,11 +1,63 @@
 
-jWrap generate encoder/decoder for TCL and other interface
-
+jWrap Generates C/C++ Stub to simplify tester live
+--------------------------------------------------
 - dependencies:
     tcl-devel
     ncurses-devel
     bison
     flex
 
+    efence (debug)
+
 - build tool
-    gmail + jCommon
+    gmake + jCommon
+
+jWrap history
+---------------
+jWrap was designed in 1998 mainly to test VxWorks/Tornado programs, and then was forgotten for 20 years.
+I restore for modern Linux/64 bits because I wanted a foundation for Automotive Grade Linux Json Bindings.
+As today I only check the C backend. WHile most backend are obsolete (VxWorks, Tcl, Java, ...). jWrap remains
+a very good foundation for who ever need to parse C/C++ and generate automatically stub to encode/decode
+object from one model to an other one, example: json<->C
+
+
+jWrap/jTcl/zDemo for examples
+------------------------------------
+Example: C code
+```
+PUBLIC int fact(int n) {
+  if (n <= 1) return 1;
+  else return n*fact(n-1);
+}
+PUBLIC int mod(int n, int m) {
+  return (n % m);
+}
+PUBLIC char *get_time() {
+    long            ltime;
+    time(&ltime);
+    // don't forget to return a valid malloced string
+    const char*now = ctime(&ltime);
+    char *dup= strdup(now);
+    return dup;
+}
+```
+
+Simple Test program
+```
+puts [DemoSimple.get_time]
+set tcl_precision 17
+puts "My Double = $JWRAP(MyDouble)"
+for {set i 0} {$i < 14} {incr i 1} {
+    set n [DemoSimple.fact $i];
+    puts "$i factorial is $n"
+}
+for {set i 1} {$i < 250} {incr i 1} {
+    for {set j 1} {$j < 250} {incr j 1} {
+	set n [DemoSimple.mod $i $j]
+	set JWRAP(MyDouble) [expr {$JWRAP(MyDouble) + $n}]
+    }
+}
+puts "MyDouble = $JWRAP(MyDouble)"
+puts "---------------------------"
+puts [DemoSimple.get_time]
+```

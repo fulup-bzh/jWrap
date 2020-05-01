@@ -4,7 +4,7 @@
  * File      :   typeWrap.c provided some default and usefull type mapping
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -23,10 +23,14 @@
 #include "libRuntimeJwrap.h"
 #include <string.h>
 #include <signal.h>
+#include <stdlib.h>
 
 // this can be usefull to many modules
 EXPORT char *jWrapStringNull  = "NULL";
 EXPORT char *jWrapStringEmpty;
+
+EXPORT char *tclEmptyStringRep;
+EXPORT char tclEmptyString;
 
 // We need this for init static type
 LOCAL void      dupStringInternal(Tcl_Obj *srcPtr, Tcl_Obj *copyPtr);
@@ -37,12 +41,19 @@ LOCAL jmp_buf   checkPoint;
 
 EXPORT Tcl_ObjType jWrapStringPtrType = {
     "char_Ptr",				/* name */
-    freeStringInternal,	                /* freeIntRepProc */
-    dupStringInternal,		        /* dupIntRepProc */
-    jWrapStringCc2Tcl,	        	/* updateStringProc */
-    putStringIntoC			/* setFromAnyProc */
-}; 
+    freeStringInternal,	 /* freeIntRepProc */
+    dupStringInternal,	 /* dupIntRepProc */
+    jWrapStringCc2Tcl,	 /* updateStringProc */
+    putStringIntoC			 /* setFromAnyProc */
+};
 
+EXPORT Tcl_ObjType jWrapConstStringPtrType = {
+    "const_char_Ptr",				/* name const char* */
+    NULL,	                /* never free internal rep */
+    dupStringInternal,	  /* dupIntRepProc */
+    jWrapStringCc2Tcl,	 	/* updateStringProc */
+    NULL			/* No option to update string */
+};
 
 // define char** as a list of pointer
 LOCAL void dupStringListInternal (Tcl_Obj *srcPtr, Tcl_Obj *copyPtr);
@@ -56,7 +67,7 @@ EXPORT Tcl_ObjType jWrapStringListType = {
     dupStringListInternal,		/* dupIntRepProc */
     getStringListFromC,	        	/* updateStringProc */
     putStringListIntoC			/* setFromAnyProc */
-}; 
+};
 
 // define char as a basic char or a small number
 LOCAL void getStringCharFromC    (Tcl_Obj *tclObj);
@@ -67,7 +78,7 @@ static Tcl_ObjType jWrapStringCharType = {
     (Tcl_DupInternalRepProc *) NULL,	/* dupIntRepProc */
     getStringCharFromC,	        	/* updateStringProc */
     putStringCharIntoC			/* setFromAnyProc */
-}; 
+};
 
 /**-------------------------------------------------------------------------
  * Create a new string and set usage count to one
@@ -79,7 +90,7 @@ Tcl_Obj *tclObj;
   Tcl_IncrRefCount (tclObj);
 
 return tclObj;
-} 
+}
 
 /**************************************************************************
  * Update external string representation from internal values. Make a
@@ -90,7 +101,7 @@ return tclObj;
 LOCAL void getStringCharFromC (Tcl_Obj *tclObj)
 {
     if (tclObj->internalRep.twoPtrValue.ptr1 == NULL) {
-        // if C value is NULL 
+        // if C value is NULL
 	jWrapStrDup (tclObj, "\\0");
     } else {
         // if C hold a valid string copy it to TCL
@@ -104,7 +115,7 @@ LOCAL void getStringCharFromC (Tcl_Obj *tclObj)
 
 errorMalloc:
  jWrapPanic (NULL,"setStringFromC can't malloc %d byte for string:%x\n"
-            ,tclObj->length,tclObj->internalRep.twoPtrValue.ptr1);  
+            ,tclObj->length,tclObj->internalRep.twoPtrValue.ptr1);
 }
 
 /**********************************************************************
@@ -118,14 +129,14 @@ errorMalloc:
  **********************************************************************/
 LOCAL int putStringCharIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj) {
   // Int type are compatible with char
-  if ((tclObj->typePtr != NULL) && (tclObj->typePtr->setFromAnyProc 
+  if ((tclObj->typePtr != NULL) && (tclObj->typePtr->setFromAnyProc
           == jWrapTypeInt->setFromAnyProc)) {
     if (tclObj->internalRep.longValue > 255) goto errToBig;
-   
+
   } else {
-    
+
     switch (tclObj->length) {
-    case 0: 
+    case 0:
       // we are facing an empty object return an empty string
       tclObj->bytes  = jWrapStringEmpty;
       tclObj->length = 0;
@@ -134,7 +145,7 @@ LOCAL int putStringCharIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj) {
       // place string address in long value for C
       tclObj->internalRep.longValue= (long)tclObj->bytes[0];
       tclObj->typePtr = &jWrapStringCharType;
-      break; 
+      break;
     default:
       // try to convert external rep to to an integer
       if (Tcl_ConvertToType (interp,tclObj,jWrapTypeInt) != TCL_OK) goto errNotChar;
@@ -163,7 +174,7 @@ errToBig:
  ******************************************************************/
 LOCAL void dupStringInternal(Tcl_Obj *srcPtr, Tcl_Obj *destPtr)
 {
- int len; 
+ int len;
     /*
      * Tricky point: the string value was copied by generic object
      * management code, so it doesn't contain any extra bytes that
@@ -180,7 +191,7 @@ LOCAL void dupStringInternal(Tcl_Obj *srcPtr, Tcl_Obj *destPtr)
  ** Protect string conversion routine from bus error
  **************************************************************************/
 LOCAL void  busErrorHandler (int sig) {
-  longjmp (checkPoint,-1); 
+  longjmp (checkPoint,-1);
 }
 
 /**************************************************************************
@@ -188,22 +199,22 @@ LOCAL void  busErrorHandler (int sig) {
  * this routine protect itself from bus error because in many occasion
  * a char* pointer is neither null neither a valid value.
  * @note under debugger bus error protection is inefficient as well as
- * for WIN32 DLL where this facility is not available. 
+ * for WIN32 DLL where this facility is not available.
  **************************************************************************/
 PUBLIC void jWrapStringCc2Tcl (Tcl_Obj *tclObj)
 {
   void      *oldSignalhandler;
- 
+
     // prepare emergency panic return
     if (setjmp (checkPoint)) goto warningMmu;
     oldSignalhandler = signal (SIGSEGV,busErrorHandler);
 
     if (tclObj->internalRep.twoPtrValue.ptr1 == NULL) {
-        // if C value is NULL 
+        // if C value is NULL
         jWrapStrDup (tclObj,jWrapStringNull);
     } else {
         // if C hold a valid string copy it to TCL
-        tclObj->length = strlen (tclObj->internalRep.twoPtrValue.ptr1);
+        tclObj->length = strlen ((char*)tclObj->internalRep.twoPtrValue.ptr1);
         tclObj->bytes  = Tcl_Alloc ((unsigned int) tclObj->length+1);
         if (tclObj->bytes == NULL) goto errorMalloc;
         memcpy (tclObj->bytes,tclObj->internalRep.twoPtrValue.ptr1,(unsigned int)tclObj->length+1);    }
@@ -219,10 +230,10 @@ warningMmu:
    jWrapStrDup (tclObj,message);
  }
  return;
- 
+
 errorMalloc:
  jWrapPanic (NULL,"setStringFromC can't malloc %d byte for string:%x\n"
-            ,tclObj->length,tclObj->internalRep.twoPtrValue.ptr1);  
+            ,tclObj->length,tclObj->internalRep.twoPtrValue.ptr1);
 }
 
 /**********************************************************************
@@ -230,7 +241,7 @@ errorMalloc:
  **********************************************************************/
 LOCAL void freeStringInternal (Tcl_Obj *tclObj)
 {
-  // String should have been Tcl_Alloc made
+  // String should have been allocated with 'Tcl_Alloc'
   Tcl_Free (tclObj->internalRep.twoPtrValue.ptr1);
 }
 
@@ -264,7 +275,7 @@ LOCAL int putStringIntoC (Tcl_Interp *interp,Tcl_Obj *tclObj)
   tclObj->typePtr = &jWrapStringPtrType;
   return TCL_OK;
 
- internalError: 
+ internalError:
   jWrapPanic (interp,"got an empty object");
   return TCL_ERROR;
 }
@@ -277,6 +288,7 @@ LOCAL void freeStringListInternal(Tcl_Obj *objList) {
 
   stringList = (char**)objList->internalRep.twoPtrValue.ptr1;
   objList->typePtr = NULL;
+
   Tcl_Free ((char*)stringList);
 }
 
@@ -289,9 +301,9 @@ LOCAL void dupStringListInternal(Tcl_Obj *srcPtr, Tcl_Obj *desPtr)
  char **stringListSrc;
  char **stringListDes;
 
- // As string is only limited with a NULL char we have to check for end 
+ // As string is only limited with a NULL char we have to check for end
  stringListSrc = (char**)srcPtr->internalRep.twoPtrValue.ptr1;
- for (objc=0; stringListSrc[objc] != NULL; objc++) ; 
+ for (objc=0; stringListSrc[objc] != NULL; objc++) ;
 
  // allocate internal destination data space
  stringListDes = (char**) Tcl_Alloc (sizeof(char*) * (objc+1));
@@ -302,14 +314,14 @@ LOCAL void dupStringListInternal(Tcl_Obj *srcPtr, Tcl_Obj *desPtr)
   stringListDes [objc] =  stringListSrc [objc];
  }
  stringListDes [objc] = NULL;
- 
+
  // Update Tcl destination Object
  desPtr->internalRep.twoPtrValue.ptr1=(void*) stringListDes;
  desPtr->bytes=NULL;
  desPtr->typePtr = &jWrapStringListType;
- 
+
  return; // OK
- 
+
 errorMalloc:
  jWrapPanic (NULL,"dupStringListInternal can't malloc %d slot for string list",objc);
  return;
@@ -345,7 +357,7 @@ LOCAL void getStringListFromC (Tcl_Obj *tclObj)
  * list of argument to a C routine from TCL without dealing with
  * Tcl C interface.
  **********************************************************************/
-LOCAL int putStringListIntoC (Tcl_Interp *interp,Tcl_Obj *objList) 
+LOCAL int putStringListIntoC (Tcl_Interp *interp,Tcl_Obj *objList)
 {
  int status,len,ind;
  char **stringList;
@@ -362,13 +374,13 @@ LOCAL int putStringListIntoC (Tcl_Interp *interp,Tcl_Obj *objList)
    status = Tcl_ListObjLength (interp, objList,&len);
    if (status == TCL_ERROR) goto errList;
 
-   // allocate stringlist 
+   // allocate stringlist
    stringList = (char**) Tcl_Alloc (sizeof(char*)*(len+1));
    if (stringList == NULL) goto errMalloc;
 
    // set and NULL in last slot
    stringList [len] = NULL;
-   
+
 
    // place Tcl object string in list
    for (ind=0; ind <len; ind++) {
@@ -404,10 +416,13 @@ Tcl_Obj *tclObj;
   Tcl_IncrRefCount(tclObj);
   jWrapStringEmpty = tclObj->bytes;
   Tcl_DecrRefCount(tclObj);
-  
-  
+
+  // TCL 8.0 compat;
+  tclEmptyStringRep= &tclEmptyString;
+
   // register char * as string
   Tcl_RegisterObjType (&jWrapStringPtrType);
+  Tcl_RegisterObjType (&jWrapConstStringPtrType);
   Tcl_RegisterObjType (&jWrapStringListType);
   Tcl_RegisterObjType (&jWrapStringCharType);
 }

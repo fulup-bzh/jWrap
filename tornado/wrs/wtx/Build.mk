@@ -1,9 +1,9 @@
-#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Le Foll)
+#       Copyright(c) 96-99 FRIDU a Free Software Company (Fulup Ar Foll)
 #
 # File      :   Build.mk
 # Projet    :   jWrap
 # Module    :   Wtx VxWorks Tornado interface
-# Auteur    :   Fulup Le Foll (Fulup@fridu.bzh)
+# Auteur    :   Fulup Ar Foll (Fulup@fridu.bzh)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -26,10 +26,10 @@ ifeq (${ARCH_OS_TYPE},Unix)
 # Define modules
 # --------------
   LIB_SRCS  = regcomp.c   regerror.c  regfree.c   wtxexch.c   xdrwtx.c \
-              regexec.c   wtx.c       wtxrpc.c 
+              regexec.c   wtx.c       wtxrpc.c
   LIB_OBJS  = $(LIB_SRCS:%.c=${OBJDIR}/%${OBJ_SFX})
 
-  SRCS      = $(LIB_SRCS) 
+  SRCS      = $(LIB_SRCS)
 
 # define meta rules
 # ------------------
@@ -45,11 +45,11 @@ ifeq (${ARCH_OS_TYPE},Unix)
 # don't try to build dependancies from WTS header files
 # -----------------------------------------------------
   override CDEPEND = echo >/dev/null
- 
+
 # set proto if any .i changed
 # ----------------------------------------
 ${INCDIR}/libLinuxWtx.i: $(LIB_SRCS:%.c=${DEPDIR}/%.i)
-	${protoRule} 
+	${protoRule}
 
 # Set library & subLib name and give source depending files
 # ----------------------------------------------------------

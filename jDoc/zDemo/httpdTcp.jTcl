@@ -5,7 +5,7 @@
 # File      :   httpdTcp.tcl HTTPD web server Class
 # Projet    :   Fridu a Realtime Booster
 # Module    :   TCP/Tcl network class
-# Author    :   Fulup Le Foll (Fulup@iu-vannes.fr)
+# Author    :   Fulup Ar Foll (Fulup@iu-vannes.fr)
 #
 # Last
 #      Author      : $Author: Fulup $
@@ -19,7 +19,7 @@
 # 01i,29jan98,Fulup overload accept method and cancel auth
 # 01h,21jan98,Fulup change click to seconds
 # 01g,13jan98,Fulup fixed up if-modify
-# 01f,27apr97,Fulup update fcopy asynchrone mode for tcl8.b1 
+# 01f,27apr97,Fulup update fcopy asynchrone mode for tcl8.b1
 # 01e,21apr97,Fulup make comments working with jDoc
 # 01d,28mar97,Fulup add java class mime extention
 # 01d,18mar97,Fulup change mime selection strategie and pass $MY to process method
@@ -39,7 +39,7 @@
 # Imported file
 # -------------
 jClassModule  httpd
-jClassImport {tcp.server.*}  
+jClassImport {tcp.server.*}
 
 ## --
 # ERROR MSG array indexed on CODE
@@ -52,17 +52,17 @@ array set _HTTPD_ERROR_MSG \
   404  {404 URL/File Not Found}
   503  {503 Service Unavailable}
   504  {504 Service Temporarily Unavailable}
-} 
+}
 
 ## -
-# Error Format 
+# Error Format
 ## ------------
 set _HTTPD_ERROR_FMT \
   {
     <title>Error: %1$s</title>
     <body bgcolor="#CCCCCC">
     <img src="../Images/error.jpg">
-    <p> 
+    <p>
     <form action="%5$s">
     <table>
 
@@ -72,21 +72,21 @@ set _HTTPD_ERROR_FMT \
     </table>
 
     <p><b>action:</b> %4$s
-   
+
    <p>
     <input type=submit value="Ok">
    </form>
   }
-  
+
 ## mine type global array
 ## ----------------------
 array set _HTTPD_MIME_TYPE \
 {
- .gif   {image/gif} 
- .jpg   {image/jpg}       
- .html  {text/html}        
- .htm   {text/html}        
- .txt   {text/html}     
+ .gif   {image/gif}
+ .jpg   {image/jpg}
+ .html  {text/html}
+ .htm   {text/html}
+ .txt   {text/html}
  .class {image/gif}
  .tcl   {application/x-tcl}
  .tk    {application/x-tk}
@@ -105,7 +105,7 @@ class TcpHttpdCl {
   {
     debug.msg url=$THIS(url) len=$LEN
     close      $FD
-    
+
     # httpd is stateless we should close channel except for RPC
     if [info exist THIS(keep-alives)] \
     {
@@ -123,15 +123,15 @@ class TcpHttpdCl {
 
   ## "et line from browser until empty line"
   ## ---------------------------------------
-  public read {} 
+  public read {}
   {
    # If Eof subcontract httpd method for handling execption
    if {[eof $THIS(in)]} \
    {
       free   $MY
-      return EOF 
+      return EOF
    }
-  
+
    set IN_LINE [gets $THIS(in)]
 
    # if line is not empty we are facing a command line
@@ -140,7 +140,7 @@ class TcpHttpdCl {
        lappend THIS(buffer) $IN_LINE
        return
    }
-  
+
    # Process Request true Httpd Class
    set PAGE [$THIS(server) process $MY]
 
@@ -159,7 +159,7 @@ class TcpHttpdCl {
    switch -- [lindex $PAGE 0] \
    {
 
-     
+
      HTML { ;# everything is included in Page
         # Send line by line our page
         foreach SLOT [lindex $PAGE 1] \
@@ -175,7 +175,7 @@ class TcpHttpdCl {
 
         # send file copying directely onto channel
         set FD [lindex $PAGE 1]
-        
+
         # warning before sending file we have to cancel readable event on socket
         fconfigure  $FD         -translation binary
         fconfigure  $THIS(out)  -translation binary
@@ -191,7 +191,7 @@ class TcpHttpdCl {
         puts $THIS(out) <html>
         foreach SLOT $THIS(page) {puts $THIS(out) $SLOT}
         puts $THIS(out) </html>
-      } 
+      }
       default {puts $THIS(out) $PAGE}
    } ;# "end switch"
 
@@ -214,15 +214,15 @@ class TcpHttpdCl {
 	HTTPD_ID         # "Parent server Object descriptor"
 	HOST             # "Incomming host IP address"
 	SOCK             # "Incomming socket Tcl handle"
-	PORT             # "Tcp socket descriptor" 
+	PORT             # "Tcp socket descriptor"
   } {
      upvar #0 $HTTPD_ID SERVER
-     
+
      set THIS(server) $HTTPD_ID
      set THIS(host)   $HOST
      set THIS(port)   $PORT
      set THIS(clog)   $SERVER(clog)
-		    
+
      # Init Channel with communication channel
      $SUPER $MY $SOCK
   }
@@ -238,31 +238,31 @@ class TcpHttpd {
  } {
  ## "Class for each new incomming client"
  ## -------------------------------------
- static clientsClass TcpHttpdCl 
+ static clientsClass TcpHttpdCl
 
  ## "Default localy managed mime type"
  ## ----------------------------------
- static mimes  _HTTPD_MIME_TYPE 
+ static mimes  _HTTPD_MIME_TYPE
 
  ## "Default error  messages"
  ## --------------------------
  static errors _HTTPD_ERROR_MSG
 
- ## "Default error formating"  
+ ## "Default error formating"
  ## -------------------------
  static errFmt _HTTPD_ERROR_FMT
 
  ## "Default Index file Name"
  ## --------------------------
- set    index   index.html 
+ set    index   index.html
 
   ## "Generate a date string in HTTP format [from SUN example]"
   ## ----------------------------------------------------------
-  public date {SECONDS} 
+  public date {SECONDS}
   {
     return [clock format $SECONDS -format {%a, %d %b %Y %T %Z}]
   }
-  
+
   ## "html error procedure"
   ## ----------------------
   public error {
@@ -273,7 +273,7 @@ class TcpHttpd {
   } {
    upvar #0  $CLASS(errFmt) ERROR_FMT
    upvar #0  $CLASS(errors) ERROR_MSG
-  
+
     lappend BUFFER "HTTP/1.1 $CODE $ERROR_MSG($CODE)"
     lappend BUFFER "Date: [$CLASS(date) $MY 0]"
     lappend BUFFER "Content-Type: text/html"
@@ -281,10 +281,10 @@ class TcpHttpd {
     lappend BUFFER "<html>"
     lappend BUFFER [format $ERROR_FMT $CODE $ERROR_MSG($CODE) $URL $MSG $ACTION]
     lappend BUFFER "</html>"
-  
+
     return [list HTML $BUFFER]
   } ;# "end error"
-  
+
   ## "Build a Valid Httpd answer from buffer"
   ## ----------------------------------------
   public header {
@@ -309,7 +309,7 @@ class TcpHttpd {
   } {
     set LVL 0
     set FULL_PATH {}
-  
+
     # Check URL don't run below it basedir
     foreach PART  [split $URL /] \
     {
@@ -321,13 +321,13 @@ class TcpHttpd {
         .. {incr LVL -1}
         default {incr LVL}
       }
-  
+
       if {$LVL < 0} \
       {
         $MY log sent URL=$URL BelowRoot
         return "ERROR BelowRoot"
       }
-  
+
       ;# at root LVL process / and ~
       if {$FULL_PATH == {}} \
       {
@@ -350,16 +350,16 @@ class TcpHttpd {
         set FULL_PATH [file join $FULL_PATH $THIS(index)]
       }
         # try opening file
-        set FD [open $FULL_PATH] 
+        set FD [open $FULL_PATH]
      } ERR]} {
        $MY log WARNING:Can't open URL=$URL FULL_PATH=$FULL_PATH
        return [list ERROR $ERR]
     }
-    
+
     $MY log sent URL=$URL FULL_PATH=$FULL_PATH
     return [list $FD $FULL_PATH]
   } ;# "end openUrl"
-  
+
   ## "get file type from extention & retreive URL"
   ## ---------------------------------------------
   public mime {
@@ -373,7 +373,7 @@ class TcpHttpd {
     if {$EXT == {}}  {set EXT .html}
     if {![info exists MIMES($EXT)]} \
       {return [$CLASS(error) $MY 503 $CLIENT(url) "Invalid/Unknow mime type $EXT"]}
-   
+
     # Open URL file and get either a valid FD or an error
     set FILE [$CLASS(openUrl) $MY $CLIENT(url)]
 
@@ -392,7 +392,7 @@ class TcpHttpd {
         return [list HTML $REP]
       }
     }
- 
+
     #Build mime header for answer
     $CLASS(header) $MY $CLIENT_ID $MIMES($EXT) [lindex $FILE 1]
 
@@ -401,7 +401,7 @@ class TcpHttpd {
 
   } ;# "end mime"
 
-  ## "Process httpd request" 
+  ## "Process httpd request"
   ## -----------------------
   public process {
     CLIENT_ID        # "Client object handle"
@@ -413,7 +413,7 @@ class TcpHttpd {
     if {![regexp {(POST|GET) ([^?]+)\??([^ ]*) HTTP/1.0} \
                   $CLIENT(buffer) x REQ URL QUERY]} \
     {
-        $CLIENT_ID dump 
+        $CLIENT_ID dump
         return [$CLASS(error) $MY 400 $CLIENT(buffer) "Invalid HTTPD-1.0 header"]
     }
 
@@ -432,7 +432,7 @@ class TcpHttpd {
           Keep-Alives:    {set CLIENT(keep-alives) [lindex $SLOT 1]}
           End-Data:       {set END_DATA [lindex $SLOT 1]}
           End-Eol:        {set END_DATA {}}
-          Cookie:  { 
+          Cookie:  {
              if {[regexp {([^;, ]+)=([^;, ]+)} [lindex $SLOT 1] x NAME VALUE]} \
              {
                lappend CLIENT(cookie) [list $NAME $VALUE]
@@ -448,7 +448,7 @@ class TcpHttpd {
           Host: {
               if {![regexp -- {(^[^:]*)} [lindex $SLOT 1] THIS(host) ]} \
                {set THIS(host) [lindex $SLOT 1]}
-           }               
+           }
        } ;# end switch
     } ;# end foreach
 
@@ -458,8 +458,8 @@ class TcpHttpd {
       fconfigure  $CLIENT(in) -translation binary -blocking 1
       set CLIENT(data) [read $CLIENT(in) $CLIENT(length)]
       fconfigure  $CLIENT(in) -translation auto -blocking 0
-    } 
-    
+    }
+
     # If end data exist read until end tag
     if [info exist END_DATA] \
     {
@@ -473,9 +473,9 @@ class TcpHttpd {
 
     # Really process our URL from mime method
     set RET [$CLASS(mime) $MY [file extension $URL] $CLIENT_ID]
-  
+
     return $RET
-  } ;# "end process" 
+  } ;# "end process"
 
   ## "Accept method if call by accept even on wellkow socket"
   #  "Https overload it in order cancelling all auth control"
@@ -495,7 +495,7 @@ class TcpHttpd {
   TcpHttpd {
     PORT              # "Socket port where server wait on"
     ROOT_DIR          # "Root Dir to add to URL path"
-  } { 
+  } {
     # Save Httpd server root dir for path translation
     if {![file isdirectory $ROOT_DIR]} \
      {
@@ -509,4 +509,4 @@ class TcpHttpd {
   } ;# "end Httpd constructor"
 
 } ;# "end TcpHttpd Class"
- 
+

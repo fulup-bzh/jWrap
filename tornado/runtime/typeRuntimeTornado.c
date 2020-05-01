@@ -5,7 +5,7 @@
  * File      :   typeWrap.c handle complex C/C++ type mapping with external TCL rep
  * Projet    :   jWrap
  * Module    :   WTX VxWorks Tornado interface
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -33,7 +33,7 @@
 #include <string.h>
 #include <stdlib.h>
 
- 
+
 /**-----------------------------------------------------------------
  ** Translate type from internal to external rep, result is a valid
  ** value for jWrapUpdateType fonction. It loops on all structure slot
@@ -41,7 +41,7 @@
  ** All elements are store in a list and used for producing final list.
  ** Depending on slot type we can malloc an area for holding internal
  ** rep of slot value. Result is a valid Tcl list Object than can be
- ** browsed with lindex functions. Nevertheless as this function does 
+ ** browsed with lindex functions. Nevertheless as this function does
  ** not change internal representation, almost any function using result
  ** will have to reprocess result obj in order producing a valid list
  ** internal representation.
@@ -50,7 +50,7 @@
  ** @info backward link on tornado module
  ** @structure static handle
  ** @tclObj a tclsh object with internal rep pointing on a valid stucture
- ** adress in VxWorks target. 
+ ** adress in VxWorks target.
  ** @note As tcl lindex routine change tcl object internal representation
  ** it is preferable using <jWtap cget> for scanning result.
  **-----------------------------------------------------------------*/
@@ -90,15 +90,15 @@ RESTRICTED char* tornadoTypeCc2Tcl (TORNADO_infos *info, JWRAP_structs *structur
      switch (structure->slotTypes[ind]->magic) {
       case JWRAP_STRUCT:
         // Map internal rep to mother structure rep
-        tmpObj[jnd]->internalRep.longValue = 
+        tmpObj[jnd]->internalRep.longValue =
             (TGT_ADDR_T) (tclObj->internalRep.longValue
             + structure->slotOffsets[ind]
             + (jnd * structure->slotTypes[ind]->size));
         break;
 
       case JWRAP_POINTER:
-      case JWRAP_COOKIE: 
-      case JWRAP_BASIC: 
+      case JWRAP_COOKIE:
+      case JWRAP_BASIC:
         // Place a copy of internal rep directelly inside tmp object
         tmpObj[jnd]->internalRep.twoPtrValue.ptr1=0;
         if (WTX_ERROR == (INT32) wtxMemRead (info->tornadoId->wtxId
@@ -127,7 +127,7 @@ RESTRICTED char* tornadoTypeCc2Tcl (TORNADO_infos *info, JWRAP_structs *structur
    } // end for jnd
 
    // group tuple object in one list {slot value}
-   elements[ind] = Tcl_Merge (structure->slotArrays[ind]+1,tuple);   
+   elements[ind] = Tcl_Merge (structure->slotArrays[ind]+1,tuple);
 
    // free all tmp object
    for (jnd=0; jnd < structure->slotArrays[ind]; jnd ++) {
@@ -194,7 +194,7 @@ RESTRICTED int tornadoTypeUpdate (TORNADO_infos *info, Tcl_Interp *interp
   Tcl_Obj *slot,*element,*value;
   int     completeMode;
   Tcl_Obj result;
-  
+
    jWrapLog (4,"tornadoTypeUpdate: type=%s ptr=0x%x\n%"
            ,structure->type->obj->name,destObj->internalRep.longValue);
 
@@ -225,7 +225,7 @@ RESTRICTED int tornadoTypeUpdate (TORNADO_infos *info, Tcl_Interp *interp
      if (len2 != (1 + structure->slotArrays[idxSlot])) {
        // check last parameter is ...
        (void) Tcl_ListObjIndex (interp, element, len2-1, &value);
-        if (strcmp ("...", value->bytes)) { 
+        if (strcmp ("...", value->bytes)) {
           goto errElement;
         } else {
           completeMode = TRUE;
@@ -236,14 +236,14 @@ RESTRICTED int tornadoTypeUpdate (TORNADO_infos *info, Tcl_Interp *interp
      for (jnd=0; jnd < structure->slotArrays[idxSlot]; jnd ++) {
 
        // In compte mode we repeat last valid value
-       if ((!completeMode) || (jnd < len2-2)) {  
+       if ((!completeMode) || (jnd < len2-2)) {
          // process input we have a valid slot call attached Tcl2Cc routine
          (void) Tcl_ListObjIndex (interp, element, jnd+1, &value);
        }
-        
+
        // For jWrapStruct place result directelly in struct without malloc
        if  (structure->slotTypes[idxSlot]->magic == JWRAP_STRUCT) {
-         result.internalRep.longValue 
+         result.internalRep.longValue
             = destObj->internalRep.longValue + structure->slotOffsets[idxSlot]
             + (structure->slotTypes[idxSlot]->size*jnd);
        }
@@ -257,13 +257,13 @@ RESTRICTED int tornadoTypeUpdate (TORNADO_infos *info, Tcl_Interp *interp
              goto errType;
        }
        if (status != TCL_OK) goto errValue;
- 
+
        // For any type other than JWRAP_struct we have to copy result in or result buffer
        if (structure->slotTypes[idxSlot]->magic != JWRAP_STRUCT) {
             // copy external rep onto target
             if (WTX_ERROR == (INT32) wtxMemWrite (info->tornadoId->wtxId
             , &value->internalRep
-            , destObj->internalRep.longValue + structure->slotOffsets[idxSlot] 
+            , destObj->internalRep.longValue + structure->slotOffsets[idxSlot]
               + (structure->slotTypes[idxSlot]->size *jnd)
             , structure->slotTypes[idxSlot]->size)) goto errWtxMemWrite;
        }
@@ -275,7 +275,7 @@ RESTRICTED int tornadoTypeUpdate (TORNADO_infos *info, Tcl_Interp *interp
  errWtxMemWrite:
   jWrapPanic (interp,"tornadoTypeUpdate can't write host <0x%p> to target <0x%x>\nWTX_ErrMsg=[%s]\n"
 	      ,&value->internalRep
-              , destObj->internalRep.longValue + structure->slotOffsets[idxSlot] 
+              , destObj->internalRep.longValue + structure->slotOffsets[idxSlot]
                  + (structure->slotTypes[idxSlot]->size *jnd)
               , wtxErrMsgGet (info->tornadoId->wtxId));
 
@@ -314,7 +314,7 @@ RESTRICTED int tornadoTypeUpdate (TORNADO_infos *info, Tcl_Interp *interp
     Tcl_AppendResult (interp,name,NULL);
   }
   Tcl_AppendResult (interp,"]\n",NULL);
-  } 
+  }
   return TCL_ERROR;
 
  errValue:
@@ -329,14 +329,14 @@ RESTRICTED int tornadoTypeUpdate (TORNADO_infos *info, Tcl_Interp *interp
 /**-----------------------------------------------------------------
  * Allocate and set to zero a new instance of Structs, this routine
  * is either called from <jWrap new> or from from jWrap input parameter
- * type control for non polymorph routines. 
+ * type control for non polymorph routines.
  * @info backward link on tornado module
  * @structure static handle
  * @note we use ptr2 in order not breaking Tcl internal object type
  * this is important when Tcl provide a valid list, and save
  * time in TornadoUpdateType routine
  * @error raise a jWrapPanic error if not more ram is avaliable in
- * wtx agent memory pool, or when module in not binded. 
+ * wtx agent memory pool, or when module in not binded.
  **-----------------------------------------------------------------*/
 RESTRICTED int tornadoTypeTcl2Cc (TORNADO_infos *info, Tcl_Interp *interp
        , JWRAP_structs *structure, Tcl_Obj * srcObj, Tcl_Obj *destObj) {
@@ -388,7 +388,7 @@ RESTRICTED int tornadoTypeTcl2Cc (TORNADO_infos *info, Tcl_Interp *interp
   // Invalidate external rep
   destObj->bytes = NULL;
 
-  return status; // ------ OK ---------  
+  return status; // ------ OK ---------
 
 errWtxMalloc: // ---------------------- ERROR -------------------
   jWrapPanic (interp,"tornadoTypeTcl2Cc can't alloc tornadoMemPool:%s WTX_ErrMsg=[%s]\n"
@@ -424,7 +424,7 @@ RESTRICTED void tornadoTypeFree (TORNADO_infos *info,Tcl_Obj *tclObj)
 
   // now free source internal list rep
   if (tclObj->internalRep.twoPtrValue.ptr2 != NULL) {
-     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2); 
+     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2);
   }
 
   return; // ------------- OK -------------
@@ -446,7 +446,7 @@ RESTRICTED void tornadoTypeClean (Tcl_Obj * tclObj) {
 
   // now free source internal list rep
   if (tclObj->internalRep.twoPtrValue.ptr2 != NULL) {
-     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2); 
+     Tcl_DecrRefCount((Tcl_Obj*)tclObj->internalRep.twoPtrValue.ptr2);
   }
 
 }
@@ -486,7 +486,7 @@ RESTRICTED void tornadoTypeCget (TORNADO_infos *info, Tcl_Interp *interp
      cget   = tclObj->internalRep.twoPtrValue.ptr1;
      origine= (long)cget->valueAdr;
    } else {
-     origine= (long)tclObj->internalRep.twoPtrValue.ptr1; 
+     origine= (long)tclObj->internalRep.twoPtrValue.ptr1;
    }
 
    // create a new TclObj that we be returned to user
@@ -508,8 +508,8 @@ RESTRICTED void tornadoTypeCget (TORNADO_infos *info, Tcl_Interp *interp
        // Place result in a Cget private structure
        resultAdr  = (JWRAP_cgets*) Tcl_Alloc (sizeof (JWRAP_cgets));
        if (resultAdr == NULL) goto errMalloc;
-       // Copy Object type & value in Cget struc & increment orig count usage 
-       resultAdr->valueAdr 
+       // Copy Object type & value in Cget struc & increment orig count usage
+       resultAdr->valueAdr
        = (void*) (origine+structure->slotOffsets[idxSlot]);
        resultAdr->type     = structure->slotTypes[idxSlot]->obj;
        resultAdr->owner    = tclObj;
@@ -551,7 +551,7 @@ RESTRICTED void tornadoTypeCheck (TORNADO_infos *info, JWRAP_types *usedType, ch
 
  // check this is not a standard TCL type
  usedType->obj = Tcl_GetObjType (typeName);
- 
+
  // if unknown we register a new jWrap cookie type
  if (usedType->obj == NULL) {
    jWrapCookieRegisterType (usedType, typeName);
@@ -566,14 +566,14 @@ RESTRICTED void tornadoTypeCheck (TORNADO_infos *info, JWRAP_types *usedType, ch
    } else if (usedType->obj->updateStringProc == jWrapStringPtrType.updateStringProc) {
        usedType->magic = JWRAP_BASIC;
        usedType->obj   = info->stringType;
-   } else if (usedType->obj == &jWrapStringListType) { 
+   } else if (usedType->obj == &jWrapStringListType) {
        jWrapPanic (NULL,"tornadoTypeCheck: type unsupported by this version :[%s]",typeName);
    } else {
        usedType->magic = JWRAP_BASIC;
    }
  }
  usedType->size = typeSize;
-  
+
 } // end initialiseType
 
 /** -----------------------------------------------------------------

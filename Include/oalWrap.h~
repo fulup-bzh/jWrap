@@ -5,7 +5,7 @@
  * File      :   oalWrap.h Object Abstraction layer
  * Projet    :   Rubicon/jTcl
  * Module    :   jTcl C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -109,7 +109,7 @@ class Elements : public BasicDatas   {
 
 class Structs : public BasicDatas   {
  public:
-  McDArray<Elements*> elements;           // A structure is build of structure  
+  McDArray<Elements*> elements;           // A structure is build of structure
   Structs (char*);
   Structs ();
 };
@@ -117,7 +117,7 @@ class Structs : public BasicDatas   {
 // Unions is equivalent to struct in midle rep.
 class Unions : public Structs {
  public:
- Unions (char*); 
+ Unions (char*);
 };
 
 class Vars : public BasicDatas   {
@@ -135,11 +135,11 @@ class Typedefs : public BasicDatas {
   McString             source;             // Original type name [struc, basic, enum]
   Typedefs (McString*, McString*);         // Constructor
 };
-   
+
 class Values : public BasicDatas {
  public:
   McString             value;             // constante value
-   
+
   Values (char*,char*);                   // constructor
 };
 
@@ -157,7 +157,7 @@ class Enums : public BasicDatas {
 class Params : public BasicDatas {
  public:
    McString   type;                       // Parameter type
-   McString   name;                       // Parameter name 
+   McString   name;                       // Parameter name
 
    Params (McString*);                    // constructor
    Params (char*);                        // constructor
@@ -193,7 +193,7 @@ class Programs : public BasicDatas {
    McDArray<Enums*>     enums;             // Enumeration constante
    McDArray<Structs*>   structs;           // Complex Structure
    McDArray<Unions*>    unions;            // Union
-   McDArray<Defines*>   defines;           // Define a special Enum 
+   McDArray<Defines*>   defines;           // Define a special Enum
    McDArray<Vars*>      vars;              // Global  exported variables
    McDArray<Functions*> functions;         // Program exported function
    McDArray<Classes*>   classes;           // Program exported classes

@@ -2,10 +2,10 @@
  *
  *  Copyright(c) 1997 FRIDU a Free Software Company [fridu@fridu.bzh]
  *
- * File      :   varBackendCc2jTcl.cc manage variable in C++ 2 jTcl backend wrapper 
+ * File      :   varBackendCc2jTcl.cc manage variable in C++ 2 jTcl backend wrapper
  * Projet    :   Rubicon/jWrap
  * Module    :   jWrap C++ wrapper
- * Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+ * Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
  *
  * Last
  *      Author      : $Author: Fulup $
@@ -25,7 +25,7 @@
 
 /*******************************************************************
  ** Output variable place C++ var in current C/C++ namespace
- *******************************************************************/ 
+ *******************************************************************/
 void BackendCc2jTcl::output (Vars* var) {
 
       switch (var->location) {
@@ -47,12 +47,12 @@ void BackendCc2jTcl::output (Vars* var) {
 
 /*******************************************************************
  ** Register variable in order trace proc to main c++/Tcl coherency
- *******************************************************************/ 
+ *******************************************************************/
 void BackendCc2jTcl::registrate (Vars* var) {
   char *jTclObj;
   char *prefix    = "";  // use to class store class name for static data
   char *separator = "";  // use to place ::
-  char *tclPrefix = "";  // use to make local variable unique in JWRAP array 
+  char *tclPrefix = "";  // use to make local variable unique in JWRAP array
   char *tclSeparator = "";
   int  len = var->name.size()-1; // Tcl what string len without \0
 
@@ -85,7 +85,7 @@ void BackendCc2jTcl::registrate (Vars* var) {
 
 /*******************************************************************
  ** unregister variable in order trace proc to main c++/Tcl coherency
- *******************************************************************/ 
+ *******************************************************************/
 void BackendCc2jTcl::unregistrate (Vars* var) {
 
       switch (var->location) {

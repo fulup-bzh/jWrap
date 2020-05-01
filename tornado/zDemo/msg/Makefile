@@ -3,7 +3,7 @@
 #
 # Projet    :   Jos/jWrap
 # Module    :   Test/Tornado
-# Auteur    :   Fulup Le Foll [Fulup@fridu.bzh]
+# Auteur    :   Fulup Ar Foll [Fulup@fridu.bzh]
 #
 # Last
 #      Author      : $Author: Fulup $
